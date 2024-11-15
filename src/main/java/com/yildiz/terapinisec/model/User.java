@@ -40,8 +40,14 @@ public class User {
     private String email ;
 
     @Column(nullable = false)
+    private String password ;
+
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private UserRole userRole = UserRole.USER ;
+
+    @Column(nullable = false)
+
 
 
 
@@ -83,7 +89,7 @@ public class User {
 //o phoneNumber: telefon numarası.
 //o	email: Kullanıcının e-posta adresi.
 //o	role: Kullanıcının rolü (örneğin, USER, PSYCHOLOGIST, ADMIN). seçilebilir
-//o	createdAt: Kullanıcının kayıt tarihi.
+//o	registrationDate: Kullanıcının kayıt tarihi.
 //o	lastLogin: Son giriş tarihi.
 //o	isPremium: Kullanıcının premium üyelik durumu.
 //o	premiumStartDate: Premium üyeliğin başlangıç tarihi.
