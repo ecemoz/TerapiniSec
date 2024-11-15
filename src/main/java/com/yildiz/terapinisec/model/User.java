@@ -150,7 +150,7 @@ public class User {
 //o	username: Kullanıcı adı.
 //o firstName: ad
 //o lastName:soyad
-// birthday: Kullanıcı doğum günü.
+//o birthday: Kullanıcı doğum günü.
 //o	password: Şifre (şifrelenmiş).
 //o phoneNumber: telefon numarası.
 //o	email: Kullanıcının e-posta adresi.
