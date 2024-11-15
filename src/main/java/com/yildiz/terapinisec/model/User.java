@@ -1,5 +1,7 @@
 package com.yildiz.terapinisec.model;
 
+import com.yildiz.terapinisec.util.PhoneNumberUtil;
+import com.yildiz.terapinisec.util.UserRole;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,6 +27,23 @@ public class User {
 
     @Column(nullable = false)
     private String phoneNumber;
+
+    public String setPhoneNumber(String phoneNumber) {
+        if (!PhoneNumberUtil.isValidPhoneNumber(phoneNumber)) {
+            throw new IllegalArgumentException("Invalid phone number");
+        }
+        this.phoneNumber = phoneNumber;
+        return this.phoneNumber;
+    }
+
+    @Column(nullable = false, unique = true)
+    private String email ;
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private UserRole userRole = UserRole.USER ;
+
+
 
 
 
