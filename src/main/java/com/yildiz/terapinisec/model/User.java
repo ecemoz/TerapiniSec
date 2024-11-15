@@ -1,10 +1,14 @@
 package com.yildiz.terapinisec.model;
 
 import com.yildiz.terapinisec.util.PhoneNumberUtil;
+import com.yildiz.terapinisec.util.Specialization;
 import com.yildiz.terapinisec.util.UserRole;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Getter
@@ -46,7 +50,50 @@ public class User {
     @Enumerated(EnumType.STRING)
     private UserRole userRole = UserRole.USER ;
 
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime registrationDateTime;
+
+    @PrePersist
+    protected void onCreate() {
+        this.registrationDateTime = LocalDateTime.now();
+    }
+
     @Column(nullable = false)
+    private LocalDateTime lastLoginDateTime ;
+
+    @PreUpdate
+    protected void onLogin() {
+        this.lastLoginDateTime = LocalDateTime.now();
+    }
+
+    @Column(nullable = false)
+    private boolean isPremium = false;
+
+    @Column(nullable = false)
+    private LocalDateTime premiumStartDateTime;
+
+    @PrePersist
+    protected void onPremiumStart() {
+        this.premiumStartDateTime = LocalDateTime.now();
+    }
+
+    @Column(nullable = false)
+    private LocalDateTime premiumEndDateTime;
+
+    @PreUpdate
+    protected void onPremiumEnd() {
+        this.premiumEndDateTime = LocalDateTime.now();
+    }
+
+    @ElementCollection(targetClass = Specialization.class)
+    @CollectionTable(name= "user_specializations", joinColumns = @JoinColumn(name = "user_id"))
+    @Enumerated(EnumType.STRING)
+    private List<Specialization> specializations;
+
+
+    
+
+
 
 
 
@@ -89,11 +136,11 @@ public class User {
 //o phoneNumber: telefon numarası.
 //o	email: Kullanıcının e-posta adresi.
 //o	role: Kullanıcının rolü (örneğin, USER, PSYCHOLOGIST, ADMIN). seçilebilir
-//o	registrationDate: Kullanıcının kayıt tarihi.
-//o	lastLogin: Son giriş tarihi.
+//o	registrationDateTime: Kullanıcının kayıt tarihi.
+//o	lastLoginDateTime: Son giriş tarihi.
 //o	isPremium: Kullanıcının premium üyelik durumu.
-//o	premiumStartDate: Premium üyeliğin başlangıç tarihi.
-//o	premiumEndDate: Premium üyeliğin bitiş tarihi.
+//o	premiumStartDateTime: Premium üyeliğin başlangıç tarihi.
+//o	premiumEndDateTime: Premium üyeliğin bitiş tarihi.
 //o	specialization: Psikologlar için uzmanlık alanı. seçilebilir
 //o	yearsOfExperience: Psikologlar için deneyim yılı.
 //o	availableTimes: Psikologların uygun olduğu zaman dilimleri.
