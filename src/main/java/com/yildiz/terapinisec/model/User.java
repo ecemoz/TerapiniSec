@@ -146,30 +146,6 @@ public class User {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 //o	id: Benzersiz kullanıcı kimliği.
 //o	username: Kullanıcı adı.
 //o firstName: ad
