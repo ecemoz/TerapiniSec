@@ -30,6 +30,9 @@ public class User {
     private String lastName;
 
     @Column(nullable = false)
+    private LocalDateTime birthday ;
+
+    @Column(nullable = false)
     private String phoneNumber;
 
     public String setPhoneNumber(String phoneNumber) {
@@ -90,16 +93,55 @@ public class User {
     @Enumerated(EnumType.STRING)
     private List<Specialization> specializations;
 
+    @Column(nullable = false)
+    private String yearsOfExperience;
 
-    
-
-
-
-
-
-
+    @ElementCollection
+    @CollectionTable(name = "user_available_times", joinColumns = @JoinColumn(name = "user_id"))
+    private List <LocalDateTime> availableTimes;
 
 
+    @OneToMany( mappedBy = "moodOwner")
+    private List<MoodLog> moodLogs;
+
+    @OneToMany( mappedBy = "assignees")
+    private List<Task> tasks;
+
+    @ManyToMany ( mappedBy = "viewedBy")
+    private List<StoryView> storyViews;
+
+    @OneToMany( mappedBy = "reportOwner")
+    private List<Report> reports;
+
+    @OneToMany( mappedBy = "goalOwner")
+    private List<Goal> goals;
+
+    @ManyToMany( mappedBy = "joinedUser")
+    private List<Participant> participants;
+
+    @OneToMany( mappedBy = "responsedBy")
+    private List<SurveyResponse> surveyResponses;
+
+    @OneToMany( mappedBy = "sleeper")
+    private List<SleepLog> sleepLogs;
+
+    @OneToMany( mappedBy = "appointmentClients")
+    private List<Appointment> appointments;
+
+    @OneToMany( mappedBy = "meditator")
+    private List<MedidationSession> medidationSessions;
+
+    @OneToMany( mappedBy = "speaker")
+    private List<VoiceMessage> voiceMessages;
+
+    @OneToMany( mappedBy = "fileUploader")
+    private List<LibraryDocument> libraryDocuments;
+
+    @OneToMany( mappedBy = "notiRecievier")
+    private List<Notification> notifications;
+
+    @OneToMany( mappedBy = "documentUploader")
+    private List<FileStorage> documents;
 }
 
 
@@ -132,6 +174,7 @@ public class User {
 //o	username: Kullanıcı adı.
 //o firstName: ad
 //o lastName:soyad
+// birthday: Kullanıcı doğum günü.
 //o	password: Şifre (şifrelenmiş).
 //o phoneNumber: telefon numarası.
 //o	email: Kullanıcının e-posta adresi.
@@ -147,10 +190,10 @@ public class User {
 //•	İlişkiler:
 //o	OneToMany – MoodLog: Kullanıcı birden fazla ruh hali kaydına sahip olabilir.
 //o	OneToMany – Task: Kullanıcı birden fazla görev ve öneriye sahip olabilir.
-//o	OneToMany – StoryView: Kullanıcının izlediği hikaye kayıtları.
+//o	ManyToMany – StoryView: Kullanıcının izlediği hikaye kayıtları.
 //o	OneToMany – Report: Kullanıcının haftalık veya aylık raporları.
 //o	OneToMany – Goal: Kullanıcının belirlediği kişisel gelişim hedefleri.
-//o	OneToMany – Participant: Kullanıcının katıldığı grup terapileri.
+//o	ManyToMany – Participant: Kullanıcının katıldığı grup terapileri.
 //o	OneToMany – SurveyResponse: Kullanıcının verdiği anket yanıtları.
 //o	OneToMany – SleepLog: Kullanıcının uyku günlüğü kayıtları.
 //o	OneToMany – Appointment: Kullanıcının terapist ile randevuları.
@@ -159,4 +202,3 @@ public class User {
 //o	OneToMany – LibraryDocument: Psikologların yüklediği belgeler.
 //o	OneToMany – Notification: Kullanıcının aldığı bildirimler.
 //o	OneToMany – FileStorage: Kullanıcının yüklediği dosyalar.
-//o	OneToMany – Review: Kullanıcının yaptığı değerlendirmeler.
