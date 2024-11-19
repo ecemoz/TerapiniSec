@@ -19,7 +19,7 @@ public class MoodLog {
     private Long id ;
 
     @ElementCollection
-    @CollectionTable(name= "user_moods",joinColumns = @JoinColumn(name =" user_id"))
+    @CollectionTable(name= "user_moods",joinColumns = @JoinColumn(name ="mood_log"))
     @Enumerated(EnumType.STRING)
     private List<UserMoods> userMoods;
 
@@ -35,6 +35,6 @@ public class MoodLog {
     }
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id",nullable = false)
     private User moodOwner;
 }
