@@ -55,36 +55,29 @@ public class User {
     @Column(nullable = false, updatable = false)
     private LocalDateTime registrationDateTime;
 
-    @PrePersist
-    protected void onCreate() {
-        this.registrationDateTime = LocalDateTime.now();
-    }
-
     @Column(nullable = false)
-    private LocalDateTime lastLoginDateTime ;
-
-    @PreUpdate
-    protected void onLogin() {
-        this.lastLoginDateTime = LocalDateTime.now();
-    }
-
-    @Column(nullable = false)
-    private boolean isPremium = false;
+    private LocalDateTime lastLoginDateTime;
 
     @Column(nullable = false)
     private LocalDateTime premiumStartDateTime;
 
-    @PrePersist
-    protected void onPremiumStart() {
-        this.premiumStartDateTime = LocalDateTime.now();
-    }
-
-    @Column(nullable = false)
+    @Column (nullable = false)
     private LocalDateTime premiumEndDateTime;
 
+    @PrePersist
+    protected void onCreate() {
+        this.registrationDateTime = LocalDateTime.now();
+        if (this.isPremium) {
+            this.premiumStartDateTime = LocalDateTime.now();
+        }
+    }
+
     @PreUpdate
-    protected void onPremiumEnd() {
-        this.premiumEndDateTime = LocalDateTime.now();
+    protected void onUpdate() {
+        this.lastLoginDateTime = LocalDateTime.now();
+        if (this.isPremium) {
+            this.premiumEndDateTime = LocalDateTime.now();
+        }
     }
 
     @ElementCollection(targetClass = Specialization.class)
