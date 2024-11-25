@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @Setter
-@Table(name ="storyview")
+@Table(name ="storyviews")
 public class StoryView {
 
     @Id
