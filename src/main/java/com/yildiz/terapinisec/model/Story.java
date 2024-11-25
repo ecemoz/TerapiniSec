@@ -16,7 +16,7 @@ public class Story {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column
+    @Column(nullable = false)
     private String storyUrl ;
 
     @Column(nullable = false)
@@ -28,11 +28,18 @@ public class Story {
     @Column(nullable = false)
     private boolean isActive = true;
 
+    @Column(nullable = false)
+    private int viewCount = 0;
+
     @PrePersist
     protected void onCreate() {
         storyCreatedAt = LocalDateTime.now();
     }
 
-    @OneToMany(mappedBy = "story", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "story", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.LAZY)
     private List<StoryView> storyViews;
+
+    public void incrementViewCount() {
+        this.viewCount++;
+    }
 }

@@ -18,11 +18,16 @@ public class StoryView {
     @Column(nullable = false, updatable = false)
     private LocalDateTime viewedAt;
 
-    @ManyToOne
+    @PrePersist
+    protected void onCreate() {
+       this.viewedAt = LocalDateTime.now();
+    }
+
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name ="story_id",nullable = false)
     private Story story;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id",nullable = false)
     private User user;
 }
