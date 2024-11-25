@@ -108,7 +108,7 @@ public class User {
     @OneToMany( mappedBy = "goalOwner")
     private List<Goal> goals;
 
-    @ManyToMany( mappedBy = "joinedUser")
+    @OneToMany( mappedBy = "joinedUser")
     private List<Participant> participants;
 
     @OneToMany( mappedBy = "responsedBy")
