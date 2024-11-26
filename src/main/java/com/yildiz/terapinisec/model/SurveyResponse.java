@@ -23,14 +23,14 @@ public class SurveyResponse {
 
     @PrePersist
     protected void onCreate() {
-        submittedDate = LocalDateTime.now();
+        this.submittedDate = LocalDateTime.now();
     }
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User responsedBy;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "survey_id")
     private Survey survey;
 }
