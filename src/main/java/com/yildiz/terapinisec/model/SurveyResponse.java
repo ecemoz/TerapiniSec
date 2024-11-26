@@ -27,10 +27,10 @@ public class SurveyResponse {
     }
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", nullable = false)
     private User responsedBy;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "survey_id")
+    @JoinColumn(name = "survey_id",nullable = false)
     private Survey survey;
 }
