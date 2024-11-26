@@ -28,6 +28,6 @@ public class Appointment {
     private User appointmentClients;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "therapist_id")
+    @JoinColumn(name = "therapist_id",nullable = false)
     private User therapist;
 }
