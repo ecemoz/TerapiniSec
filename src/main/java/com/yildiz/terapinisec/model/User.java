@@ -126,6 +126,9 @@ public class User {
     @OneToMany( mappedBy = "speaker")
     private List<VoiceMessage> voiceMessages;
 
+    @OneToMany( mappedBy = "listener")
+    private List<VoiceMessage> listenerVoiceMessages;
+
     @OneToMany( mappedBy = "fileUploader")
     private List<LibraryDocument> libraryDocuments;
 
