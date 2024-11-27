@@ -5,7 +5,6 @@ import com.yildiz.terapinisec.util.Specialization;
 import com.yildiz.terapinisec.util.UserRole;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-
 import java.time.LocalDateTime;
 
 @Repository
