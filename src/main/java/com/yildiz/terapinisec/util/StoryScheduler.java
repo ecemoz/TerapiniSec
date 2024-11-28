@@ -5,6 +5,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import java.time.LocalDateTime;
+import com.yildiz.terapinisec.repository.StoryRepository;
 
 @Component
 public class StoryScheduler {
