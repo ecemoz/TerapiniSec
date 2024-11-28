@@ -7,17 +7,18 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Repository
 public interface TaskRepository extends JpaRepository<Task, Long> {
 
     Task findByTaskName(String taskName);
-    Task findByDueDateBefore(LocalDateTime dueDate);
-    Task findByIsCompletedTrue();
-    Task findByIsCompletedFalse();
-    Task findByUserId(Long userId);
-    Task findByUserIdAndIsCompletedFalse(Long userId);
-    Task findByUserIdDueDateBefore(Long userId ,LocalDateTime dueDate);
+    List<Task>findByDueDateBefore(LocalDateTime dueDate);
+    List<Task> findByIsCompletedTrue();
+    List<Task> findByIsCompletedFalse();
+    List<Task> findByUserId(Long userId);
+    List<Task> findByUserIdAndIsCompletedFalse(Long userId);
+    List<Task> findByUserIdDueDateBefore(Long userId ,LocalDateTime dueDate);
 
     @Modifying
     @Query("UPDATE Task t SET t.isCompleted = :isCompleted WHERE t.id = :taskId")

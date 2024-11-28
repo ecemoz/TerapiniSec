@@ -6,6 +6,7 @@ import com.yildiz.terapinisec.util.UserRole;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Repository
 public interface  UserRepository  extends JpaRepository<User, Long> {
@@ -13,11 +14,11 @@ public interface  UserRepository  extends JpaRepository<User, Long> {
     User findByFirstNameAndLastName(String firstName, String lastName);
     User findByEmail(String email);
     User findByPhoneNumber(String phoneNumber);
-    User findByRole(UserRole role);
-    User findByLastLoginDateTimeBefore(LocalDateTime dateTime);
+    List<User> findByRole(UserRole role);
+    List<User> findByLastLoginDateTimeBefore(LocalDateTime dateTime);
     User findByLastLoginDateTimeAfter(LocalDateTime dateTime);
-    User findByIsPremiumTrue();
-    User findByIsPremiumFalse();
-    User findBySpecializationContains(Specialization specialization);
-    User findByYearsOfExperienceGreaterThan(Integer years);
+    List<User> findByIsPremiumTrue();
+    List<User> findByIsPremiumFalse();
+    List<User>findBySpecializationContains(Specialization specialization);
+    List<User> findByYearsOfExperienceGreaterThan(Integer years);
 }
