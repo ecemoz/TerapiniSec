@@ -30,4 +30,8 @@ public class MedidationSession {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id",nullable = false)
     private User meditator;
+
+    @ManyToOne(fetch =FetchType.LAZY)
+    @JoinColumn(name ="content_id",nullable = false)
+    private MeditationContent meditationContent;
 }
