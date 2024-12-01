@@ -17,10 +17,6 @@ public class MedidationSession {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false)
-    @Enumerated(EnumType.STRING)
-    private MedidationSessionType medidationSessionType;
-
     @Column(nullable = false)
     private Duration medidationSessionDuration;
 
