@@ -137,6 +137,9 @@ public class User {
 
     @OneToMany( mappedBy = "documentUploader")
     private List<FileStorage> documents;
+
+    @OneToMany (mappedBy = "createdBy")
+    private List<Survey> surveys;
 }
 
 

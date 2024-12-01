@@ -32,4 +32,8 @@ public class Survey {
 
     @OneToMany(mappedBy = "survey" , fetch = FetchType.LAZY)
     private List<SurveyResponse> surveyResponses;
+
+    @ManyToOne(fetch =FetchType.LAZY)
+    @JoinColumn(name = "user_id",nullable = false)
+    private User createdBy;
 }
