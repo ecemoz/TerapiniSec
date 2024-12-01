@@ -1,6 +1,6 @@
 package com.yildiz.terapinisec.model;
 
-import com.yildiz.terapinisec.util.MedidationSessionType;
+import com.yildiz.terapinisec.util.MeditationSessionType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -23,7 +23,7 @@ public class MeditationContent {
 
     @Column(unique = true, nullable = false)
     @Enumerated(EnumType.STRING)
-    private MedidationSessionType medidationSessionType;
+    private MeditationSessionType meditationSessionType;
 
     @Column(nullable = false,unique = true)
     private String contentUrl;

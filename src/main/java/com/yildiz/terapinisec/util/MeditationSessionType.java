@@ -1,6 +1,6 @@
 package com.yildiz.terapinisec.util;
 
-public enum MedidationSessionType {
+public enum MeditationSessionType {
     GUIDED_MEDITATION,       // Rehberli meditasyon
     MINDFULNESS,             // Farkındalık meditasyonu
     TRANSCENDENTAL,          // Transandantal meditasyon

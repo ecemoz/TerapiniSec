@@ -121,7 +121,7 @@ public class User {
     private List<Appointment> appointments;
 
     @OneToMany( mappedBy = "meditator")
-    private List<MedidationSession> medidationSessions;
+    private List<MeditationSession> meditationSessions;
 
     @OneToMany( mappedBy = "speaker")
     private List<VoiceMessage> voiceMessages;

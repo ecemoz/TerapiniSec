@@ -1,6 +1,5 @@
 package com.yildiz.terapinisec.model;
 
-import com.yildiz.terapinisec.util.MedidationSessionType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -11,17 +10,17 @@ import java.time.LocalDateTime;
 @Getter
 @Setter
 @Table(name = "meditationsessions")
-public class MedidationSession {
+public class MeditationSession {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(nullable = false)
-    private Duration medidationSessionDuration;
+    private Duration meditationSessionDuration;
 
     @Column(nullable = false)
-    private LocalDateTime medidationDateTime;
+    private LocalDateTime meditationDateTime;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id",nullable = false)
