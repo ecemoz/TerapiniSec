@@ -19,5 +19,6 @@ public interface FileStorageRepository extends JpaRepository<FileStorage, Long> 
     List<FileStorage>findByIsPublicTrue();
     List<FileStorage>findByUploaderIdAndIsPublicFalse(Long uploaderId);
     List<FileStorage>findByUploadDateBetween(LocalDateTime startDate, LocalDateTime endDate);
+    List<FileStorage>findByUploaderIdAndUploadDateBetween(Long uploaderId, LocalDateTime startDate, LocalDateTime endDate);
     FileStorage findByFileName(String fileName);
 }
