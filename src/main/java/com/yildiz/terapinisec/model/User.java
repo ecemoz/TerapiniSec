@@ -64,6 +64,9 @@ public class User {
     @Column (nullable = false)
     private LocalDateTime premiumEndDateTime;
 
+    @Column(nullable = false)
+    public boolean isPremium = false;
+
     @PrePersist
     protected void onCreate() {
         this.registrationDateTime = LocalDateTime.now();
