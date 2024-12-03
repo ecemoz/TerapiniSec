@@ -2,10 +2,12 @@ package com.yildiz.terapinisec.service;
 
 import com.yildiz.terapinisec.model.User;
 import com.yildiz.terapinisec.repository.UserRepository;
+import com.yildiz.terapinisec.util.Specialization;
 import com.yildiz.terapinisec.util.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -24,8 +26,14 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public void updateUserPhoneNumber(Long userId, String phoneNumber) {
-        phoneNumberValidationService.validatePhoneNumber(phoneNumber);
+    public User updateUserPhoneNumber(Long userId, String phoneNumber) {
+        return userRepository.findById(userId)
+                        .map(user-> {
+                            phoneNumberValidationService.validatePhoneNumber(phoneNumber);
+                            return userRepository.save(user);
+                        })
+                .orElseThrow(()->new RuntimeException("User not found"));
+
     }
 
     public User makeUserPremium(Long userId) {
@@ -105,5 +113,49 @@ public class UserService {
         } else {
             throw new RuntimeException("User not found.");
         }
+    }
+
+    public User findByUsername(String username) {
+        return userRepository.findByUsername(username);
+    }
+
+    public User findByFirstNameAndLastName(String firstName, String lastName) {
+        return userRepository.findByFirstNameAndLastName(firstName, lastName);
+    }
+
+    public User findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
+    public User findByPhoneNumber(String phoneNumber) {
+        return userRepository.findByPhoneNumber(phoneNumber);
+    }
+
+    public List<User>findByRole (UserRole role) {
+        return userRepository.findByRole(role);
+    }
+
+    public List<User>findByLastLoginDateTimeBefore(LocalDateTime dateTime) {
+        return userRepository.findByLastLoginDateTimeBefore(dateTime);
+    }
+
+    public User findByLastLoginDateTimeAfter(LocalDateTime dateTime) {
+        return userRepository.findByLastLoginDateTimeAfter(dateTime);
+    }
+
+    public List<User>findByIsPremiumTrue(){
+        return userRepository.findByIsPremiumTrue();
+    }
+
+    public List<User>findByIsPremiumFalse(){
+        return userRepository.findByIsPremiumFalse();
+    }
+
+    public List<User>findBySpecializationContains(Specialization specialization) {
+        return userRepository.findBySpecializationContains(specialization);
+    }
+
+    public List<User>findByYearsOfExperienceGreaterThan(Integer years) {
+        return userRepository.findByYearsOfExperienceGreaterThan(years);
     }
 }
