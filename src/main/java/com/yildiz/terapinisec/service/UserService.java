@@ -16,55 +16,74 @@ public class UserService {
     private UserRepository userRepository;
 
     @Autowired
-    private  PhoneNumberValidationService phoneNumberValidationService;
+    private PhoneNumberValidationService phoneNumberValidationService;
 
-    public void updateUserPhoneNumber(Long userId,String phoneNumber){
-        phoneNumberValidationService.validatePhoneNumber(phoneNumber);
-    }
+    @Autowired
+    private PremiumService premiumService;
 
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public List<User> getAllUsers(){
+    public void updateUserPhoneNumber(Long userId, String phoneNumber) {
+        phoneNumberValidationService.validatePhoneNumber(phoneNumber);
+    }
+
+    public User makeUserPremium(Long userId) {
+        return premiumService.upgradeToPremium(userId);
+    }
+
+    public User removeUserPremium(Long userId) {
+        return premiumService.downgradeFromPremium(userId);
+    }
+
+    public void activePremium(Long userId) {
+        if (premiumService.isPremiumActive(userId)) {
+            System.out.println("You are premium member");
+        } else {
+            System.out.println("You are not premium member");
+        }
+    }
+
+    public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
-    public Optional<User>getUserById(Long id){
+    public Optional<User> getUserById(Long id) {
         return userRepository.findById(id);
     }
 
-    public User createUser(User user){
+    public User createUser(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setPhoneNumber(phoneNumberValidationService.validatePhoneNumber(user.getPhoneNumber()));
         return userRepository.save(user);
     }
 
-    public User updateUser(Long id,User updatedUser){
+    public User updateUser(Long id, User updatedUser) {
         return userRepository.findById(id)
-                .map(existingUser ->{
-               updateBasicFields(existingUser, updatedUser);
+                .map(existingUser -> {
+                    updateBasicFields(existingUser, updatedUser);
 
-               if (existingUser.getUserRole().equals(UserRole.PSYCHOLOGIST)) {
-                   updatePsychologistFields(existingUser,updatedUser);
-               } else if (existingUser.getUserRole().equals(UserRole.ADMIN)) {
-                   updateAdminFields(existingUser,updatedUser);
-               }
-               return userRepository.save(existingUser);
+                    if (existingUser.getUserRole().equals(UserRole.PSYCHOLOGIST)) {
+                        updatePsychologistFields(existingUser, updatedUser);
+                    } else if (existingUser.getUserRole().equals(UserRole.ADMIN)) {
+                        updateAdminFields(existingUser, updatedUser);
+                    }
+                    return userRepository.save(existingUser);
 
                 })
-                .orElseThrow(()->new RuntimeException("User not found."));
+                .orElseThrow(() -> new RuntimeException("User not found."));
     }
 
-    private void updateBasicFields(User existingUser,User updatedUser){
-         existingUser.setUsername(updatedUser.getUsername());
-         existingUser.setFirstName(updatedUser.getFirstName());
-         existingUser.setLastName(updatedUser.getLastName());
-         existingUser.setEmail(updatedUser.getEmail());
-         existingUser.setBirthday(updatedUser.getBirthday());
+    private void updateBasicFields(User existingUser, User updatedUser) {
+        existingUser.setUsername(updatedUser.getUsername());
+        existingUser.setFirstName(updatedUser.getFirstName());
+        existingUser.setLastName(updatedUser.getLastName());
+        existingUser.setEmail(updatedUser.getEmail());
+        existingUser.setBirthday(updatedUser.getBirthday());
     }
 
-    private void updatePsychologistFields(User existingUser,User updatedUser){
-        if(updatedUser.getSpecializations() != null) {
+    private void updatePsychologistFields(User existingUser, User updatedUser) {
+        if (updatedUser.getSpecializations() != null) {
             existingUser.setSpecializations(updatedUser.getSpecializations());
         }
 
@@ -77,13 +96,13 @@ public class UserService {
         }
     }
 
-    private void updateAdminFields(User existingUser,User updatedUser){
+    private void updateAdminFields(User existingUser, User updatedUser) {
     }
 
-    public void deleteUser(Long id){
+    public void deleteUser(Long id) {
         if (userRepository.existsById(id)) {
             userRepository.deleteById(id);
-        }else {
+        } else {
             throw new RuntimeException("User not found.");
         }
     }
