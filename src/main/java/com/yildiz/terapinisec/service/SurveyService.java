@@ -22,8 +22,6 @@ public class SurveyService {
     }
 
     public Survey createSurvey(Survey survey) {
-        survey.setTitle(survey.getTitle());
-        survey.setDescription(survey.getDescription());
         return surveyRepository.save(survey);
     }
 
