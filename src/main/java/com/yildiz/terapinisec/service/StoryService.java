@@ -55,4 +55,8 @@ public class StoryService {
             throw new RuntimeException("Story not found");
         }
     }
+
+    public Story findByIsActiveTrue(){
+        return storyRepository.findByIsActiveTrue();
+    }
 }
