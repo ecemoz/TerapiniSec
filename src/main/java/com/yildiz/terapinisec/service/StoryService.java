@@ -5,7 +5,6 @@ import com.yildiz.terapinisec.repository.StoryRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -49,5 +48,11 @@ public class StoryService {
         });
     }
 
-
+    public void deleteStory(Long id) {
+        if (storyRepository.existsById(id)) {
+            storyRepository.deleteById(id);
+        }else {
+            throw new RuntimeException("Story not found");
+        }
+    }
 }
