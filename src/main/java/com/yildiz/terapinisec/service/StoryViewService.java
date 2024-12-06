@@ -23,6 +23,10 @@ public class StoryViewService {
     @Autowired
     private UserRepository userRepository;
 
+    public StoryView createStoryView(StoryView storyView) {
+        return storyViewRepository.save(storyView);
+    }
+
     public boolean hasUserViewedStory(Long storyId,Long userId) {
         return storyViewRepository.existsById(storyId) && userRepository.existsById(userId);
     }
