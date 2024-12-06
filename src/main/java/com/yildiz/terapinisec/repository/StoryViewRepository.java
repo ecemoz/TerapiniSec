@@ -9,6 +9,6 @@ import java.util.List;
 public interface StoryViewRepository extends JpaRepository<StoryView, Long> {
 
     List<StoryView> findByStoryId(Long storyId);
+    List<StoryView> findByUserId(Long userId);
     long countByStoryId(Long storyId);
-    StoryView existsByUserIdAndStoryId(Long userId, Long storyId);
 }
