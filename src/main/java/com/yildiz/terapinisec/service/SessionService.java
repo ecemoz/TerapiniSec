@@ -1,7 +1,10 @@
 package com.yildiz.terapinisec.service;
 
+import com.yildiz.terapinisec.model.Participant;
 import com.yildiz.terapinisec.model.Session;
+import com.yildiz.terapinisec.model.User;
 import com.yildiz.terapinisec.repository.SessionRepository;
+import com.yildiz.terapinisec.repository.UserRepository;
 import com.yildiz.terapinisec.util.SessionStatus;
 import com.yildiz.terapinisec.util.SessionType;
 import jakarta.transaction.Transactional;
@@ -16,6 +19,8 @@ public class SessionService {
 
     @Autowired
     private SessionRepository sessionRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     public List<Session>getAllSessions(){
         return sessionRepository.findAll();
@@ -100,5 +105,14 @@ public class SessionService {
          LocalDateTime endDateTime = date.toLocalDate().atTime(23, 59, 59);
 
          return sessionRepository.findBySessionDateTimeBetween(startDateTime, endDateTime);
+     }
+
+     @Transactional
+    public void addParticipant (Long sessionId, Participant participant) {
+        Session session = sessionRepository.findById(sessionId)
+                .orElseThrow(() -> new RuntimeException("Session not found with ID: " +sessionId));
+
+         session.getParticipants().add(participant);
+         sessionRepository.save(session);
      }
 }
