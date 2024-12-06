@@ -12,6 +12,5 @@ public interface SessionRepository extends JpaRepository<Session, Long> {
 
     List<Session>findBySessionType(SessionType sessionType);
     List<Session>findBySessionDateTimeBetween(LocalDateTime startDateTime, LocalDateTime endDateTime);
-    //belli bir tarih girilecek ve o tarihin saat 00-23.59 arası sorgulama listesi döndürülecek servis katmanında...
     List<Session>findBySessionNameContainingIgnoreCase(String keyword);
 }
