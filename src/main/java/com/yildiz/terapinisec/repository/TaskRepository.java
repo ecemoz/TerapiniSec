@@ -23,4 +23,12 @@ public interface TaskRepository extends JpaRepository<Task, Long> {
     @Modifying
     @Query("UPDATE Task t SET t.isCompleted = :isCompleted WHERE t.id = :taskId")
     void updateTaskCompletion(@Param("taskId") Long taskId, @Param("isCompleted") boolean isCompleted);
+
+    @Query("SELECT COUNT(t) FROM Task t WHERE t.assignees.id = :userId AND t.dueDate BETWEEN :startDate AND : endDate")
+    long countCompletedTasksByUserAndDateRange(@Param("userId") Long userId, @Param("startDate") LocalDateTime startDate,
+                                               @Param("endDate") LocalDateTime endDate);
+
+    @Query("SELECT COUNT(t) FROM Task t WHERE t.assignees.id = :userId AND t.dueDate BETWEEN :startDate AND :endDate")
+    long countTasksByUserAndDateRange(@Param("userId") Long userId, @Param("startDate") LocalDateTime startDate,
+                                      @Param("endDate") LocalDateTime endDate);
 }
