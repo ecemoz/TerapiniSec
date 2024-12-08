@@ -4,6 +4,9 @@ import com.yildiz.terapinisec.model.SleepLog;
 import com.yildiz.terapinisec.repository.SleepLogRepository;
 import com.yildiz.terapinisec.util.SleepQuality;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -50,8 +53,9 @@ public class SleepLogService {
         }
     }
 
-    public List<SleepLog> getSleepLogByUserId(Long userId) {
-        return sleepLogRepository.findBySleeperId(userId);
+    public Page<SleepLog> getSleepLogByUserId(Long userId, int page , int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return sleepLogRepository.findBySleeperId(userId,pageable);
     }
 
     public List<SleepLog>findBySleepDate(LocalDateTime sleepDate){
@@ -64,5 +68,9 @@ public class SleepLogService {
 
     public List<SleepLog>findBySleepQualityAndSleeperId(SleepQuality sleepQuality, Long id) {
         return sleepLogRepository.findBySleepQualityAndSleeperId(sleepQuality, id);
+    }
+
+    public List<SleepLog>findByUserWithDetails(Long userId) {
+        return sleepLogRepository.findByUserWithDetails(userId);
     }
 }
