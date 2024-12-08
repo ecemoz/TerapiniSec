@@ -168,9 +168,25 @@ public class ReportService {
                 .filter(moodLog -> moodLog.getUserMoods().equals("Negative"))
                 .count();
         if (negativeCount > 3) {
-            suggestions.append(" Do meditation to reduce  your stress");
+            suggestions.append(" Do meditation to reduce your stress");
         }
 
         return suggestions.toString();
+    }
+
+    public Report findByReportType(String reportType) {
+        return reportRepository.findByReportType(reportType);
+    }
+
+    public Report findByReportOwnerId(Long userId) {
+        return reportRepository.findByReportOwnerId(userId);
+    }
+
+    public Report findByReportOwnerIdAndReportType(Long userId, String reportType) {
+        return reportRepository.findByReportOwnerIdAndReportType(userId, reportType);
+    }
+
+    List<Report> findByReportCreatedAt(LocalDateTime reportCreatedAt) {
+        return reportRepository.findByReportCreatedAt(reportCreatedAt);
     }
 }
