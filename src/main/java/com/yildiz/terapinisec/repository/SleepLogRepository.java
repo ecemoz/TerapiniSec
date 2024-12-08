@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface SleepLogRepository extends JpaRepository<SleepLog, Long> {
@@ -23,7 +24,7 @@ public interface SleepLogRepository extends JpaRepository<SleepLog, Long> {
     List<SleepLog> findByUserWithDetails(@Param("userId") Long userId);
 
     @Query("SELECT AVG(s.sleepQuality) FROM SleepLog s WHERE s.sleeper.id = :userId AND s.sleepDate BETWEEN :startDate AND :endDate")
-    String findAverageSleepQualityByUserAndDateRange(@Param("userId") Long userId,
-                                                     @Param("startDate") LocalDateTime startDate,
-                                                     @Param("endDate") LocalDateTime endDate);
+    Optional<SleepQuality> findAverageSleepQualityByUserAndDateRange(@Param("userId") Long userId,
+                                                                     @Param("startDate") LocalDateTime startDate,
+                                                                     @Param("endDate") LocalDateTime endDate);
 }

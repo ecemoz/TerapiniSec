@@ -151,7 +151,7 @@ public class ReportService {
     private String generateSuggestions(User user, LocalDateTime startDate, LocalDateTime endDate) {
         StringBuilder suggestions = new StringBuilder(" Suggestions: ");
 
-        String sleepQuality = sleepLogRepository.findAverageSleepQualityByUserAndDateRange(user.getId(), startDate, endDate );
+        Optional<SleepQuality> sleepQuality = sleepLogRepository.findAverageSleepQualityByUserAndDateRange(user.getId(), startDate, endDate );
         if ( SleepQuality.LOW.equals(sleepQuality) ) {
             suggestions.append(" Improve your sleeping pattern.");
         }
