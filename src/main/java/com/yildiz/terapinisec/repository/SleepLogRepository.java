@@ -21,4 +21,9 @@ public interface SleepLogRepository extends JpaRepository<SleepLog, Long> {
 
     @Query("SELECT sl FROM SleepLog sl JOIN FETCH sl.sleeper WHERE sl.sleeper.id = :userId")
     List<SleepLog> findByUserWithDetails(@Param("userId") Long userId);
+
+    @Query("SELECT AVG(s.sleepQuality) FROM SleepLog s WHERE s.sleeper.id = :userId AND s.sleepDate BETWEEN :startDate AND :endDate")
+    String findAverageSleepQualityByUserAndDateRange(@Param("userId") Long userId,
+                                                     @Param("startDate") LocalDateTime startDate,
+                                                     @Param("endDate") LocalDateTime endDate);
 }
