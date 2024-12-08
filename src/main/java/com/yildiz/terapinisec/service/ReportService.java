@@ -31,8 +31,6 @@ public class ReportService {
     private GoalRepository goalRepository;
 
     @Autowired
-    private SleepLogRepository SleepLogRepository;
-    @Autowired
     private SleepLogRepository sleepLogRepository;
 
     public Report generatePersonalizedWeeklyReport(Long userId) {
