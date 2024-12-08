@@ -2,7 +2,6 @@ package com.yildiz.terapinisec.service;
 
 import com.yildiz.terapinisec.model.Participant;
 import com.yildiz.terapinisec.model.Session;
-import com.yildiz.terapinisec.model.User;
 import com.yildiz.terapinisec.repository.SessionRepository;
 import com.yildiz.terapinisec.repository.UserRepository;
 import com.yildiz.terapinisec.util.SessionStatus;

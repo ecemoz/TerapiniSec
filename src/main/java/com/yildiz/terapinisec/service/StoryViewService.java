@@ -8,6 +8,8 @@ import com.yildiz.terapinisec.repository.StoryViewRepository;
 import com.yildiz.terapinisec.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
@@ -30,12 +32,12 @@ public class StoryViewService {
     }
 
     public boolean hasUserViewedStory(Long storyId,Long userId) {
-        return storyViewRepository.existsById(storyId) && userRepository.existsById(userId);
+        return storyViewRepository.existsByStoryIdAndUserId(storyId,userId);
     }
 
     @Transactional
     public StoryView addStoryView (Long storyId,Long userId) {
-        if (hasUserViewedStory(storyId,userId)) {
+        if (storyViewRepository.existsByStoryIdAndUserId(storyId,userId)) {
             throw new RuntimeException("User has already  viewed story");
         }
 
@@ -56,11 +58,15 @@ public class StoryViewService {
         return storyViewRepository.countByStoryId(storyId);
     }
 
-    public List<StoryView> getViewsForStory(Long storyId) {
-        return storyViewRepository.findByStoryId(storyId);
+    public Page<StoryView> getViewsForStory(Long storyId, Pageable pageable) {
+        return storyViewRepository.findByStoryId(storyId,pageable);
     }
 
-    public List<StoryView>getViewsForUser(Long userId) {
-        return storyViewRepository.findByUserId(userId);
+    public Page<StoryView>getViewsForUser(Long userId, Pageable pageable) {
+        return storyViewRepository.findByUserId(userId,pageable);
+    }
+
+    public List<StoryView>getViewsByUserWithStories(Long userId) {
+        return storyViewRepository.findViewsByUserWithStories(userId);
     }
 }
