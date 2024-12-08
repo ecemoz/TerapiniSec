@@ -93,10 +93,10 @@ public class ReportService {
         List<MoodLog> moodLogs = moodLogRepository.findMoodSummaryByUserAndDateRange(user.getId(), startDate, endDate);
 
         long positiveCount = moodLogs.stream()
-                .filter(moodLog -> moodLog.getUserMoods().equalsIgnoreCase("Positive"))
+                .filter(moodLog -> moodLog.getUserMoods().equals("Positive"))
                 .count();
         long negativeCount = moodLogs.stream()
-                .filter(moodLog -> moodLog.getUserMoods().equalsIgnoreCase("Negative"))
+                .filter(moodLog -> moodLog.getUserMoods().equals("Negative"))
                 .count();
 
         if (positiveCount > negativeCount) {
@@ -148,14 +148,31 @@ public class ReportService {
                         default:
                             return "Sleep Quality Unknown";
         }
-
-
     }
 
+    private String generateSuggestions(User user, LocalDateTime startDate, LocalDateTime endDate) {
+        StringBuilder suggestions = new StringBuilder(" Suggestions: ");
 
+        String sleepQuality = sleepLogRepository.findAverageSleepQualityByUserAndDateRange(user.getId(), startDate, endDate );
+        if ( SleepQuality.LOW.equals(sleepQuality) ) {
+            suggestions.append(" Improve your sleeping pattern.");
+        }
 
+        long completedTasks = taskRepository.countCompletedTasksByUserAndDateRange(user.getId(), startDate, endDate);
+        long totalTasks = taskRepository.countTasksByUserAndDateRange(user.getId(), startDate, endDate);
 
+        if (completedTasks < totalTasks /2) {
+            suggestions.append("Determine smaller goals to increase your task complete. ");
+        }
 
+        List<MoodLog> moodLogs = moodLogRepository.findMoodSummaryByUserAndDateRange(user.getId(), startDate, endDate);
+        long negativeCount = moodLogs.stream()
+                .filter(moodLog -> moodLog.getUserMoods().equals("Negative"))
+                .count();
+        if (negativeCount > 3) {
+            suggestions.append(" Do meditation to reduce  your stress");
+        }
 
-
+        return suggestions.toString();
+    }
 }
