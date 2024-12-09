@@ -87,6 +87,7 @@ public class SessionService {
             throw new IllegalArgumentException("SessionStatus cannot be changed");
         }
     }
+
      public List<Session>findBySessionType(SessionType sessionType) {
         return sessionRepository.findBySessionType(sessionType);
      }
