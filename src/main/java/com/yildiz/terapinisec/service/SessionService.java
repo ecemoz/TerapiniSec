@@ -32,6 +32,7 @@ public class SessionService {
         session.setSessionType(session.getSessionType());
         session.setSessionStatus(session.getSessionStatus());
         session.setDurationMinutes(session.getDurationMinutes());
+        session.setParticipants(session.getParticipants());
         return sessionRepository.save(session);
     }
 
@@ -42,6 +43,7 @@ public class SessionService {
                     session.setSessionDateTime(updatedSession.getSessionDateTime());
                     session.setSessionType(updatedSession.getSessionType());
                     session.setDurationMinutes(updatedSession.getDurationMinutes());
+                    session.setParticipants(updatedSession.getParticipants());
                     return sessionRepository.save(session);
                 })
                 .orElseThrow(() -> new RuntimeException("Session not found"));
