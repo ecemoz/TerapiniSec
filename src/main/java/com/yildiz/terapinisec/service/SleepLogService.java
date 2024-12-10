@@ -31,6 +31,7 @@ public class SleepLogService {
         sleepLog.setSleepDuration(sleepLog.getSleepDuration());
         sleepLog.setSleepDate(sleepLog.getSleepDate());
         sleepLog.setSleepQuality(sleepLog.getSleepQuality());
+        sleepLog.setSleeper(sleepLog.getSleeper());
         return sleepLogRepository.save(sleepLog);
     }
 
