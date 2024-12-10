@@ -32,6 +32,7 @@ public class LibraryDocumentService {
         libraryDocument.setDocumentUploadDate(libraryDocument.getDocumentUploadDate());
         libraryDocument.setPublic(libraryDocument.isPublic());
         libraryDocument.setAccesibleByPremiumOnly(libraryDocument.isAccesibleByPremiumOnly());
+        libraryDocument.setFileUploader(libraryDocument.getFileUploader());
         return libraryDocumentRepository.save(libraryDocument);
     }
 
