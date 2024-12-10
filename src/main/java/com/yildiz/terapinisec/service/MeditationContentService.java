@@ -22,13 +22,14 @@ public class MeditationContentService {
         return meditationContentRepository.findById(id);
     }
 
-    public MeditationContent createMeditationContent(MeditationContent updatedMeditationContent) {
-        updatedMeditationContent.setContentUrl(updatedMeditationContent.getContentUrl());
-        updatedMeditationContent.setDescription(updatedMeditationContent.getDescription());
-        updatedMeditationContent.setTitle(updatedMeditationContent.getTitle());
-        updatedMeditationContent.setMeditationSessionType(updatedMeditationContent.getMeditationSessionType());
-        updatedMeditationContent.setPublic(updatedMeditationContent.isPublic());
-        return meditationContentRepository.save(updatedMeditationContent);
+    public MeditationContent createMeditationContent(MeditationContent MeditationContent) {
+        MeditationContent.setContentUrl(MeditationContent.getContentUrl());
+        MeditationContent.setDescription(MeditationContent.getDescription());
+        MeditationContent.setTitle(MeditationContent.getTitle());
+        MeditationContent.setMeditationSessionType(MeditationContent.getMeditationSessionType());
+        MeditationContent.setPublic(MeditationContent.isPublic());
+        MeditationContent.setCreatedBy(MeditationContent.getCreatedBy());
+        return meditationContentRepository.save(MeditationContent);
     }
 
     public MeditationContent updateMeditationContent(Long id, MeditationContent updatedMeditationContent) {
