@@ -26,6 +26,7 @@ public class MoodLogService {
         moodLog.setUserMoods(moodLog.getUserMoods());
         moodLog.setDescription(moodLog.getDescription());
         moodLog.setLogDateTime(moodLog.getLogDateTime());
+        moodLog.setMoodOwner(moodLog.getMoodOwner());
         return moodLogRepository.save(moodLog);
     }
 
