@@ -20,6 +20,9 @@ public class FileStorage {
     private String fileName ;
 
     @Column(nullable = false)
+    private String filePath;
+
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private FileType fileType ;
 

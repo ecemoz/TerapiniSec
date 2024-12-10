@@ -25,8 +25,6 @@ public class StoryViewService {
     @Autowired
     private UserRepository userRepository;
 
-
-
     public StoryView createStoryView(StoryView storyView) {
         return storyViewRepository.save(storyView);
     }
