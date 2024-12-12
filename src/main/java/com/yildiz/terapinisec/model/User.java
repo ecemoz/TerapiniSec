@@ -17,19 +17,19 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id ;
+    private Long id;
 
     @Column(unique = true, nullable = false)
-    private String username ;
+    private String username;
 
     @Column(nullable = false)
-    private String firstName ;
+    private String firstName;
 
     @Column(nullable = false)
     private String lastName;
 
     @Column(nullable = false)
-    private LocalDateTime birthday ;
+    private LocalDateTime birthday;
 
     @Column(nullable = false)
     private String phoneNumber;
@@ -43,14 +43,14 @@ public class User {
     }
 
     @Column(nullable = false, unique = true)
-    private String email ;
+    private String email;
 
     @Column(nullable = false)
-    private String password ;
+    private String password;
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private UserRole userRole = UserRole.USER ;
+    private UserRole userRole = UserRole.USER;
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime registrationDateTime;
@@ -61,7 +61,7 @@ public class User {
     @Column(nullable = false)
     private LocalDateTime premiumStartDateTime;
 
-    @Column (nullable = false)
+    @Column(nullable = false)
     private LocalDateTime premiumEndDateTime;
 
     @Column(nullable = false)
@@ -84,7 +84,7 @@ public class User {
     }
 
     @ElementCollection(targetClass = Specialization.class)
-    @CollectionTable(name= "user_specializations", joinColumns = @JoinColumn(name = "user_id"))
+    @CollectionTable(name = "user_specializations", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)
     private List<Specialization> specializations;
 
@@ -93,58 +93,56 @@ public class User {
 
     @ElementCollection
     @CollectionTable(name = "user_available_times", joinColumns = @JoinColumn(name = "user_id"))
-    private List <LocalDateTime> availableTimes;
+    private List<LocalDateTime> availableTimes;
 
-
-    @OneToMany( mappedBy = "moodOwner")
+    @OneToMany(mappedBy = "moodOwner")
     private List<MoodLog> moodLogs;
 
-    @OneToMany( mappedBy = "assignees")
+    @OneToMany(mappedBy = "assignees")
     private List<Task> tasks;
 
-    @ManyToMany ( mappedBy = "viewedBy")
+    @ManyToMany(mappedBy = "viewedBy")
     private List<StoryView> storyViews;
 
-    @OneToMany( mappedBy = "reportOwner")
+    @OneToMany(mappedBy = "reportOwner")
     private List<Report> reports;
 
-    @OneToMany( mappedBy = "goalOwner")
+    @OneToMany(mappedBy = "goalOwner")
     private List<Goal> goals;
 
-    @OneToMany( mappedBy = "joinedUser")
+    @OneToMany(mappedBy = "joinedUser")
     private List<Participant> participants;
 
-    @OneToMany( mappedBy = "responsedBy")
+    @OneToMany(mappedBy = "responsedBy")
     private List<SurveyResponse> surveyResponses;
 
-    @OneToMany( mappedBy = "sleeper")
+    @OneToMany(mappedBy = "sleeper")
     private List<SleepLog> sleepLogs;
 
-    @OneToMany( mappedBy = "appointmentClients")
+    @OneToMany(mappedBy = "appointmentClients")
     private List<Appointment> appointments;
 
-    @OneToMany( mappedBy = "meditator")
+    @OneToMany(mappedBy = "meditator")
     private List<MeditationSession> meditationSessions;
 
-    @OneToMany( mappedBy = "speaker")
+    @OneToMany(mappedBy = "speaker")
     private List<VoiceMessage> voiceMessages;
 
-    @OneToMany( mappedBy = "listener")
+    @OneToMany(mappedBy = "listener")
     private List<VoiceMessage> listenerVoiceMessages;
 
-    @OneToMany( mappedBy = "fileUploader")
+    @OneToMany(mappedBy = "fileUploader")
     private List<LibraryDocument> libraryDocuments;
 
-    @OneToMany( mappedBy = "notiRecievier")
+    @OneToMany(mappedBy = "notiRecievier")
     private List<Notification> notifications;
 
-    @OneToMany( mappedBy = "documentUploader")
+    @OneToMany(mappedBy = "documentUploader")
     private List<FileStorage> documents;
 
-    @OneToMany (mappedBy = "createdBy")
+    @OneToMany(mappedBy = "createdBy")
     private List<Survey> surveys;
 }
-
 
 
 //o	id: Benzersiz kullanıcı kimliği.
