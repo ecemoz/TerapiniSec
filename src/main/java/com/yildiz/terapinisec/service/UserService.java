@@ -157,23 +157,27 @@ public class UserService {
         return userMapper.toUserResponseDtoList(users);
     }
 
-    public List<User>findByIsPremiumTrue(){
-        return userRepository.findByIsPremiumTrue();
+    public List<UserResponseDto>findByIsPremiumTrue(){
+        List<User> users = userRepository.findByIsPremiumTrue();
+        return userMapper.toUserResponseDtoList(users);
     }
 
-    public List<User>findByIsPremiumFalse(){
-        return userRepository.findByIsPremiumFalse();
+    public List<UserResponseDto>findByIsPremiumFalse(){
+        List<User> users = userRepository.findByIsPremiumFalse();
+        return userMapper.toUserResponseDtoList(users);
     }
 
-    public List<User>findBySpecializationContains(Specialization specialization) {
-        return userRepository.findBySpecializationContains(specialization);
+    public List<UserResponseDto>findBySpecializationContains(Specialization specialization) {
+        List<User> users = userRepository.findBySpecializationContains(specialization);
+        return userMapper.toUserResponseDtoList(users);
     }
 
-    public List<User>findByYearsOfExperienceGreaterThan(Integer years) {
-        return userRepository.findByYearsOfExperienceGreaterThan(years);
+    public List<UserResponseDto>findByYearsOfExperienceGreaterThan(Integer years) {
+        List<User> users = userRepository.findByYearsOfExperienceGreaterThan(years);
+        return userMapper.toUserResponseDtoList(users);
     }
 
-    public boolean authenticate (UserLoginDto userLoginDto) {
+    public boolean authenticate(UserLoginDto userLoginDto) {
         User user = userRepository.findByUsernameOrEmail(userLoginDto.getUsernameOrEmail());
         if (user != null && passwordEncoder.matches(userLoginDto.getPassword(), user.getPassword())) {
             return true;
