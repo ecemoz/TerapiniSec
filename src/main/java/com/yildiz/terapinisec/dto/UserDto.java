@@ -13,11 +13,12 @@ public class UserDto {
     private String firstName;
     private String lastName;
     private String email;
-    private String password;
-    private LocalDateTime birthday;
+    private String phoneNumber;
+    private boolean premium;
+    private LocalDateTime registrationDateTime;
+    private LocalDateTime lastLoginDateTime;
     private UserRole userRole;
-    private Boolean isPremium;
-    private List<Specialization> specializations;
+    private String specialization;
     private Integer yearsOfExperience;
     private List<LocalDateTime> availableTimes;
 }
