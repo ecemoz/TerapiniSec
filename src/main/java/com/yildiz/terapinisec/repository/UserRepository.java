@@ -21,4 +21,5 @@ public interface  UserRepository  extends JpaRepository<User, Long> {
     List<User> findByIsPremiumFalse();
     List<User>findBySpecializationContains(Specialization specialization);
     List<User> findByYearsOfExperienceGreaterThan(Integer years);
+    User findByUsernameOrEmail(String usernameOrEmail);
 }

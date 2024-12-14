@@ -1,6 +1,7 @@
 package com.yildiz.terapinisec.service;
 
 import com.yildiz.terapinisec.dto.UserCreateDto;
+import com.yildiz.terapinisec.dto.UserLoginDto;
 import com.yildiz.terapinisec.dto.UserResponseDto;
 import com.yildiz.terapinisec.dto.UserUpdateDto;
 import com.yildiz.terapinisec.mapper.UserMapper;
@@ -170,5 +171,13 @@ public class UserService {
 
     public List<User>findByYearsOfExperienceGreaterThan(Integer years) {
         return userRepository.findByYearsOfExperienceGreaterThan(years);
+    }
+
+    public boolean authenticate (UserLoginDto userLoginDto) {
+        User user = userRepository.findByUsernameOrEmail(userLoginDto.getUsernameOrEmail());
+        if (user != null && passwordEncoder.matches(userLoginDto.getPassword(), user.getPassword())) {
+            return true;
+        }
+        return false;
     }
 }
