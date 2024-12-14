@@ -1,5 +1,9 @@
 package com.yildiz.terapinisec.service;
 
+import com.yildiz.terapinisec.dto.UserCreateDto;
+import com.yildiz.terapinisec.dto.UserResponseDto;
+import com.yildiz.terapinisec.dto.UserUpdateDto;
+import com.yildiz.terapinisec.mapper.UserMapper;
 import com.yildiz.terapinisec.model.User;
 import com.yildiz.terapinisec.repository.UserRepository;
 import com.yildiz.terapinisec.util.Specialization;
@@ -9,7 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
+
 
 @Service
 public class UserService {
@@ -26,22 +30,29 @@ public class UserService {
     @Autowired
     private PasswordEncoder passwordEncoder;
 
-    public User updateUserPhoneNumber(Long userId, String phoneNumber) {
+    @Autowired
+    private UserMapper userMapper;
+
+    public UserResponseDto updateUserPhoneNumber(Long userId, String phoneNumber) {
         return userRepository.findById(userId)
                         .map(user-> {
                             phoneNumberValidationService.validatePhoneNumber(phoneNumber);
-                            return userRepository.save(user);
+                            user.setPhoneNumber(phoneNumber);
+                            User updatedUser=userRepository.save(user);
+                            return userMapper.toUserResponseDto(updatedUser);
                         })
                 .orElseThrow(()->new RuntimeException("User not found"));
 
     }
 
-    public User makeUserPremium(Long userId) {
-        return premiumService.upgradeToPremium(userId);
+    public UserResponseDto makeUserPremium(Long userId) {
+        User premiumUser = premiumService.upgradeToPremium(userId);
+        return userMapper.toUserResponseDto(premiumUser);
     }
 
-    public User removeUserPremium(Long userId) {
-        return premiumService.downgradeFromPremium(userId);
+    public UserResponseDto removeUserPremium(Long userId) {
+        User downgradedUser = premiumService.downgradeFromPremium(userId);
+        return userMapper.toUserResponseDto(downgradedUser);
     }
 
     public void activePremium(Long userId) {
@@ -52,29 +63,35 @@ public class UserService {
         }
     }
 
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public List<UserResponseDto> getAllUsers() {
+        List<User>users = userRepository.findAll();
+        return userMapper.toUserResponseDtoList(users);
     }
 
-    public Optional<User> getUserById(Long id) {
-        return userRepository.findById(id);
+    public UserResponseDto getUserById(Long id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(()->new RuntimeException("User not found"));
+        return userMapper.toUserResponseDto(user);
     }
 
-    public User createUser(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setPhoneNumber(phoneNumberValidationService.validatePhoneNumber(user.getPhoneNumber()));
-        return userRepository.save(user);
+    public UserResponseDto createUser(UserCreateDto userCreateDto) {
+        User user = userMapper.toUser(userCreateDto);
+
+        user.setPassword(passwordEncoder.encode(userCreateDto.getPassword()));
+        user.setPhoneNumber(phoneNumberValidationService.validatePhoneNumber(userCreateDto.getPhoneNumber()));
+        User savedUser = userRepository.save(user);
+        return userMapper.toUserResponseDto(savedUser);
     }
 
-    public User updateUser(Long id, User updatedUser) {
+    public User updateUser(Long id, UserUpdateDto userUpdateDto) {
         return userRepository.findById(id)
                 .map(existingUser -> {
-                    updateBasicFields(existingUser, updatedUser);
+                    userMapper.updateUserFromDto(userUpdateDto,existingUser);
 
                     if (existingUser.getUserRole().equals(UserRole.PSYCHOLOGIST)) {
-                        updatePsychologistFields(existingUser, updatedUser);
+                        updatePsychologistFields(existingUser, userUpdateDto);
                     } else if (existingUser.getUserRole().equals(UserRole.ADMIN)) {
-                        updateAdminFields(existingUser, updatedUser);
+                        updateAdminFields(existingUser, userUpdateDto);
                     }
                     return userRepository.save(existingUser);
 
@@ -82,29 +99,22 @@ public class UserService {
                 .orElseThrow(() -> new RuntimeException("User not found."));
     }
 
-    private void updateBasicFields(User existingUser, User updatedUser) {
-        existingUser.setUsername(updatedUser.getUsername());
-        existingUser.setFirstName(updatedUser.getFirstName());
-        existingUser.setLastName(updatedUser.getLastName());
-        existingUser.setEmail(updatedUser.getEmail());
-        existingUser.setBirthday(updatedUser.getBirthday());
-    }
 
-    private void updatePsychologistFields(User existingUser, User updatedUser) {
-        if (updatedUser.getSpecializations() != null) {
-            existingUser.setSpecializations(updatedUser.getSpecializations());
+    private void updatePsychologistFields(User existingUser, UserUpdateDto userUpdateDto) {
+        if (userUpdateDto.getSpecializations() != null) {
+            existingUser.setSpecializations(userUpdateDto.getSpecializations());
         }
 
-        if (updatedUser.getYearsOfExperience() != null) {
-            existingUser.setYearsOfExperience(updatedUser.getYearsOfExperience());
+        if (userUpdateDto.getYearsOfExperience() != null) {
+            existingUser.setYearsOfExperience(userUpdateDto.getYearsOfExperience());
         }
 
-        if (updatedUser.getAvailableTimes() != null) {
-            existingUser.setAvailableTimes(updatedUser.getAvailableTimes());
+        if (userUpdateDto.getAvailableTimes() != null) {
+            existingUser.setAvailableTimes(userUpdateDto.getAvailableTimes());
         }
     }
 
-    private void updateAdminFields(User existingUser, User updatedUser) {
+    private void updateAdminFields(User existingUser, UserUpdateDto userUpdateDto) {
     }
 
     public void deleteUser(Long id) {
@@ -131,16 +141,19 @@ public class UserService {
         return userRepository.findByPhoneNumber(phoneNumber);
     }
 
-    public List<User>findByRole (UserRole role) {
-        return userRepository.findByRole(role);
+    public List<UserResponseDto>findByRole (UserRole role) {
+        List<User>users = userRepository.findByRole(role);
+        return userMapper.toUserResponseDtoList(users);
     }
 
-    public List<User>findByLastLoginDateTimeBefore(LocalDateTime dateTime) {
-        return userRepository.findByLastLoginDateTimeBefore(dateTime);
+    public List<UserResponseDto>findByLastLoginDateTimeBefore(LocalDateTime dateTime) {
+        List<User> users = userRepository.findByLastLoginDateTimeBefore(dateTime);
+        return userMapper.toUserResponseDtoList(users);
     }
 
-    public User findByLastLoginDateTimeAfter(LocalDateTime dateTime) {
-        return userRepository.findByLastLoginDateTimeAfter(dateTime);
+    public List<UserResponseDto> findByLastLoginDateTimeAfter(LocalDateTime dateTime) {
+        List<User> users = userRepository.findByLastLoginDateTimeAfter(dateTime);
+        return userMapper.toUserResponseDtoList(users);
     }
 
     public List<User>findByIsPremiumTrue(){

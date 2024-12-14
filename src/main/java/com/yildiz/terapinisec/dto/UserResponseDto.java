@@ -11,4 +11,5 @@ public class UserResponseDto {
     private String lastName;
     private String email;
     private boolean isPremium;
+    private String phoneNumber;
 }

@@ -16,7 +16,7 @@ public interface  UserRepository  extends JpaRepository<User, Long> {
     User findByPhoneNumber(String phoneNumber);
     List<User> findByRole(UserRole role);
     List<User> findByLastLoginDateTimeBefore(LocalDateTime dateTime);
-    User findByLastLoginDateTimeAfter(LocalDateTime dateTime);
+    List <User> findByLastLoginDateTimeAfter(LocalDateTime dateTime);
     List<User> findByIsPremiumTrue();
     List<User> findByIsPremiumFalse();
     List<User>findBySpecializationContains(Specialization specialization);
