@@ -14,7 +14,7 @@ public class UserDto {
     private String lastName;
     private String email;
     private String phoneNumber;
-    private boolean premium;
+    private boolean isPremium;
     private LocalDateTime registrationDateTime;
     private LocalDateTime lastLoginDateTime;
     private UserRole userRole;

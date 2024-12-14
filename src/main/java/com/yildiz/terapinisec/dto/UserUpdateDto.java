@@ -14,7 +14,7 @@ public class UserUpdateDto {
     private String email;
     private String phoneNumber;
     private LocalDateTime birthday;
-    private String specialization;
+    private Specialization specialization;
     private Integer yearsOfExperience;
     private List<LocalDateTime> availableTimes;
 }
