@@ -6,7 +6,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
-public class UpdateUserRequestDto {
+public class UserUpdateDto {
 
     private String username;
     private String firstName;

@@ -5,7 +5,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-public class CreateUserRequestDto {
+public class UserCreateDto {
 
     private String username;
     private String firstName;
