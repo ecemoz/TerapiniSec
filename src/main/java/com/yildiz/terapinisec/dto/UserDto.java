@@ -18,7 +18,7 @@ public class UserDto {
     private LocalDateTime registrationDateTime;
     private LocalDateTime lastLoginDateTime;
     private UserRole userRole;
-    private String specialization;
+    private Specialization specialization;
     private Integer yearsOfExperience;
     private List<LocalDateTime> availableTimes;
 }
