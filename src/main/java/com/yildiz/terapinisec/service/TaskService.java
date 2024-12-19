@@ -1,5 +1,9 @@
 package com.yildiz.terapinisec.service;
 
+import com.yildiz.terapinisec.dto.TaskCreateDto;
+import com.yildiz.terapinisec.dto.TaskResponseDto;
+import com.yildiz.terapinisec.dto.TaskUpdateDto;
+import com.yildiz.terapinisec.mapper.TaskMapper;
 import com.yildiz.terapinisec.model.Task;
 import com.yildiz.terapinisec.repository.TaskRepository;
 import jakarta.transaction.Transactional;
@@ -7,7 +11,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class TaskService {
@@ -15,40 +18,45 @@ public class TaskService {
     @Autowired
     private TaskRepository taskRepository;
 
-    public List<Task> getAllTasks() {
-        return taskRepository.findAll();
+    @Autowired
+    private TaskMapper taskMapper;
+
+    public List<TaskResponseDto> getAllTasks() {
+        List<Task> tasks = taskRepository.findAll();
+        return taskMapper.taskResponseDtoList(tasks);
     }
 
-    public Optional<Task> getTaskById(Long id) {
-        return taskRepository.findById(id);
-    }
-
-    public Task createTask(Task task) {
-        task.setTaskName(task.getTaskName());
-        task.setTaskDescription(task.getTaskDescription());
-        return taskRepository.save(task);
-    }
-
-    public Task updateTask(Long id,Task updatedtask) {
-        return taskRepository.findById(id)
-                .map(task -> {
-                    task.setTaskName(updatedtask.getTaskName());
-                    task.setTaskDescription(updatedtask.getTaskDescription());
-                    return taskRepository.save(task);
-                })
+    public TaskResponseDto getTaskById(Long id) {
+        Task task = taskRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Task not found"));
+        return taskMapper.toTaskResponseDto(task);
     }
 
-    public Task updateDueDate(Long id, LocalDateTime newDueDate) {
-        return taskRepository.findById(id)
-                .map(task -> {
-                    if (newDueDate.isBefore(LocalDateTime.now())) {
-                        throw new RuntimeException("Due date cannot be before current date");
-                    }
-                    task.setDueDate(newDueDate);
-                    return taskRepository.save(task);
-                })
+    public TaskResponseDto createTask(TaskCreateDto taskcreateDto) {
+       Task task = taskMapper.toTask(taskcreateDto);
+       Task savedTask = taskRepository.save(task);
+       return taskMapper.toTaskResponseDto(savedTask);
+    }
+
+    public TaskResponseDto updateTask(Long id, TaskUpdateDto taskupdateDto) {
+        Task task = taskRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Task not found"));
+        taskMapper.updateTaskFromDto(taskupdateDto, task);
+        Task savedTask = taskRepository.save(task);
+        return taskMapper.toTaskResponseDto(savedTask);
+    }
+
+    public TaskResponseDto updateDueDate(Long id, LocalDateTime newDueDate) {
+        Task task = taskRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Task not found"));
+
+        if(newDueDate.isBefore(LocalDateTime.now())) {
+            throw new RuntimeException("Due date cannot be before current date");
+        }
+
+        task.setDueDate(newDueDate);
+        Task updatedTask = taskRepository.save(task);
+        return taskMapper.toTaskResponseDto(updatedTask);
     }
 
     public void deleteTask(Long id) {
@@ -59,32 +67,40 @@ public class TaskService {
         }
     }
 
-    public Task findByTaskName(String taskName) {
-        return taskRepository.findByTaskName(taskName);
+    public TaskResponseDto findByTaskName(String taskName) {
+        Task task = taskRepository.findByTaskName(taskName);
+        return taskMapper.toTaskResponseDto(task);
     }
 
-    public List <Task>findByDueDateBefore(LocalDateTime dueDate){
-        return taskRepository.findByDueDateBefore(dueDate);
+    public List <TaskResponseDto>findByDueDateBefore(LocalDateTime dueDate){
+        List<Task> tasks = taskRepository.findByDueDateBefore(dueDate);
+        return taskMapper.taskResponseDtoList(tasks);
     }
 
-    public List<Task> findByIsCompletedTrue() {
-        return taskRepository.findByIsCompletedTrue();
+    public List<TaskResponseDto> findByIsCompletedTrue() {
+        List<Task> tasks = taskRepository.findByIsCompletedTrue();
+        return taskMapper.taskResponseDtoList(tasks);
     }
 
-    public List<Task> findByIsCompletedFalse() {
-        return taskRepository.findByIsCompletedFalse();
+    public List<TaskResponseDto> findByIsCompletedFalse() {
+        List<Task> tasks = taskRepository.findByIsCompletedFalse();
+        return taskMapper.taskResponseDtoList(tasks);
     }
 
-    public List<Task> findByUserId(Long userId){
-        return taskRepository.findByUserId(userId);
+    public List<TaskResponseDto> findByUserId(Long userId){
+        List<Task> tasks = taskRepository.findByUserId(userId);
+        return taskMapper.taskResponseDtoList(tasks);
     }
 
-    public List<Task> findByUserIdAndIsCompletedFalse(Long userId){
-        return taskRepository.findByUserIdAndIsCompletedFalse(userId);
+    public List<TaskResponseDto> findByUserIdAndIsCompletedFalse(Long userId){
+        List<Task> tasks = taskRepository.findByUserIdAndIsCompletedFalse(userId);
+        return taskMapper.taskResponseDtoList(tasks);
+
     }
 
-    public List<Task> findByUserIdDueDateBefore(Long userId ,LocalDateTime dueDate){
-        return taskRepository.findByUserIdDueDateBefore(userId,dueDate);
+    public List<TaskResponseDto> findByUserIdDueDateBefore(Long userId ,LocalDateTime dueDate){
+        List<Task> tasks = taskRepository.findByUserIdDueDateBefore(userId,dueDate);
+        return taskMapper.taskResponseDtoList(tasks);
     }
 
     @Transactional

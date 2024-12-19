@@ -9,6 +9,8 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.factory.Mappers;
 
+import java.util.List;
+
 @Mapper(componentModel = "spring")
 public interface TaskMapper {
 
@@ -21,4 +23,6 @@ public interface TaskMapper {
     TaskResponseDto toTaskResponseDto(Task task);
 
     void updateTaskFromDto(TaskUpdateDto taskUpdateDto, @MappingTarget Task task );
+
+    List<TaskResponseDto> taskResponseDtoList(List<Task> tasks);
 }
