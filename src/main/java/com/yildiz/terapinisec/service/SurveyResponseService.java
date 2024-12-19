@@ -1,6 +1,6 @@
 package com.yildiz.terapinisec.service;
 
-import com.yildiz.terapinisec.dto.SurveyPostDto;
+import com.yildiz.terapinisec.dto.SurveyResponseCreateDto;
 import com.yildiz.terapinisec.dto.SurveyResponsePostDto;
 import com.yildiz.terapinisec.mapper.SurveyResponseMapper;
 import com.yildiz.terapinisec.model.SurveyResponse;
@@ -8,7 +8,6 @@ import com.yildiz.terapinisec.repository.SurveyResponseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,27 +26,43 @@ public class SurveyResponseService {
                 .collect(Collectors.toList());
     }
 
-    public Optional<SurveyResponse> getSurveyResponseById(Long id){
-        return surveyResponseRepository.findById(id);
+    public SurveyResponsePostDto getSurveyResponseById(Long id){
+        SurveyResponse surveyResponse = surveyResponseRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Survey Response Not Found"));
+        return surveyResponseMapper.toSurveyResponseResponseDto(surveyResponse);
     }
 
-    public SurveyResponse createSurveyResponse(SurveyResponse surveyResponse){
-       return surveyResponseRepository.save(surveyResponse);
+    public SurveyResponsePostDto createSurveyResponse(SurveyResponseCreateDto surveyResponseCreateDto){
+        SurveyResponse surveyResponse = surveyResponseMapper.toSurveyResponse(surveyResponseCreateDto);
+        SurveyResponse savedSurveyResponse = surveyResponseRepository.save(surveyResponse);
+       return surveyResponseMapper.toSurveyResponseResponseDto(savedSurveyResponse);
     }
 
-    public  List<SurveyResponse>findByResponsedById(Long userId){
-         return surveyResponseRepository.findByResponsedById(userId);
+    public  List<SurveyResponsePostDto>findByResponsedById(Long userId){
+        List<SurveyResponse> surveyResponses = surveyResponseRepository.findByResponsedById(userId);
+        return surveyResponses.stream()
+                .map(surveyResponseMapper::toSurveyResponseResponseDto)
+                .collect(Collectors.toList());
     }
 
-    public List<SurveyResponse>findBySurveyId(Long surveyId){
-        return surveyResponseRepository.findBySurveyId(surveyId);
+    public List<SurveyResponsePostDto>findBySurveyId(Long surveyId){
+        List<SurveyResponse> surveyResponses = surveyResponseRepository.findBySurveyId(surveyId);
+        return surveyResponses.stream()
+                .map(surveyResponseMapper::toSurveyResponseResponseDto)
+                .collect(Collectors.toList());
     }
 
-    public List<SurveyResponse>findByResponsedByIdAndSurveyId(Long userId, Long surveyId){
-        return surveyResponseRepository.findByResponsedByIdAndSurveyId(userId, surveyId);
+    public List<SurveyResponsePostDto>findByResponsedByIdAndSurveyId(Long userId, Long surveyId){
+        List<SurveyResponse>surveyResponses  = surveyResponseRepository.findByResponsedByIdAndSurveyId(userId, surveyId);
+        return  surveyResponses.stream()
+                .map(surveyResponseMapper::toSurveyResponseResponseDto)
+                .collect(Collectors.toList());
     }
 
-    public List<SurveyResponse>findBySurveyIdOrderBySubmittedDateDesc(Long surveyId){
-        return surveyResponseRepository.findBySurveyIdOrderBySubmittedDateDesc(surveyId);
+    public List<SurveyResponsePostDto>findBySurveyIdOrderBySubmittedDateDesc(Long surveyId){
+        List<SurveyResponse> surveyResponses = surveyResponseRepository.findBySurveyIdOrderBySubmittedDateDesc(surveyId);
+        return  surveyResponses.stream()
+                .map(surveyResponseMapper::toSurveyResponseResponseDto)
+                .collect(Collectors.toList());
     }
 }
