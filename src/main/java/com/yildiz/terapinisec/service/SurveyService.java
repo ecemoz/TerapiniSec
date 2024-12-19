@@ -1,38 +1,54 @@
 package com.yildiz.terapinisec.service;
 
+import com.yildiz.terapinisec.dto.SurveyCreateDto;
+import com.yildiz.terapinisec.dto.SurveyResponseDto;
+import com.yildiz.terapinisec.dto.SurveyUpdateDto;
+import com.yildiz.terapinisec.mapper.SurveyMapper;
 import com.yildiz.terapinisec.model.Survey;
 import com.yildiz.terapinisec.repository.SurveyRepository;
+import com.yildiz.terapinisec.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class SurveyService {
 
     @Autowired
     private SurveyRepository surveyRepository;
+    @Autowired
+    private SurveyMapper surveyMapper;
+    @Autowired
+    private UserRepository userRepository;
 
-    public List<Survey>getAllSurveys() {
-        return surveyRepository.findAll();
+    public List<SurveyResponseDto>getAllSurveys() {
+        List<Survey> surveys = surveyRepository.findAll();
+        return surveys.stream()
+                .map(surveyMapper::toSurveyResponseDto)
+                .collect(Collectors.toList());
     }
 
-    public Optional<Survey> getSurveyById(Long id) {
-        return surveyRepository.findById(id);
+    public SurveyResponseDto getSurveyById(Long id) {
+        Survey survey = surveyRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Survey not found"));
+        return surveyMapper.toSurveyResponseDto(survey);
     }
 
-    public Survey createSurvey(Survey survey) {
-        return surveyRepository.save(survey);
+    public SurveyResponseDto createSurvey(SurveyCreateDto surveyCreateDto) {
+        Survey survey = surveyMapper.toSurvey(surveyCreateDto);
+        survey.setCreatedBy(userRepository.findById(surveyCreateDto.getCreatedById())
+        .orElseThrow(() -> new RuntimeException("User not found")));
+        Survey savedSurvey = surveyRepository.save(survey);
+        return surveyMapper.toSurveyResponseDto(savedSurvey);
     }
 
-    public Survey updateSurvey(Long id , Survey updatedSurvey) {
-        return surveyRepository.findById(id)
-                .map(survey -> {
-                    survey.setTitle(updatedSurvey.getTitle());
-                    survey.setDescription(updatedSurvey.getDescription());
-                    return surveyRepository.save(survey);
-                })
-                .orElseThrow(()-> new RuntimeException("Survey not found."));
+    public SurveyResponseDto updateSurvey(Long id , SurveyUpdateDto surveyUpdateDto) {
+       Survey survey = surveyRepository.findById(id)
+               .orElseThrow(() -> new RuntimeException("Survey not found"));
+       surveyMapper.updateSurveyFromDto(surveyUpdateDto, survey);
+       Survey updatedSurvey = surveyRepository.save(survey);
+       return surveyMapper.toSurveyResponseDto(updatedSurvey);
     }
 
     public void deleteSurvey(Long id) {
@@ -43,11 +59,17 @@ public class SurveyService {
         }
     }
 
-    public List<Survey> findByTitleContaining(String keyword){
-        return surveyRepository.findByTitleContaining(keyword);
+    public List<SurveyResponseDto> findByTitleContaining(String keyword){
+        List<Survey>surveys = surveyRepository.findByTitleContaining(keyword);
+        return surveys.stream()
+                .map(surveyMapper::toSurveyResponseDto)
+                .collect(Collectors.toList());
     }
 
-    public List<Survey>findByUserId(Long userId){
-        return surveyRepository.findByUserId(userId);
+    public List<SurveyResponseDto>findByUserId(Long userId){
+        List<Survey> surveys = surveyRepository.findByUserId(userId);
+        return surveys.stream()
+                .map(surveyMapper:: toSurveyResponseDto)
+                .collect(Collectors.toList());
     }
 }
