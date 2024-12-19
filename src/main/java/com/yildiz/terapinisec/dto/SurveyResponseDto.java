@@ -1,7 +1,6 @@
 package com.yildiz.terapinisec.dto;
 
 import lombok.Data;
-
 import java.time.LocalDateTime;
 
 @Data
