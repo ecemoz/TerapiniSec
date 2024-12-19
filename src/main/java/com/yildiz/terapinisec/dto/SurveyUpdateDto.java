@@ -1,4 +1,4 @@
 package com.yildiz.terapinisec.dto;
 
-public class SurveyDto {
+public class SurveyUpdateDto {
 }
