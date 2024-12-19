@@ -4,7 +4,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-public class SurveyResponseDto {
+public class SurveyPostDto {
 
     private Long id;
     private String title;

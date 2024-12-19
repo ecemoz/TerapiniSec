@@ -1,11 +1,15 @@
 package com.yildiz.terapinisec.service;
 
+import com.yildiz.terapinisec.dto.SurveyPostDto;
+import com.yildiz.terapinisec.dto.SurveyResponsePostDto;
+import com.yildiz.terapinisec.mapper.SurveyResponseMapper;
 import com.yildiz.terapinisec.model.SurveyResponse;
 import com.yildiz.terapinisec.repository.SurveyResponseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class SurveyResponseService {
@@ -13,8 +17,14 @@ public class SurveyResponseService {
     @Autowired
     private SurveyResponseRepository surveyResponseRepository;
 
-    public List<SurveyResponse>getAllSurveyResponses(){
-        return surveyResponseRepository.findAll();
+    @Autowired
+    private SurveyResponseMapper surveyResponseMapper;
+
+    public List<SurveyResponsePostDto>getAllSurveyResponses(){
+        List<SurveyResponse> surveyResponses = surveyResponseRepository.findAll();
+        return surveyResponses.stream()
+                .map(surveyResponseMapper::toSurveyResponseResponseDto)
+                .collect(Collectors.toList());
     }
 
     public Optional<SurveyResponse> getSurveyResponseById(Long id){

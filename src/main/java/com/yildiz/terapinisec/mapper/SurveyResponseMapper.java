@@ -1,8 +1,8 @@
 package com.yildiz.terapinisec.mapper;
 
 import com.yildiz.terapinisec.dto.SurveyResponseCreateDto;
-import com.yildiz.terapinisec.dto.SurveyResponseDto;
-import com.yildiz.terapinisec.model.Survey;
+import com.yildiz.terapinisec.dto.SurveyPostDto;
+import com.yildiz.terapinisec.dto.SurveyResponsePostDto;
 import com.yildiz.terapinisec.model.SurveyResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -18,5 +18,5 @@ public interface SurveyResponseMapper {
     SurveyResponse toSurveyResponse(SurveyResponseCreateDto surveyResponseCreateDto);
 
     @Mapping( source = "responsedBy.username" , target = "respondedByUsername")
-    SurveyResponseDto toSurveyResponseDto(SurveyResponse surveyResponse);
+    SurveyResponsePostDto toSurveyResponseResponseDto(SurveyResponse surveyResponse);
 }

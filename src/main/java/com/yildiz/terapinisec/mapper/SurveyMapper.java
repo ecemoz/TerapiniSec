@@ -1,7 +1,7 @@
 package com.yildiz.terapinisec.mapper;
 
 import com.yildiz.terapinisec.dto.SurveyCreateDto;
-import com.yildiz.terapinisec.dto.SurveyResponseDto;
+import com.yildiz.terapinisec.dto.SurveyPostDto;
 import com.yildiz.terapinisec.dto.SurveyUpdateDto;
 import com.yildiz.terapinisec.model.Survey;
 import org.mapstruct.Mapper;
@@ -24,7 +24,7 @@ public interface SurveyMapper {
     SurveyCreateDto toSurveyCreateDto(Survey survey);
 
     @Mapping(source = "createdBy.id", target = "createdById")
-    SurveyResponseDto toSurveyResponseDto(Survey survey);
+    SurveyPostDto toSurveyPostDto(Survey survey);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "surveyCreatedAt", ignore = true)
