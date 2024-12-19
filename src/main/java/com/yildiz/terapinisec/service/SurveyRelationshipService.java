@@ -1,7 +1,9 @@
 package com.yildiz.terapinisec.service;
 
+import com.yildiz.terapinisec.dto.SurveyResponseCreateDto;
 import com.yildiz.terapinisec.dto.SurveyResponseDto;
 import com.yildiz.terapinisec.mapper.SurveyMapper;
+import com.yildiz.terapinisec.mapper.SurveyResponseMapper;
 import com.yildiz.terapinisec.model.SurveyResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,7 +23,7 @@ public class SurveyRelationshipService {
     private SurveyMapper surveyMapper;
 
     @Autowired
-    private SurveyResponseMapper  surveyResponseMapper;
+    private SurveyResponseMapper surveyResponseMapper;
 
     public List<SurveyResponseDto>getResponsesBySurvey(Long surveyId) {
         List<SurveyResponse> responses = surveyResponseService.findBySurveyId(surveyId);
@@ -30,7 +32,7 @@ public class SurveyRelationshipService {
                 .collect(Collectors.toList());
     }
 
-    public SurveyResponseDto addResponseToSurvey(Long surveyId ,SurveyResponseCreateDto surveyResponseCreateDto) {
+    public SurveyResponseDto addResponseToSurvey(Long surveyId , SurveyResponseCreateDto surveyResponseCreateDto) {
         return surveyService.getSurveyById(surveyId)
                 .map(survey -> {
                     SurveyResponse surveyResponse = surveyResponseMapper.toSurveyResponse(surveyResponseCreateDto);
