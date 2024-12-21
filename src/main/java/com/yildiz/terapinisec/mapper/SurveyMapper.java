@@ -12,7 +12,6 @@ import org.mapstruct.factory.Mappers;
 @Mapper(componentModel = "spring")
 public interface SurveyMapper {
 
-    SurveyMapper INSTANCE = Mappers.getMapper(SurveyMapper.class);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "surveyCreatedAt", ignore = true)

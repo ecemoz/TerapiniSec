@@ -14,8 +14,6 @@ import java.util.List;
 @Mapper(componentModel = "spring")
 public interface TaskMapper {
 
-    TaskMapper INSTANCE = Mappers.getMapper(TaskMapper.class);
-
     @Mapping(target = "assignees.id", source = "assigneeId")
     Task toTask(TaskCreateDto taskCreateDto);
 

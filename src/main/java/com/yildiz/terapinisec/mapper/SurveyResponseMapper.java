@@ -11,8 +11,6 @@ import org.mapstruct.factory.Mappers;
 @Mapper(componentModel = "spring")
 public interface SurveyResponseMapper {
 
-    SurveyResponseMapper INSTANCE = Mappers.getMapper(SurveyResponseMapper.class);
-
     @Mapping(source = "userId" , target = "responsedBy.id")
     @Mapping(source = "surveyId" , target = "survey.id" )
     SurveyResponse toSurveyResponse(SurveyResponseCreateDto surveyResponseCreateDto);

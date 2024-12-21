@@ -4,7 +4,7 @@ import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
-public class StoryviewResponseDto {
+public class StoryViewResponseDto {
 
     private Long id;
     private LocalDateTime viewedAt;
