@@ -32,10 +32,8 @@ public class SurveyResponseService {
         return surveyResponseMapper.toSurveyResponseResponseDto(surveyResponse);
     }
 
-    public SurveyResponsePostDto createSurveyResponse(SurveyResponseCreateDto surveyResponseCreateDto){
-        SurveyResponse surveyResponse = surveyResponseMapper.toSurveyResponse(surveyResponseCreateDto);
-        SurveyResponse savedSurveyResponse = surveyResponseRepository.save(surveyResponse);
-       return surveyResponseMapper.toSurveyResponseResponseDto(savedSurveyResponse);
+    public SurveyResponse createSurveyResponse(SurveyResponse surveyResponse) {
+        return surveyResponseRepository.save(surveyResponse);
     }
 
     public  List<SurveyResponsePostDto>findByResponsedById(Long userId){
@@ -45,7 +43,7 @@ public class SurveyResponseService {
                 .collect(Collectors.toList());
     }
 
-    public List<SurveyResponsePostDto>findBySurveyId(Long surveyId){
+    public List<SurveyResponsePostDto> findBySurveyId(Long surveyId){
         List<SurveyResponse> surveyResponses = surveyResponseRepository.findBySurveyId(surveyId);
         return surveyResponses.stream()
                 .map(surveyResponseMapper::toSurveyResponseResponseDto)
@@ -64,5 +62,13 @@ public class SurveyResponseService {
         return  surveyResponses.stream()
                 .map(surveyResponseMapper::toSurveyResponseResponseDto)
                 .collect(Collectors.toList());
+    }
+
+    public void deleteSurveyResponse(Long id) {
+        if (surveyResponseRepository.existsById(id)) {
+            surveyResponseRepository.deleteById(id);
+        } else {
+            throw new RuntimeException("Survey Response not found.");
+        }
     }
 }
