@@ -8,7 +8,6 @@ import com.yildiz.terapinisec.model.Participant;
 import com.yildiz.terapinisec.model.Session;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-
 import java.util.List;
 
 @Mapper(componentModel = "spring")
