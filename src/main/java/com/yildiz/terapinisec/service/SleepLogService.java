@@ -1,5 +1,9 @@
 package com.yildiz.terapinisec.service;
 
+import com.yildiz.terapinisec.dto.SleepLogCreateDto;
+import com.yildiz.terapinisec.dto.SleepLogDetailedDto;
+import com.yildiz.terapinisec.dto.SleepLogResponseDto;
+import com.yildiz.terapinisec.mapper.SleepLogMapper;
 import com.yildiz.terapinisec.model.SleepLog;
 import com.yildiz.terapinisec.repository.SleepLogRepository;
 import com.yildiz.terapinisec.util.SleepQuality;
@@ -10,7 +14,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class SleepLogService {
@@ -18,32 +21,35 @@ public class SleepLogService {
     @Autowired
     private SleepLogRepository sleepLogRepository;
 
+    @Autowired
+    private SleepLogMapper sleepLogMapper;
 
-    public List<SleepLog> getAllSleepLog() {
-        return sleepLogRepository.findAll();
+
+    public List<SleepLogResponseDto> getAllSleepLogs() {
+        List<SleepLog> sleepLogs = sleepLogRepository.findAll();
+        return sleepLogMapper.toSleepLogResponseDtoList(sleepLogs);
     }
 
-    public Optional<SleepLog> getSleepLogById(Long id) {
-        return sleepLogRepository.findById(id);
+    public SleepLogDetailedDto getSleepLogById(Long id) {
+        SleepLog sleepLog = sleepLogRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("SleepLog not found"));
+        return sleepLogMapper.toSleepLogDetailedDto(sleepLog);
     }
 
-    public SleepLog createSleepLog(SleepLog sleepLog) {
-        sleepLog.setSleepDuration(sleepLog.getSleepDuration());
-        sleepLog.setSleepDate(sleepLog.getSleepDate());
-        sleepLog.setSleepQuality(sleepLog.getSleepQuality());
-        sleepLog.setSleeper(sleepLog.getSleeper());
-        return sleepLogRepository.save(sleepLog);
+    public SleepLogResponseDto createSleepLog(SleepLogCreateDto sleepLogCreateDto) {
+        SleepLog sleepLog = sleepLogMapper.toSleepLog(sleepLogCreateDto);
+        SleepLog savedSleepLog = sleepLogRepository.save(sleepLog);
+        return sleepLogMapper.toSleepLogResponseDto(savedSleepLog);
     }
 
-    public SleepLog updateSleepLog(Long id ,SleepLog updatedSleepLog) {
-        return sleepLogRepository.findById(id)
-                .map(sleepLog -> {
-                    sleepLog.setSleepDuration(updatedSleepLog.getSleepDuration());
-                    sleepLog.setSleepDate(updatedSleepLog.getSleepDate());
-                    sleepLog.setSleepQuality(updatedSleepLog.getSleepQuality());
-                    return sleepLogRepository.save(sleepLog);
-                })
-                .orElseThrow(()->  new RuntimeException ("SleepLog not found"));
+    public SleepLogResponseDto updateSleepLog(Long id ,SleepLogCreateDto sleepLogCreateDto) {
+       SleepLog existingSleepLog = sleepLogRepository.findById(id)
+               .orElseThrow(() -> new RuntimeException("SleepLog not found"));
+
+       SleepLog updatedSleepLog = sleepLogMapper.toSleepLog(sleepLogCreateDto);
+       updatedSleepLog.setId(existingSleepLog.getId());
+       SleepLog savedSleepLog = sleepLogRepository.save(updatedSleepLog);
+       return sleepLogMapper.toSleepLogResponseDto(savedSleepLog);
     }
 
     public void deleteSleepLog(Long id) {
@@ -54,24 +60,29 @@ public class SleepLogService {
         }
     }
 
-    public Page<SleepLog> getSleepLogByUserId(Long userId, int page , int size) {
+    public Page<SleepLogResponseDto> getSleepLogByUserId(Long userId, int page , int size) {
         Pageable pageable = PageRequest.of(page, size);
-        return sleepLogRepository.findBySleeperId(userId,pageable);
+        Page<SleepLog> sleepLogs = sleepLogRepository.findBySleeperId(userId, pageable);
+        return sleepLogs.map(sleepLogMapper::toSleepLogResponseDto);
     }
 
-    public List<SleepLog>findBySleepDate(LocalDateTime sleepDate){
-        return sleepLogRepository.findBySleepDate(sleepDate);
+    public List<SleepLogResponseDto>findBySleepDate(LocalDateTime sleepDate){
+        List<SleepLog> sleepLogs = sleepLogRepository.findBySleepDate(sleepDate);
+        return sleepLogMapper.toSleepLogResponseDtoList(sleepLogs);
     }
 
-    public List<SleepLog>findBySleeperIdAndSleepDate(Long id, LocalDateTime sleepDate) {
-        return sleepLogRepository.findBySleeperIdAndSleepDate(id, sleepDate);
+    public List<SleepLogResponseDto>findBySleeperIdAndSleepDate(Long id, LocalDateTime sleepDate) {
+         List<SleepLog> sleepLogs = sleepLogRepository.findBySleeperIdAndSleepDate(id, sleepDate);
+         return sleepLogMapper.toSleepLogResponseDtoList(sleepLogs);
     }
 
-    public List<SleepLog>findBySleepQualityAndSleeperId(SleepQuality sleepQuality, Long id) {
-        return sleepLogRepository.findBySleepQualityAndSleeperId(sleepQuality, id);
+    public List<SleepLogResponseDto>findBySleepQualityAndSleeperId(SleepQuality sleepQuality, Long id) {
+        List<SleepLog> sleepLogs = sleepLogRepository.findBySleepQualityAndSleeperId(sleepQuality, id);
+        return sleepLogMapper.toSleepLogResponseDtoList(sleepLogs);
     }
 
-    public List<SleepLog>findByUserWithDetails(Long userId) {
-        return sleepLogRepository.findByUserWithDetails(userId);
+    public List<SleepLogDetailedDto>findByUserWithDetails(Long userId) {
+        List<SleepLog>sleepLogs = sleepLogRepository.findByUserWithDetails(userId);
+        return sleepLogMapper.toSleepLogDetailedDtoList(sleepLogs);
     }
 }
