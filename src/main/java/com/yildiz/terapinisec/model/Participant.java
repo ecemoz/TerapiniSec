@@ -24,5 +24,5 @@ public class Participant {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn( name = "session_id",nullable = false)
-    private Session participant;
+    private Session session;
 }

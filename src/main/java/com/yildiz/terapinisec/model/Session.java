@@ -35,6 +35,6 @@ public class Session {
     @Enumerated(EnumType.STRING)
     private SessionStatus sessionStatus = SessionStatus.SCHEDULED;
 
-    @OneToMany(mappedBy = "participant" , fetch = FetchType.LAZY , cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "session" , fetch = FetchType.LAZY , cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Participant> participants;
 }
