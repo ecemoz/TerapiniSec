@@ -1,5 +1,7 @@
 package com.yildiz.terapinisec.service;
 
+import com.yildiz.terapinisec.dto.ReportResponseDto;
+import com.yildiz.terapinisec.mapper.ReportMapper;
 import com.yildiz.terapinisec.model.MoodLog;
 import com.yildiz.terapinisec.model.Report;
 import com.yildiz.terapinisec.model.User;
@@ -33,20 +35,25 @@ public class ReportService {
     @Autowired
     private SleepLogRepository sleepLogRepository;
 
-    public Report generatePersonalizedWeeklyReport(Long userId) {
+    @Autowired
+    private ReportMapper reportMapper;
+
+    public ReportResponseDto generatePersonalizedWeeklyReport(Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User Not Found"));
 
         String content = generateWeeklyContent(user);
-        return createReport(userId, content, ReportSituation.WEEKLY);
+        Report report = createReport(userId, content, ReportSituation.WEEKLY);
+        return reportMapper.toReportResponseDto(report);
     }
 
-    public Report generatePersonalizedMonthlyReport(Long userId) {
+    public ReportResponseDto generatePersonalizedMonthlyReport(Long userId) {
         User user =userRepository.findById(userId)
                 .orElseThrow(() -> new RuntimeException("User Not Found"));
 
         String content = generateMonthlyContent(user);
-        return createReport(userId, content, ReportSituation.MONTHLY);
+        Report report = createReport(userId, content, ReportSituation.MONTHLY);
+        return reportMapper.toReportResponseDto(report);
     }
 
     private Report createReport(Long userId, String content, ReportSituation situation) {
@@ -174,19 +181,29 @@ public class ReportService {
         return suggestions.toString();
     }
 
-    public Report findByReportType(String reportType) {
-        return reportRepository.findByReportType(reportType);
+    public ReportResponseDto findByReportType(String reportType) {
+        Report report = reportRepository.findByReportType(reportType)
+                .orElseThrow(()-> new RuntimeException("Report not found for type:" + reportType));
+        return reportMapper.toReportResponseDto(report);
     }
 
-    public Report findByReportOwnerId(Long userId) {
-        return reportRepository.findByReportOwnerId(userId);
+    public ReportResponseDto findByReportOwnerId(Long userId) {
+        Report report = reportRepository.findByReportOwnerId(userId)
+                .orElseThrow(()-> new RuntimeException("Report not found for user:" + userId));
+        return reportMapper.toReportResponseDto(report);
     }
 
-    public Report findByReportOwnerIdAndReportType(Long userId, String reportType) {
-        return reportRepository.findByReportOwnerIdAndReportType(userId, reportType);
+    public ReportResponseDto findByReportOwnerIdAndReportType(Long userId, String reportType) {
+        Report report = reportRepository.findByReportOwnerIdAndReportType(userId, reportType)
+                .orElseThrow(()-> new RuntimeException("Report not found for user:" + userId + " and type:" + reportType));
+        return reportMapper.toReportResponseDto(report);
     }
 
-    List<Report> findByReportCreatedAt(LocalDateTime reportCreatedAt) {
-        return reportRepository.findByReportCreatedAt(reportCreatedAt);
+    List<ReportResponseDto> findByReportCreatedAt(LocalDateTime reportCreatedAt) {
+        List<Report> reports = reportRepository.findByReportCreatedAt(reportCreatedAt);
+        if (reports.isEmpty()) {
+            throw new RuntimeException("Report not found");
+        }
+        return reportMapper.toReportResponseDtoList(reports);
     }
 }
