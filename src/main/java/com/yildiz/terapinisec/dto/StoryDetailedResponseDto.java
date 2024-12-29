@@ -1,7 +1,6 @@
 package com.yildiz.terapinisec.dto;
 
 import lombok.Data;
-
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -14,6 +13,5 @@ public class StoryDetailedResponseDto {
     private LocalDateTime storyCreatedAt;
     private boolean isActive;
     private int viewCount;
-
     private List<StoryViewResponseDto> storyViews;
 }

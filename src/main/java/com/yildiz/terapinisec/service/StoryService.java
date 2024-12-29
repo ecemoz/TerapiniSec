@@ -1,5 +1,10 @@
 package com.yildiz.terapinisec.service;
 
+import com.yildiz.terapinisec.dto.StoryCreateDto;
+import com.yildiz.terapinisec.dto.StoryDetailedResponseDto;
+import com.yildiz.terapinisec.dto.StoryResponseDto;
+import com.yildiz.terapinisec.dto.StoryUpdateDto;
+import com.yildiz.terapinisec.mapper.StoryMapper;
 import com.yildiz.terapinisec.model.Story;
 import com.yildiz.terapinisec.repository.StoryRepository;
 import jakarta.transaction.Transactional;
@@ -7,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class StoryService {
@@ -15,26 +19,33 @@ public class StoryService {
     @Autowired
     private StoryRepository storyRepository;
 
-    public List<Story>getAllStories(){
-        return storyRepository.findAll();
+    @Autowired
+    private StoryMapper storyMapper;
+
+    public List<StoryResponseDto> getAllStories() {
+        List<Story> stories = storyRepository.findAll();
+        return storyMapper.toStoryResponseDtoList(stories);
     }
 
-    public Optional<Story> getStoryById(Long id){
-        return storyRepository.findById(id);
+    public StoryDetailedResponseDto getStoryById(Long id) {
+        Story story = storyRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Story not found"));
+        return storyMapper.toStoryDetailedResponseDto(story);
     }
 
-    public Story createStory(Story story){
-        return storyRepository.save(story);
+    public StoryResponseDto createStory(StoryCreateDto storyCreateDto) {
+        Story story = storyMapper.toStory(storyCreateDto);
+        Story savedStory = storyRepository.save(story);
+        return storyMapper.toStoryResponseDto(savedStory);
     }
 
-    public Story updateStory(Long id, Story updatedStory){
-        return storyRepository.findById(id)
-                .map(story -> {
-                   story.setDescription(updatedStory.getDescription());
-                   return storyRepository.save(story);
+    public StoryResponseDto updateStory(Long id, StoryUpdateDto storyUpdateDto) {
+        Story existingStory = storyRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Story not found"));
 
-                })
-                .orElseThrow(()-> new RuntimeException("Story not found"));
+        storyMapper.updateStory(storyUpdateDto, existingStory);
+        Story updatedStory = storyRepository.save(existingStory);
+        return storyMapper.toStoryResponseDto(updatedStory);
     }
 
     @Transactional
@@ -51,12 +62,16 @@ public class StoryService {
     public void deleteStory(Long id) {
         if (storyRepository.existsById(id)) {
             storyRepository.deleteById(id);
-        }else {
+        } else {
             throw new RuntimeException("Story not found");
         }
     }
 
-    public Story findByIsActiveTrue(){
-        return storyRepository.findByIsActiveTrue();
+    public StoryResponseDto findActiveStory() {
+        Story story = storyRepository.findByIsActiveTrue();
+        if (story == null) {
+            throw new RuntimeException("No active story found");
+        }
+        return storyMapper.toStoryResponseDto(story);
     }
 }
