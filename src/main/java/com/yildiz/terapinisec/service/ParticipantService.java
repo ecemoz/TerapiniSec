@@ -44,11 +44,12 @@ public class ParticipantService {
         List<Participant> participants = participantRepository.findByJoinedUserId(userId);
         return participantMapper.toParticipantDtoList(participants);
     }
-        public List<User> findJoinedUserBySessionId ( Long sessionId ){
-            return participantRepository.findJoinedUserBySessionId(sessionId);
-        }
 
-        public long countBySessionId (Long sessionId){
-            return participantRepository.countByParticipantId(sessionId);
+    public List<User> findJoinedUserBySessionId ( Long sessionId ){
+        return participantRepository.findJoinedUserBySessionId(sessionId);
+    }
+
+    public long countBySessionId (Long sessionId){
+        return participantRepository.countByParticipantId(sessionId);
         }
 }
