@@ -6,6 +6,8 @@ import com.yildiz.terapinisec.dto.StoryViewResponseDto;
 import com.yildiz.terapinisec.model.StoryView;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.springframework.data.domain.Page;
+
 import java.util.List;
 
 @Mapper(componentModel = "spring")
@@ -23,5 +25,7 @@ public interface StoryViewMapper {
     @Mapping(source = "user.username" , target = "username")
     StoryViewDetailedDto toStoryViewDetailedDto (StoryView storyView);
 
-    List<StoryViewResponseDto> toStoryViewResponseDtoList(List<StoryView> storyViews);
+    Page<StoryViewResponseDto> toStoryViewResponseDtoList(Page<StoryView> storyViews);
+
+    List<StoryViewDetailedDto> toStoryViewDetailedDtoList(List<StoryView> storyViews);
 }

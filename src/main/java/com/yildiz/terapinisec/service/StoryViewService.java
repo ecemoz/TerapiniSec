@@ -1,5 +1,9 @@
 package com.yildiz.terapinisec.service;
 
+import com.yildiz.terapinisec.dto.StoryViewCreateDto;
+import com.yildiz.terapinisec.dto.StoryViewDetailedDto;
+import com.yildiz.terapinisec.dto.StoryViewResponseDto;
+import com.yildiz.terapinisec.mapper.StoryViewMapper;
 import com.yildiz.terapinisec.model.Story;
 import com.yildiz.terapinisec.model.StoryView;
 import com.yildiz.terapinisec.model.User;
@@ -25,8 +29,26 @@ public class StoryViewService {
     @Autowired
     private UserRepository userRepository;
 
-    public StoryView createStoryView(StoryView storyView) {
-        return storyViewRepository.save(storyView);
+    @Autowired
+    private StoryViewMapper storyViewMapper;
+
+    public StoryViewResponseDto createStoryView(StoryViewCreateDto storyViewCreateDto) {
+        Story story = storyRepository.findById(storyViewCreateDto.getStoryId())
+                .orElseThrow(() -> new RuntimeException("Story Not Found"));
+
+        User user = userRepository.findById(storyViewCreateDto.getUserId())
+                .orElseThrow(() -> new RuntimeException("User Not Found"));
+
+        if (storyViewRepository.existsByStoryIdAndUserId(story.getId(), user.getId())) {
+            throw new RuntimeException("User has already viewed this story.");
+        }
+
+        StoryView storyView = storyViewMapper.toStoryView(storyViewCreateDto);
+        storyView.setStory(story);
+        storyView.setUser(user);
+
+        StoryView savedStoryView = storyViewRepository.save(storyView);
+        return storyViewMapper.toStoryViewResponseDto(savedStoryView);
     }
 
     public boolean hasUserViewedStory(Long storyId,Long userId) {
@@ -34,7 +56,7 @@ public class StoryViewService {
     }
 
     @Transactional
-    public StoryView addStoryView (Long storyId,Long userId) {
+    public StoryViewResponseDto addStoryView (Long storyId,Long userId) {
         if (storyViewRepository.existsByStoryIdAndUserId(storyId,userId)) {
             throw new RuntimeException("User has already  viewed story");
         }
@@ -49,22 +71,26 @@ public class StoryViewService {
         storyView.setStory(story);
         storyView.setUser(user);
 
-        return storyViewRepository.save(storyView);
+        StoryView savedStoryView = storyViewRepository.save(storyView);
+        return storyViewMapper.toStoryViewResponseDto(savedStoryView);
     }
 
     public long getViewCountForStory(Long storyId) {
         return storyViewRepository.countByStoryId(storyId);
     }
 
-    public Page<StoryView> getViewsForStory(Long storyId, Pageable pageable) {
-        return storyViewRepository.findByStoryId(storyId,pageable);
+    public Page<StoryViewResponseDto> getViewsForStory(Long storyId, Pageable pageable) {
+        Page<StoryView> storyViews = storyViewRepository.findByStoryId(storyId, pageable);
+        return storyViewMapper.toStoryViewResponseDtoList(storyViews);
     }
 
-    public Page<StoryView>getViewsForUser(Long userId, Pageable pageable) {
-        return storyViewRepository.findByUserId(userId,pageable);
+    public Page<StoryViewResponseDto>getViewsForUser(Long userId, Pageable pageable) {
+       Page<StoryView> storyViews = storyViewRepository.findByUserId(userId, pageable);
+       return storyViews.map(storyViewMapper::toStoryViewResponseDto);
     }
 
-    public List<StoryView>getViewsByUserWithStories(Long userId) {
-        return storyViewRepository.findViewsByUserWithStories(userId);
+    public List<StoryViewDetailedDto>getViewsByUserWithStories(Long userId) {
+        List<StoryView> storyViews = storyViewRepository.findViewsByUserWithStories(userId);
+        return storyViewMapper.toStoryViewDetailedDtoList(storyViews);
     }
 }
