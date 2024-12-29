@@ -1,5 +1,9 @@
 package com.yildiz.terapinisec.service;
 
+import com.yildiz.terapinisec.dto.SessionCreateDto;
+import com.yildiz.terapinisec.dto.SessionDetailedDto;
+import com.yildiz.terapinisec.dto.SessionResponseDto;
+import com.yildiz.terapinisec.mapper.SessionMapper;
 import com.yildiz.terapinisec.model.Participant;
 import com.yildiz.terapinisec.model.Session;
 import com.yildiz.terapinisec.repository.SessionRepository;
@@ -10,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class SessionService {
@@ -18,109 +21,112 @@ public class SessionService {
     @Autowired
     private SessionRepository sessionRepository;
 
-    public List<Session>getAllSessions(){
-        return sessionRepository.findAll();
+    @Autowired
+    private SessionMapper sessionMapper;
+
+    public List<SessionResponseDto> getAllSessions() {
+        List<Session> sessions = sessionRepository.findAll();
+        return sessionMapper.toSessionResponseDtoList(sessions);
     }
 
-    public Optional <Session> getSessionById(Long id) {
-        return sessionRepository.findById(id);
-    }
-
-    public Session createSession(Session session) {
-        session.setSessionName(session.getSessionName());
-        session.setSessionDateTime(session.getSessionDateTime());
-        session.setSessionType(session.getSessionType());
-        session.setSessionStatus(session.getSessionStatus());
-        session.setDurationMinutes(session.getDurationMinutes());
-        session.setParticipants(session.getParticipants());
-        return sessionRepository.save(session);
-    }
-
-    public Session updateSession(Long id ,Session updatedSession) {
-        return sessionRepository.findById(id)
-                .map(session -> {
-                    session.setSessionName(updatedSession.getSessionName());
-                    session.setSessionDateTime(updatedSession.getSessionDateTime());
-                    session.setSessionType(updatedSession.getSessionType());
-                    session.setDurationMinutes(updatedSession.getDurationMinutes());
-                    session.setParticipants(updatedSession.getParticipants());
-                    return sessionRepository.save(session);
-                })
+    public SessionDetailedDto getSessionById(Long id) {
+        Session session = sessionRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Session not found"));
+        return sessionMapper.toSessionDetailedDto(session);
+    }
+
+    public SessionResponseDto createSession(SessionCreateDto sessionCreateDto) {
+        Session session = sessionMapper.toSession(sessionCreateDto);
+        Session savedSession = sessionRepository.save(session);
+        return sessionMapper.toSessionResponseDtoList(List.of(savedSession)).get(0);
+    }
+
+    public SessionResponseDto updateSession(Long id, SessionCreateDto sessionCreateDto) {
+        Session existingSession = sessionRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Session not found"));
+
+        sessionMapper.toSession(sessionCreateDto);
+        Session updatedSession = sessionRepository.save(existingSession);
+        return sessionMapper.toSessionResponseDtoList(List.of(updatedSession)).get(0);
     }
 
     @Transactional
-    public Session  startSession(Long sessionId) {
+    public SessionResponseDto startSession(Long sessionId) {
         return updateSessionStatus(sessionId, SessionStatus.ACTIVE);
     }
 
     @Transactional
-    public Session completeSession(Long sessionId) {
-        return updateSessionStatus(sessionId,SessionStatus.COMPLETED);
+    public SessionResponseDto completeSession(Long sessionId) {
+        return updateSessionStatus(sessionId, SessionStatus.COMPLETED);
     }
 
     @Transactional
-    public Session cancelSession(Long sessionId) {
-        return updateSessionStatus(sessionId,SessionStatus.CANCELLED);
+    public SessionResponseDto cancelSession(Long sessionId) {
+        return updateSessionStatus(sessionId, SessionStatus.CANCELLED);
     }
 
-    private Session updateSessionStatus(Long sessionId, SessionStatus newStatus) {
-        return sessionRepository.findById(sessionId)
-                .map(session -> {
-                    validateStatusChange(session.getSessionStatus(),newStatus);
-                    session.setSessionStatus(newStatus);
-                    return sessionRepository.save(session);
-                })
-                .orElseThrow(()-> new RuntimeException("Session not found with ID: " +sessionId));
+    private SessionResponseDto updateSessionStatus(Long sessionId, SessionStatus newStatus) {
+        Session session = sessionRepository.findById(sessionId)
+                .orElseThrow(() -> new RuntimeException("Session not found"));
+
+        validateStatusChange(session.getSessionStatus(), newStatus);
+        session.setSessionStatus(newStatus);
+        Session updatedSession = sessionRepository.save(session);
+
+        return sessionMapper.toSessionResponseDtoList(List.of(updatedSession)).get(0);
     }
 
     private void validateStatusChange(SessionStatus currentStatus, SessionStatus newStatus) {
-        if (currentStatus ==SessionStatus.COMPLETED || currentStatus ==SessionStatus.CANCELLED) {
+        if (currentStatus == SessionStatus.COMPLETED || currentStatus == SessionStatus.CANCELLED) {
             throw new IllegalArgumentException("SessionStatus cannot be changed");
         }
     }
 
     private void deleteSession(Session session) {
-        if(session.getSessionStatus() == SessionStatus.COMPLETED) {
+        if (session.getSessionStatus() == SessionStatus.COMPLETED) {
             sessionRepository.delete(session);
-        } else if(session.getSessionStatus() == SessionStatus.CANCELLED) {
+        } else if (session.getSessionStatus() == SessionStatus.CANCELLED) {
             sessionRepository.delete(session);
         } else {
             throw new IllegalArgumentException("SessionStatus cannot be changed");
         }
     }
 
-     public List<Session>findBySessionType(SessionType sessionType) {
-        return sessionRepository.findBySessionType(sessionType);
-     }
+    public List<SessionResponseDto> findBySessionType(SessionType sessionType) {
+        List<Session> sessions = sessionRepository.findBySessionType(sessionType);
+        return sessionMapper.toSessionResponseDtoList(sessions);
+    }
 
 
-     public  List<Session>findBySessionNameContainingIgnoreCase(String keyword) {
-        return sessionRepository.findBySessionNameContainingIgnoreCase(keyword);
-     }
+    public List<SessionResponseDto> findBySessionNameContainingIgnoreCase(String keyword) {
+        List<Session> sessions = sessionRepository.findBySessionNameContainingIgnoreCase(keyword);
+        return sessionMapper.toSessionResponseDtoList(sessions);
+    }
 
-     public List<Session> getSessionByDate(LocalDateTime date) {
-         LocalDateTime startDateTime = date.toLocalDate().atStartOfDay();
-         LocalDateTime endDateTime = date.toLocalDate().atTime(23, 59, 59);
+    public List<SessionResponseDto> getSessionByDate(LocalDateTime date) {
+        LocalDateTime startDateTime = date.toLocalDate().atStartOfDay();
+        LocalDateTime endDateTime = date.toLocalDate().atTime(23, 59, 59);
 
-         return sessionRepository.findBySessionDateTimeBetween(startDateTime, endDateTime);
-     }
+        List<Session> sessions = sessionRepository.findBySessionDateTimeBetween(startDateTime, endDateTime);
+        return sessionMapper.toSessionResponseDtoList(sessions);
+    }
 
-     @Transactional
-    public void addParticipant (Long sessionId, Participant participant) {
+    @Transactional
+    public void addParticipant(Long sessionId, Participant participant) {
         Session session = sessionRepository.findById(sessionId)
-                .orElseThrow(() -> new RuntimeException("Session not found with ID: " +sessionId));
+                .orElseThrow(() -> new RuntimeException("Session not found with ID: " + sessionId));
 
         if (session.getParticipants().contains(participant)) {
             throw new IllegalArgumentException("Participant already exists");
         }
 
-         session.getParticipants().add(participant);
-         sessionRepository.save(session);
+        session.getParticipants().add(participant);
+        sessionRepository.save(session);
     }
 
-    public Session getSessionWithParticipants(Long sessionId) {
-        return sessionRepository.findByIdWithParticipants(sessionId)
-                .orElseThrow(() -> new RuntimeException("Session not found with ID: " +sessionId));
+    public SessionDetailedDto getSessionWithParticipants(Long sessionId) {
+        Session session = sessionRepository.findByIdWithParticipants(sessionId)
+                .orElseThrow(() -> new RuntimeException("Session not found with ID: " + sessionId));
+        return sessionMapper.toSessionDetailedDto(session);
     }
 }
