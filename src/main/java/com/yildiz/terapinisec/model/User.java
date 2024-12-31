@@ -89,7 +89,7 @@ public class User {
     private List<Specialization> specializations;
 
     @Column(nullable = false)
-    private String yearsOfExperience;
+    private int yearsOfExperience;
 
     @ElementCollection
     @CollectionTable(name = "user_available_times", joinColumns = @JoinColumn(name = "user_id"))

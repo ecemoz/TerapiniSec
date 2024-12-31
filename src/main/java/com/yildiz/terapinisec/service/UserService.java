@@ -47,13 +47,11 @@ public class UserService {
     }
 
     public UserResponseDto makeUserPremium(Long userId) {
-        User premiumUser = premiumService.upgradeToPremium(userId);
-        return userMapper.toUserResponseDto(premiumUser);
+        return premiumService.upgradeToPremium(userId);
     }
 
     public UserResponseDto removeUserPremium(Long userId) {
-        User downgradedUser = premiumService.downgradeFromPremium(userId);
-        return userMapper.toUserResponseDto(downgradedUser);
+       return premiumService.downgradeFromPremium(userId);
     }
 
     public void activePremium(Long userId) {
@@ -102,8 +100,8 @@ public class UserService {
 
 
     private void updatePsychologistFields(User existingUser, UserUpdateDto userUpdateDto) {
-        if (userUpdateDto.getSpecializations() != null) {
-            existingUser.setSpecializations(userUpdateDto.getSpecializations());
+        if (userUpdateDto.getSpecialization() != null) {
+            existingUser.setSpecializations(userUpdateDto.getSpecialization());
         }
 
         if (userUpdateDto.getYearsOfExperience() != null) {
