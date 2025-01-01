@@ -11,4 +11,4 @@ public class MeditationContentUpdateDto {
         private MeditationSessionType meditationSessionType;
         private String contentUrl;
         private boolean isPublic;
-    }
+}
