@@ -11,8 +11,8 @@ public class GoalResponseDto {
     private Long id;
     private List<GoalType> goalType;
     private String goalDescription;
-    private LocalDateTime goalStartTime;
-    private LocalDateTime goalEndTime;
+    private LocalDateTime goalStartDate;
+    private LocalDateTime goalEndDate;
     private boolean goalComplete;
     private String goalOwnerUsername;
 }

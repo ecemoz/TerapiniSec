@@ -6,10 +6,10 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
-public class GoalCreateDto {
+public class GoalUpdateDto {
 
     private List<GoalType> goalType;
     private String goalDescription;
     private LocalDateTime goalEndDate;
-    private Long goalOwnerId;
+    private boolean goalComplete;
 }
