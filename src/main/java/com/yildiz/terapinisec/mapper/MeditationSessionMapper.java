@@ -16,5 +16,4 @@ public interface MeditationSessionMapper {
     @Mapping(source = "meditator.username" , target = "meditatorUsername")
     @Mapping(source = "meditationContent.title" , target = "meditationContentTitle")
     MeditationSessionResponseDto toMeditationSessionResponseDto(MeditationSession meditationSession);
-
 }
