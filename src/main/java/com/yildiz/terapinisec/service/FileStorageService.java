@@ -1,7 +1,9 @@
 package com.yildiz.terapinisec.service;
 
+import com.yildiz.terapinisec.dto.FileStorageCreateDto;
+import com.yildiz.terapinisec.dto.FileStorageResponseDto;
+import com.yildiz.terapinisec.mapper.FileStorageMapper;
 import com.yildiz.terapinisec.model.FileStorage;
-import com.yildiz.terapinisec.model.User;
 import com.yildiz.terapinisec.repository.FileStorageRepository;
 import com.yildiz.terapinisec.util.FileType;
 import jakarta.annotation.PostConstruct;
@@ -29,42 +31,39 @@ import java.util.UUID;
 public class FileStorageService {
 
     private final FileStorageRepository fileStorageRepository;
+    private final FileStorageMapper fileStorageMapper;
     private final Path rootLocation = Paths.get("file-storage");
 
     @PostConstruct
     public void initStorage() {
         try {
-            Files.createDirectories(rootLocation.resolve("documents"));
-            Files.createDirectories(rootLocation.resolve("audio"));
-            Files.createDirectories(rootLocation.resolve("video"));
-            Files.createDirectories(rootLocation.resolve("images"));
+            for(FileType fileType : FileType.values()) {
+                Files.createDirectories(rootLocation.resolve(fileType.toString().toLowerCase()));
+            }
         }  catch (IOException e) {
             throw new RuntimeException("Could not initialize file storage", e);
         }
     }
 
-    public FileStorage uploadFile(MultipartFile file, FileType fileType, User documentUploader ) {
+    public FileStorageResponseDto uploadFile(MultipartFile file, FileStorageCreateDto fileStorageCreateDto ) {
+        String fileName = UUID.randomUUID() + "_" + file.getOriginalFilename();
+        Path directory = rootLocation.resolve(fileStorageCreateDto.getFileType().toString().toLowerCase());
+        Path destination = directory.resolve(fileName);
+
         try {
-            Path directory = rootLocation.resolve (fileType.toString().toLowerCase());
-            if (!Files.exists(directory)) {
-                Files.createDirectories(directory);
-            }
-
-            String fileName = UUID.randomUUID()+ "_" + file.getOriginalFilename();
-            Path destination = directory.resolve(fileName);
-            Files.copy(file.getInputStream(),destination, StandardCopyOption.REPLACE_EXISTING);
-
-            FileStorage fileStorage = new FileStorage();
-            fileStorage.setFileName(fileName);
-            fileStorage.setFileType(fileType);
-            fileStorage.setFilePath(fileType.toString().toLowerCase() + "/" + fileName);
-            fileStorage.setDocumentUploader(documentUploader);
-            fileStorage.setFileUploadDate(LocalDateTime.now());
-
-            return fileStorageRepository.save(fileStorage);
+            Files.createDirectories(directory);
+            Files.copy(file.getInputStream(), destination , StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
-            throw new RuntimeException("Failed to store file !", e);
+            throw new RuntimeException(" Failed to store file!", e);
         }
+
+        FileStorage fileStorage = fileStorageMapper.toFileStorage(fileStorageCreateDto);
+        fileStorage.setFileName(fileName);
+        fileStorage.setFilePath(fileStorageCreateDto.getFileType().toString().toLowerCase() + "/" + fileName);
+        fileStorage.setFileUploadDate(LocalDateTime.now());
+
+        FileStorage savedFileStorage = fileStorageRepository.save(fileStorage);
+        return fileStorageMapper.toFileStorageResponseDto(savedFileStorage);
     }
 
     public Resource downloadFile(String filePath) {
@@ -93,33 +92,43 @@ public class FileStorageService {
         }
     }
 
-    Page<FileStorage> findByUploaderId(Long uploaderId, Pageable pageable) {
-        return fileStorageRepository.findByUploaderId(uploaderId, pageable);
+    Page<FileStorageResponseDto> findByUploaderId(Long uploaderId, Pageable pageable) {
+        return fileStorageRepository.findByUploaderId(uploaderId, pageable)
+                .map(fileStorageMapper::toFileStorageResponseDto);
     }
 
-    List<FileStorage> findByFileType(FileType fileType) {
-        return fileStorageRepository.findByFileType(fileType);
+    List<FileStorageResponseDto> findByFileType(FileType fileType) {
+        List<FileStorage> fileStorages = fileStorageRepository.findByFileType(fileType);
+        return fileStorageMapper.toFileStorageResponseDtoList(fileStorages);
     }
 
-    List<FileStorage>findByFileNameContainingOrDescriptionContaining(String fileNameKeyWord, Pageable pageable) {
-        return fileStorageRepository.findByFileNameContainingOrDescriptionContaining(fileNameKeyWord, pageable);
+    List<FileStorageResponseDto>findByFileNameContainingOrDescriptionContaining(String fileNameKeyWord, Pageable pageable) {
+        List<FileStorage> fileStorages = fileStorageRepository.findByFileNameContainingOrDescriptionContaining(fileNameKeyWord, pageable);
+        return fileStorageMapper.toFileStorageResponseDtoList(fileStorages);
     }
-    List<FileStorage>findByUploaderIdAndFileType(Long uploaderId, FileType fileType) {
-        return fileStorageRepository.findByUploaderIdAndFileType(uploaderId, fileType);
+    List<FileStorageResponseDto>findByUploaderIdAndFileType(Long uploaderId, FileType fileType) {
+        List<FileStorage> fileStorages = fileStorageRepository.findByUploaderIdAndFileType(uploaderId, fileType);
+        return fileStorageMapper.toFileStorageResponseDtoList(fileStorages);
     }
-    List<FileStorage>findByIsPublicTrue() {
-        return fileStorageRepository.findByIsPublicTrue();
+    List<FileStorageResponseDto>findByIsPublicTrue() {
+        List<FileStorage> fileStorages = fileStorageRepository.findByIsPublicTrue();
+        return fileStorageMapper.toFileStorageResponseDtoList(fileStorages);
     }
-    List<FileStorage>findByUploaderIdAndIsPublicFalse(Long uploaderId) {
-        return fileStorageRepository.findByUploaderIdAndIsPublicFalse(uploaderId);
+
+    List<FileStorageResponseDto>findByUploaderIdAndIsPublicFalse(Long uploaderId) {
+       List<FileStorage> fileStorages = fileStorageRepository.findByUploaderIdAndIsPublicFalse(uploaderId);
+       return fileStorageMapper.toFileStorageResponseDtoList(fileStorages);
     }
-    List<FileStorage>findByUploadDateBetween(LocalDateTime startDate, LocalDateTime endDate) {
-        return fileStorageRepository.findByUploadDateBetween(startDate, endDate);
+    List<FileStorageResponseDto>findByUploadDateBetween(LocalDateTime startDate, LocalDateTime endDate) {
+       List<FileStorage> fileStorages = fileStorageRepository.findByUploadDateBetween(startDate, endDate);
+       return fileStorageMapper.toFileStorageResponseDtoList(fileStorages);
     }
-    List<FileStorage>findByUploaderIdAndUploadDateBetween(Long uploaderId, LocalDateTime startDate, LocalDateTime endDate) {
-        return fileStorageRepository.findByUploaderIdAndUploadDateBetween(uploaderId, startDate, endDate);
+    List<FileStorageResponseDto>findByUploaderIdAndUploadDateBetween(Long uploaderId, LocalDateTime startDate, LocalDateTime endDate) {
+        List<FileStorage> fileStorages = fileStorageRepository.findByUploaderIdAndUploadDateBetween(uploaderId, startDate, endDate);
+        return fileStorageMapper.toFileStorageResponseDtoList(fileStorages);
     }
-    FileStorage findByFileName(String fileName) {
-        return fileStorageRepository.findByFileName(fileName);
+    FileStorageResponseDto findByFileName(String fileName) {
+        FileStorage fileStorages = fileStorageRepository.findByFileName(fileName);
+        return fileStorageMapper.toFileStorageResponseDto(fileStorages);
     }
 }
