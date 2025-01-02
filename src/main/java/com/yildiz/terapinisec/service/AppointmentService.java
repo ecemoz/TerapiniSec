@@ -1,17 +1,19 @@
 package com.yildiz.terapinisec.service;
 
+import com.yildiz.terapinisec.dto.AppointmentCreateDto;
+import com.yildiz.terapinisec.dto.AppointmentResponseDto;
+import com.yildiz.terapinisec.dto.AppointmentUpdateDto;
+import com.yildiz.terapinisec.mapper.AppointmentMapper;
 import com.yildiz.terapinisec.model.Appointment;
 import com.yildiz.terapinisec.model.User;
 import com.yildiz.terapinisec.repository.AppointmentRepository;
 import com.yildiz.terapinisec.util.AppointmentStatus;
 import com.yildiz.terapinisec.util.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class AppointmentService {
@@ -19,25 +21,35 @@ public class AppointmentService {
     @Autowired
     private AppointmentRepository appointmentRepository;
 
-    public List<Appointment> getAllAppointments() {
-        return appointmentRepository.findAll();
+    @Autowired
+    private AppointmentMapper appointmentMapper;
+
+    public List<AppointmentResponseDto> getAllAppointments() {
+        List<Appointment> appointments = appointmentRepository.findAll();
+        return appointments.stream()
+                .map(appointmentMapper::toAppointmentResponseDto)
+                .collect(Collectors.toList());
     }
 
-    public Optional<Appointment> getAppointmentById(Long id) {
-        return appointmentRepository.findById(id);
+    public AppointmentResponseDto getAppointmentById(Long id) {
+        Appointment appointment = appointmentRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("appointment not found"));
+        return appointmentMapper.toAppointmentResponseDto(appointment);
     }
 
-    public Appointment createAppointment(Appointment appointment) {
-        return appointmentRepository.save(appointment);
+    public AppointmentResponseDto createAppointment(AppointmentCreateDto appointmentCreateDto) {
+        Appointment appointment = appointmentMapper.toAppointment(appointmentCreateDto);
+        Appointment savedAppointment = appointmentRepository.save(appointment);
+        return appointmentMapper.toAppointmentResponseDto(savedAppointment);
     }
 
-    public Appointment updateAppointment(Long id, Appointment updatedAppointment) {
-        return appointmentRepository.findById(id)
-                .map(appointment -> {
-                    appointment.setAppointmentDate(updatedAppointment.getAppointmentDate());
-                    return appointmentRepository.save(appointment);
-                })
-                .orElseThrow(() -> new RuntimeException("Appointment not found"));
+    public AppointmentResponseDto updateAppointment(Long id, AppointmentUpdateDto appointmentUpdateDto) {
+        Appointment existingAppointment = appointmentRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("appointment not found"));
+
+        appointmentMapper.updateAppointmentFromDto(appointmentUpdateDto, existingAppointment);
+        Appointment updatedAppointment = appointmentRepository.save(existingAppointment);
+        return appointmentMapper.toAppointmentResponseDto(updatedAppointment);
     }
 
     public Appointment updateAppointmentStatus(Long appointmentId, AppointmentStatus newStatus, User user) {
@@ -73,23 +85,28 @@ public class AppointmentService {
         }
     }
 
-    List<Appointment> findByAppointmentDateAfter(LocalDateTime appointmentDate) {
-        return appointmentRepository.findByAppointmentDateAfter(appointmentDate);
+    List<AppointmentResponseDto> findByAppointmentDateAfter(LocalDateTime appointmentDate) {
+       List<Appointment> appointments = appointmentRepository.findByAppointmentDateAfter(appointmentDate);
+       return appointmentMapper.toAppointmentResponseDtoList(appointments);
     }
 
-    Page<Appointment> findByAppointmentDateBetween(LocalDateTime appointmentDate1, LocalDateTime appointmentDate2, Pageable pageable) {
-        return appointmentRepository.findByAppointmentDateBetween(appointmentDate1, appointmentDate2, pageable);
+    List<AppointmentResponseDto> findByAppointmentDateBetween(LocalDateTime appointmentDate1, LocalDateTime appointmentDate2) {
+       List<Appointment> appointments = appointmentRepository.findByAppointmentDateBetween(appointmentDate1, appointmentDate2);
+       return appointmentMapper.toAppointmentResponseDtoList(appointments);
     }
 
-    List<Appointment> findByStatus(AppointmentStatus status) {
-        return appointmentRepository.findByStatus(status);
+    List<AppointmentResponseDto> findByStatus(AppointmentStatus status) {
+       List<Appointment> appointments = appointmentRepository.findByStatus(status);
+       return appointmentMapper.toAppointmentResponseDtoList(appointments);
     }
 
-    Page<Appointment> findByAppointmentDateBetweenAndStatus(LocalDateTime appointmentDate1, LocalDateTime appointmentDate2, AppointmentStatus status, Pageable pageable) {
-        return appointmentRepository.findByAppointmentDateBetweenAndStatus(appointmentDate1, appointmentDate2, status, pageable);
+    List<AppointmentResponseDto> findByAppointmentDateBetweenAndStatus(LocalDateTime appointmentDate1, LocalDateTime appointmentDate2, AppointmentStatus status) {
+        List<Appointment> appointments = appointmentRepository.findByAppointmentDateBetweenAndStatus(appointmentDate1, appointmentDate2, status);
+        return appointmentMapper.toAppointmentResponseDtoList(appointments);
     }
 
-    List<Appointment> findByUserId(Long userId) {
-        return appointmentRepository.findByUserId(userId);
+    List<AppointmentResponseDto> findByUserId(Long userId) {
+        List<Appointment> appointments = appointmentRepository.findByUserId(userId);
+        return appointmentMapper.toAppointmentResponseDtoList(appointments);
     }
 }
