@@ -13,8 +13,8 @@ import java.util.List;
 public interface AppointmentRepository extends JpaRepository<Appointment, Long> {
 
     List<Appointment>findByAppointmentDateAfter(LocalDateTime appointmentDate);
-    Page<Appointment> findByAppointmentDateBetween(LocalDateTime appointmentDate1, LocalDateTime appointmentDate2, Pageable pageable);
+    List<Appointment> findByAppointmentDateBetween(LocalDateTime appointmentDate1, LocalDateTime appointmentDate2, Pageable pageable);
     List<Appointment>findByStatus(AppointmentStatus status);
-    Page<Appointment>findByAppointmentDateBetweenAndStatus(LocalDateTime appointmentDate1, LocalDateTime appointmentDate2, AppointmentStatus status, Pageable pageable);
+    List<Appointment>findByAppointmentDateBetweenAndStatus(LocalDateTime appointmentDate1, LocalDateTime appointmentDate2, AppointmentStatus status, Pageable pageable);
     List<Appointment>findByUserId(Long userId);
 }

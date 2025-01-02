@@ -5,7 +5,6 @@ import com.yildiz.terapinisec.dto.AppointmentResponseDto;
 import com.yildiz.terapinisec.dto.AppointmentUpdateDto;
 import com.yildiz.terapinisec.dto.FileStorageResponseDto;
 import com.yildiz.terapinisec.model.Appointment;
-import com.yildiz.terapinisec.model.FileStorage;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
