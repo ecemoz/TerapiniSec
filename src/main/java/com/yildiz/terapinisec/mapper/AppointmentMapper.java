@@ -10,7 +10,6 @@ import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
-
 import java.util.List;
 
 @Mapper
@@ -27,5 +26,5 @@ public interface AppointmentMapper {
     void updateAppointmentFromDto(AppointmentUpdateDto appointmentUpdateDto, @MappingTarget Appointment appointment);
 
     @IterableMapping( elementTargetType = FileStorageResponseDto.class)
-    List<FileStorageResponseDto> toFileStorageResponseDtoList(List<FileStorage> fileStorageList);
+    List<AppointmentResponseDto> toAppointmentResponseDtoList(List<Appointment> appointments);
 }
