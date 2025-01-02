@@ -9,6 +9,6 @@ public class AppointmentCreateDto {
 
     private LocalDateTime appointmentTime;
     private Long appointmentClientId;
-    private Long threapistId;
+    private Long therapistId;
     private AppointmentStatus appointmentStatus = AppointmentStatus.PENDING;
 }
