@@ -46,19 +46,6 @@ public class TaskService {
         return taskMapper.toTaskResponseDto(savedTask);
     }
 
-    public TaskResponseDto updateDueDate(Long id, LocalDateTime newDueDate) {
-        Task task = taskRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Task not found"));
-
-        if(newDueDate.isBefore(LocalDateTime.now())) {
-            throw new RuntimeException("Due date cannot be before current date");
-        }
-
-        task.setDueDate(newDueDate);
-        Task updatedTask = taskRepository.save(task);
-        return taskMapper.toTaskResponseDto(updatedTask);
-    }
-
     public void deleteTask(Long id) {
         if (taskRepository.existsById(id)) {
             taskRepository.deleteById(id);
