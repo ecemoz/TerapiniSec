@@ -7,6 +7,7 @@ import com.yildiz.terapinisec.service.UserService;
 import com.yildiz.terapinisec.util.Specialization;
 import com.yildiz.terapinisec.util.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,7 +27,7 @@ public class UserController {
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
-    @GetMapping
+    @GetMapping("/{id}")
     public ResponseEntity<UserResponseDto> getUserById(@PathVariable Long id) {
         return ResponseEntity.ok(userService.getUserById(id));
     }
@@ -69,12 +70,12 @@ public class UserController {
     }
 
     @GetMapping("/last-login/before")
-    public ResponseEntity<List<UserResponseDto>> findByLastLoginBefore(@RequestParam LocalDateTime dateTime) {
+    public ResponseEntity<List<UserResponseDto>> findByLastLoginBefore(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dateTime) {
         return ResponseEntity.ok(userService.findByLastLoginDateTimeBefore(dateTime));
     }
 
     @GetMapping("/last-login/after")
-    public ResponseEntity<List<UserResponseDto>> findByLastLoginAfter(@RequestParam LocalDateTime dateTime) {
+    public ResponseEntity<List<UserResponseDto>> findByLastLoginAfter(@RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dateTime) {
         return ResponseEntity.ok(userService.findByLastLoginDateTimeAfter(dateTime));
     }
 
@@ -89,7 +90,7 @@ public class UserController {
     }
 
     @GetMapping("/speacialization")
-    public ResponseEntity<List<UserResponseDto>> findBySpeacializationContains(@RequestParam Specialization specialization) {
+    public ResponseEntity<List<UserResponseDto>> findBySpecializationContains(@RequestParam Specialization specialization) {
         return ResponseEntity.ok(userService.findBySpecializationContains(specialization));
     }
 
