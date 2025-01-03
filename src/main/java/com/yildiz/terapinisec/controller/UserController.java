@@ -3,6 +3,9 @@ package com.yildiz.terapinisec.controller;
 import com.yildiz.terapinisec.dto.UserCreateDto;
 import com.yildiz.terapinisec.dto.UserLoginDto;
 import com.yildiz.terapinisec.dto.UserResponseDto;
+import com.yildiz.terapinisec.dto.UserUpdateDto;
+import com.yildiz.terapinisec.mapper.UserMapper;
+import com.yildiz.terapinisec.model.User;
 import com.yildiz.terapinisec.service.UserService;
 import com.yildiz.terapinisec.util.Specialization;
 import com.yildiz.terapinisec.util.UserRole;
@@ -22,6 +25,9 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private UserMapper userMapper;
+
     @GetMapping
     public ResponseEntity<List<UserResponseDto>> getAllUsers() {
         return ResponseEntity.ok(userService.getAllUsers());
@@ -37,9 +43,16 @@ public class UserController {
         return ResponseEntity.ok(userService.createUser(userCreateDto));
     }
 
-    @PutMapping("/{id}")
+    @PutMapping("/{id}/update-phone")
     public ResponseEntity<UserResponseDto> updateUserPhoneNumber(@PathVariable Long id, @RequestParam String phoneNumber) {
         return ResponseEntity.ok(userService.updateUserPhoneNumber(id, phoneNumber));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<UserResponseDto> updateUser(@PathVariable Long id, @RequestBody UserUpdateDto userUpdateDto) {
+        User updatedUser = userService.updateUser(id, userUpdateDto);
+        UserResponseDto responseDto = userMapper.toUserResponseDto(updatedUser);
+        return ResponseEntity.ok(responseDto);
     }
 
     @PutMapping("/{id}/premium")
