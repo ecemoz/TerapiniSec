@@ -1,12 +1,15 @@
 package com.yildiz.terapinisec.service;
 
+import com.yildiz.terapinisec.dto.VoiceMessageCreateDto;
+import com.yildiz.terapinisec.dto.VoiceMessageResponseDto;
+import com.yildiz.terapinisec.mapper.AppointmentMapper;
+import com.yildiz.terapinisec.mapper.VoiceMessageMapper;
 import com.yildiz.terapinisec.model.VoiceMessage;
 import com.yildiz.terapinisec.repository.VoiceMessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import java.time.LocalDateTime;
 import java.util.List;
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class VoiceMessageService {
@@ -14,17 +17,29 @@ public class VoiceMessageService {
     @Autowired
     private VoiceMessageRepository voiceMessageRepository;
 
-    public List<VoiceMessage> getAllVoiceMessages() {
-        return voiceMessageRepository.findAll();
+    @Autowired
+    private VoiceMessageMapper voiceMessageMapper;
+
+    @Autowired
+    private AppointmentMapper appointmentMapper;
+
+    public List<VoiceMessageResponseDto> getAllVoiceMessages() {
+        List<VoiceMessage> voiceMessages = voiceMessageRepository.findAll();
+        return voiceMessages.stream()
+                .map(voiceMessageMapper::toResponseDto)
+                .collect(Collectors.toList());
     }
 
-    public Optional <VoiceMessage> getVoiceMessageById(Long id) {
-        return voiceMessageRepository.findById(id);
+    public VoiceMessageResponseDto getVoiceMessageById(Long id) {
+        VoiceMessage voiceMessage = voiceMessageRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("VoiceMessage not found"));
+        return voiceMessageMapper.toResponseDto(voiceMessage);
     }
 
-    public VoiceMessage createVoiceMessage(VoiceMessage voiceMessage) {
-        voiceMessage.setTimeStamp(LocalDateTime.now());
-        return voiceMessageRepository.save(voiceMessage);
+    public VoiceMessageResponseDto createVoiceMessage(VoiceMessageCreateDto voiceMessageCreateDto) {
+        VoiceMessage voiceMessage = voiceMessageMapper.toEntity(voiceMessageCreateDto);
+        voiceMessage = voiceMessageRepository.save(voiceMessage);
+        return voiceMessageMapper.toResponseDto(voiceMessage);
     }
 
     public void deleteVoiceMessage(Long id) {
@@ -35,19 +50,23 @@ public class VoiceMessageService {
         }
     }
 
-    public List<VoiceMessage>findBySpeakerId(Long senderId){
-        return voiceMessageRepository.findBySpeakerId(senderId);
+    public List<VoiceMessageResponseDto>findBySpeakerId(Long senderId){
+        List<VoiceMessage> voiceMessages = voiceMessageRepository.findBySpeakerId(senderId);
+        return voiceMessageMapper.toVoiceMessageResponseDtoList(voiceMessages);
     }
 
-    public List<VoiceMessage>findByListenerId(Long recipientId) {
-        return voiceMessageRepository.findByListenerId(recipientId);
+    public List<VoiceMessageResponseDto>findByListenerId(Long recipientId) {
+        List<VoiceMessage> voiceMessages = voiceMessageRepository.findByListenerId(recipientId);
+        return voiceMessageMapper.toVoiceMessageResponseDtoList(voiceMessages);
     }
 
-    public List<VoiceMessage>findBySpeakerIdAndListenerId(Long speakerId, Long listenerId) {
-        return voiceMessageRepository.findBySpeakerIdAndListenerId(speakerId, listenerId);
+    public List<VoiceMessageResponseDto>findBySpeakerIdAndListenerId(Long speakerId, Long listenerId) {
+       List<VoiceMessage> voiceMessages = voiceMessageRepository.findBySpeakerIdAndListenerId(speakerId, listenerId);
+       return voiceMessageMapper.toVoiceMessageResponseDtoList(voiceMessages);
     }
 
-    public VoiceMessage findByAudioUrl(String audioUrl) {
-        return voiceMessageRepository.findByAudioUrl(audioUrl);
+    public VoiceMessageResponseDto findByAudioUrl(String audioUrl) {
+        VoiceMessage voiceMessages = voiceMessageRepository.findByAudioUrl(audioUrl);
+        return voiceMessageMapper.toResponseDto(voiceMessages);
     }
 }
