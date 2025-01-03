@@ -124,20 +124,24 @@ public class UserService {
         }
     }
 
-    public User findByUsername(String username) {
-        return userRepository.findByUsername(username);
+    public UserResponseDto findByUsername(String username) {
+       User user = userRepository.findByUsername(username);
+       return userMapper.toUserResponseDto(user);
     }
 
-    public User findByFirstNameAndLastName(String firstName, String lastName) {
-        return userRepository.findByFirstNameAndLastName(firstName, lastName);
+    public UserResponseDto findByFirstNameAndLastName(String firstName, String lastName) {
+        User user = userRepository.findByFirstNameAndLastName(firstName, lastName);
+        return userMapper.toUserResponseDto(user);
     }
 
-    public User findByEmail(String email) {
-        return userRepository.findByEmail(email);
+    public UserResponseDto findByEmail(String email) {
+       User user = userRepository.findByEmail(email);
+       return userMapper.toUserResponseDto(user);
     }
 
-    public User findByPhoneNumber(String phoneNumber) {
-        return userRepository.findByPhoneNumber(phoneNumber);
+    public UserResponseDto findByPhoneNumber(String phoneNumber) {
+       User user = userRepository.findByPhoneNumber(phoneNumber);
+       return userMapper.toUserResponseDto(user);
     }
 
     public List<UserResponseDto>findByRole (UserRole role) {
