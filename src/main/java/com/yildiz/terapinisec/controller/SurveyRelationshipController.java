@@ -35,10 +35,7 @@ public class SurveyRelationshipController {
 
     @DeleteMapping("/{surveyId}/with-responses")
     public ResponseEntity<Void> deleteSurveyWithResponses(@PathVariable Long surveyId) {
-        surveyResponseService.findBySurveyId(surveyId).forEach(response ->
-                surveyResponseService.deleteSurveyResponse(response.getId())
-        );
-        surveyService.deleteSurvey(surveyId);
+        surveyRelationshipService.deleteSurveyWithResponses(surveyId);
         return ResponseEntity.noContent().build();
     }
 }
