@@ -32,8 +32,10 @@ public class SurveyResponseService {
         return surveyResponseMapper.toSurveyResponseResponseDto(surveyResponse);
     }
 
-    public SurveyResponse createSurveyResponse(SurveyResponse surveyResponse) {
-        return surveyResponseRepository.save(surveyResponse);
+    public SurveyResponsePostDto createSurveyResponse(SurveyResponseCreateDto surveyResponseCreateDto) {
+       SurveyResponse surveyResponse = surveyResponseMapper.toSurveyResponse(surveyResponseCreateDto);
+       SurveyResponse savedSurveyResponse = surveyResponseRepository.save(surveyResponse);
+       return surveyResponseMapper.toSurveyResponseResponseDto(savedSurveyResponse);
     }
 
     public  List<SurveyResponsePostDto>findByResponsedById(Long userId){
