@@ -47,7 +47,7 @@ public class SurveyController {
         return ResponseEntity.ok(surveyService.findByTitleContaining(title));
     }
 
-    @GetMapping("/user/{userId}")
+    @GetMapping("/{userId}")
     public ResponseEntity<List<SurveyPostDto>> getSurveyByUserId(@PathVariable Long userId) {
         return ResponseEntity.ok(surveyService.findSurveyByUserId(userId));
     }
