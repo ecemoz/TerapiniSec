@@ -3,7 +3,6 @@ package com.yildiz.terapinisec.controller;
 import com.yildiz.terapinisec.dto.SurveyResponseCreateDto;
 import com.yildiz.terapinisec.dto.SurveyResponsePostDto;
 import com.yildiz.terapinisec.service.SurveyRelationshipService;
-import com.yildiz.terapinisec.service.SurveyResponseService;
 import com.yildiz.terapinisec.service.SurveyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,9 +15,6 @@ public class SurveyRelationshipController {
 
    @Autowired
    private SurveyRelationshipService surveyRelationshipService;
-
-   @Autowired
-   private SurveyResponseService surveyResponseService;
 
    @Autowired
    private SurveyService surveyService;
