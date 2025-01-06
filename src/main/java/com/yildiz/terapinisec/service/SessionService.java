@@ -82,15 +82,18 @@ public class SessionService {
         }
     }
 
-    private void deleteSession(Session session) {
-        if (session.getSessionStatus() == SessionStatus.COMPLETED) {
-            sessionRepository.delete(session);
-        } else if (session.getSessionStatus() == SessionStatus.CANCELLED) {
+    @Transactional
+    public void deleteSession(Long sessionId) {
+        Session session = sessionRepository.findById(sessionId)
+                .orElseThrow(() -> new RuntimeException("Session not found"));
+
+        if (session.getSessionStatus() == SessionStatus.COMPLETED || session.getSessionStatus() == SessionStatus.CANCELLED) {
             sessionRepository.delete(session);
         } else {
-            throw new IllegalArgumentException("SessionStatus cannot be changed");
+            throw new IllegalArgumentException("Only COMPLETED or CANCELLED sessions can be deleted");
         }
     }
+
 
     public List<SessionResponseDto> findBySessionType(SessionType sessionType) {
         List<Session> sessions = sessionRepository.findBySessionType(sessionType);
