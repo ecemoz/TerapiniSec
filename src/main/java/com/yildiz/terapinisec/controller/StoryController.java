@@ -29,7 +29,7 @@ public class StoryController {
     }
 
     @PostMapping
-    public ResponseEntity<StoryResponseDto> createStory(@PathVariable StoryCreateDto storyCreateDto) {
+    public ResponseEntity<StoryResponseDto> createStory(@RequestBody StoryCreateDto storyCreateDto) {
         return ResponseEntity.ok(storyService.createStory(storyCreateDto));
     }
 

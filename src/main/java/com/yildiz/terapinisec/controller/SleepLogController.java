@@ -30,12 +30,12 @@ public class SleepLogController {
     }
 
     @PostMapping
-    public ResponseEntity<SleepLogResponseDto> createSleeplog(SleepLogCreateDto sleepLogCreateDto) {
+    public ResponseEntity<SleepLogResponseDto> createSleeplog(@RequestBody SleepLogCreateDto sleepLogCreateDto) {
         return ResponseEntity.ok(sleepLogService.createSleepLog(sleepLogCreateDto));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<SleepLogResponseDto> updateSleeplog(SleepLogCreateDto sleepLogCreateDto, @PathVariable Long id) {
+    public ResponseEntity<SleepLogResponseDto> updateSleeplog(@RequestBody SleepLogCreateDto sleepLogCreateDto, @PathVariable Long id) {
         return ResponseEntity.ok(sleepLogService.updateSleepLog(id, sleepLogCreateDto));
     }
 
