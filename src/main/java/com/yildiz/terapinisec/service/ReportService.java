@@ -199,7 +199,7 @@ public class ReportService {
         return reportMapper.toReportResponseDto(report);
     }
 
-    List<ReportResponseDto> findByReportCreatedAt(LocalDateTime reportCreatedAt) {
+    public List<ReportResponseDto> findByReportCreatedAt(LocalDateTime reportCreatedAt) {
         List<Report> reports = reportRepository.findByReportCreatedAt(reportCreatedAt);
         if (reports.isEmpty()) {
             throw new RuntimeException("Report not found");
