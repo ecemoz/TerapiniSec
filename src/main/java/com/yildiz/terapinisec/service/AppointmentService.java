@@ -105,7 +105,7 @@ public class AppointmentService {
         return appointmentMapper.toAppointmentResponseDtoList(appointments);
     }
 
-    public List<AppointmentResponseDto> findByUserId(Long userId) {
+    public List<AppointmentResponseDto> findAppointmentByUserId(Long userId) {
         List<Appointment> appointments = appointmentRepository.findByUserId(userId);
         return appointmentMapper.toAppointmentResponseDtoList(appointments);
     }
