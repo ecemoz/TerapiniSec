@@ -14,7 +14,7 @@ public interface FileStorageRepository extends JpaRepository<FileStorage, Long> 
 
     Page<FileStorage>findByUploaderId(Long uploaderId, Pageable pageable);
     List<FileStorage> findByFileType(FileType fileType);
-    List<FileStorage>findByFileNameContainingOrDescriptionContaining(String fileNameKeyWord, Pageable pageable);
+    List<FileStorage>findByFileNameContainingOrDescriptionContaining(String fileNameKeyWord);
     List<FileStorage>findByUploaderIdAndFileType(Long uploaderId, FileType fileType);
     List<FileStorage>findByIsPublicTrue();
     List<FileStorage>findByUploaderIdAndIsPublicFalse(Long uploaderId);

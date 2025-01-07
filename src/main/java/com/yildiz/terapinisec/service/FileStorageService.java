@@ -102,8 +102,8 @@ public class FileStorageService {
         return fileStorageMapper.toFileStorageResponseDtoList(fileStorages);
     }
 
-    public List<FileStorageResponseDto>findByFileNameContainingOrDescriptionContaining(String fileNameKeyWord, Pageable pageable) {
-        List<FileStorage> fileStorages = fileStorageRepository.findByFileNameContainingOrDescriptionContaining(fileNameKeyWord, pageable);
+    public List<FileStorageResponseDto>findByFileNameContainingOrDescriptionContaining(String fileNameKeyWord) {
+        List<FileStorage> fileStorages = fileStorageRepository.findByFileNameContainingOrDescriptionContaining(fileNameKeyWord);
         return fileStorageMapper.toFileStorageResponseDtoList(fileStorages);
     }
     public List<FileStorageResponseDto>findByUploaderIdAndFileType(Long uploaderId, FileType fileType) {
