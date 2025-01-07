@@ -92,42 +92,42 @@ public class FileStorageService {
         }
     }
 
-    Page<FileStorageResponseDto> findByUploaderId(Long uploaderId, Pageable pageable) {
+    public Page<FileStorageResponseDto> findByUploaderId(Long uploaderId, Pageable pageable) {
         return fileStorageRepository.findByUploaderId(uploaderId, pageable)
                 .map(fileStorageMapper::toFileStorageResponseDto);
     }
 
-    List<FileStorageResponseDto> findByFileType(FileType fileType) {
+    public List<FileStorageResponseDto> findByFileType(FileType fileType) {
         List<FileStorage> fileStorages = fileStorageRepository.findByFileType(fileType);
         return fileStorageMapper.toFileStorageResponseDtoList(fileStorages);
     }
 
-    List<FileStorageResponseDto>findByFileNameContainingOrDescriptionContaining(String fileNameKeyWord, Pageable pageable) {
+    public List<FileStorageResponseDto>findByFileNameContainingOrDescriptionContaining(String fileNameKeyWord, Pageable pageable) {
         List<FileStorage> fileStorages = fileStorageRepository.findByFileNameContainingOrDescriptionContaining(fileNameKeyWord, pageable);
         return fileStorageMapper.toFileStorageResponseDtoList(fileStorages);
     }
-    List<FileStorageResponseDto>findByUploaderIdAndFileType(Long uploaderId, FileType fileType) {
+    public List<FileStorageResponseDto>findByUploaderIdAndFileType(Long uploaderId, FileType fileType) {
         List<FileStorage> fileStorages = fileStorageRepository.findByUploaderIdAndFileType(uploaderId, fileType);
         return fileStorageMapper.toFileStorageResponseDtoList(fileStorages);
     }
-    List<FileStorageResponseDto>findByIsPublicTrue() {
+    public List<FileStorageResponseDto>findByIsPublicTrue() {
         List<FileStorage> fileStorages = fileStorageRepository.findByIsPublicTrue();
         return fileStorageMapper.toFileStorageResponseDtoList(fileStorages);
     }
 
-    List<FileStorageResponseDto>findByUploaderIdAndIsPublicFalse(Long uploaderId) {
+    public List<FileStorageResponseDto>findByUploaderIdAndIsPublicFalse(Long uploaderId) {
        List<FileStorage> fileStorages = fileStorageRepository.findByUploaderIdAndIsPublicFalse(uploaderId);
        return fileStorageMapper.toFileStorageResponseDtoList(fileStorages);
     }
-    List<FileStorageResponseDto>findByUploadDateBetween(LocalDateTime startDate, LocalDateTime endDate) {
+    public List<FileStorageResponseDto>findByUploadDateBetween(LocalDateTime startDate, LocalDateTime endDate) {
        List<FileStorage> fileStorages = fileStorageRepository.findByUploadDateBetween(startDate, endDate);
        return fileStorageMapper.toFileStorageResponseDtoList(fileStorages);
     }
-    List<FileStorageResponseDto>findByUploaderIdAndUploadDateBetween(Long uploaderId, LocalDateTime startDate, LocalDateTime endDate) {
+    public List<FileStorageResponseDto>findByUploaderIdAndUploadDateBetween(Long uploaderId, LocalDateTime startDate, LocalDateTime endDate) {
         List<FileStorage> fileStorages = fileStorageRepository.findByUploaderIdAndUploadDateBetween(uploaderId, startDate, endDate);
         return fileStorageMapper.toFileStorageResponseDtoList(fileStorages);
     }
-    FileStorageResponseDto findByFileName(String fileName) {
+    public FileStorageResponseDto findByFileName(String fileName) {
         FileStorage fileStorages = fileStorageRepository.findByFileName(fileName);
         return fileStorageMapper.toFileStorageResponseDto(fileStorages);
     }
