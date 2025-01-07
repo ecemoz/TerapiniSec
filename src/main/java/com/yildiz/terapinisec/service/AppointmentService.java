@@ -85,27 +85,27 @@ public class AppointmentService {
         }
     }
 
-    List<AppointmentResponseDto> findByAppointmentDateAfter(LocalDateTime appointmentDate) {
+    public List<AppointmentResponseDto> findByAppointmentDateAfter(LocalDateTime appointmentDate) {
        List<Appointment> appointments = appointmentRepository.findByAppointmentDateAfter(appointmentDate);
        return appointmentMapper.toAppointmentResponseDtoList(appointments);
     }
 
-    List<AppointmentResponseDto> findByAppointmentDateBetween(LocalDateTime appointmentDate1, LocalDateTime appointmentDate2) {
+    public List<AppointmentResponseDto> findByAppointmentDateBetween(LocalDateTime appointmentDate1, LocalDateTime appointmentDate2) {
        List<Appointment> appointments = appointmentRepository.findByAppointmentDateBetween(appointmentDate1, appointmentDate2);
        return appointmentMapper.toAppointmentResponseDtoList(appointments);
     }
 
-    List<AppointmentResponseDto> findByStatus(AppointmentStatus status) {
+    public List<AppointmentResponseDto> findByStatus(AppointmentStatus status) {
        List<Appointment> appointments = appointmentRepository.findByStatus(status);
        return appointmentMapper.toAppointmentResponseDtoList(appointments);
     }
 
-    List<AppointmentResponseDto> findByAppointmentDateBetweenAndStatus(LocalDateTime appointmentDate1, LocalDateTime appointmentDate2, AppointmentStatus status) {
+    public List<AppointmentResponseDto> findByAppointmentDateBetweenAndStatus(LocalDateTime appointmentDate1, LocalDateTime appointmentDate2, AppointmentStatus status) {
         List<Appointment> appointments = appointmentRepository.findByAppointmentDateBetweenAndStatus(appointmentDate1, appointmentDate2, status);
         return appointmentMapper.toAppointmentResponseDtoList(appointments);
     }
 
-    List<AppointmentResponseDto> findByUserId(Long userId) {
+    public List<AppointmentResponseDto> findByUserId(Long userId) {
         List<Appointment> appointments = appointmentRepository.findByUserId(userId);
         return appointmentMapper.toAppointmentResponseDtoList(appointments);
     }
