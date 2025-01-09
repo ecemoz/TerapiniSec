@@ -44,6 +44,6 @@ public class FileStorage {
     private boolean isFilePublic = true;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
+    @JoinColumn(name = "document_uploader_id", nullable = false)
     private User documentUploader;
 }

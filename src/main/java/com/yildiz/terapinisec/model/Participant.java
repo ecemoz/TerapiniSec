@@ -15,11 +15,17 @@ public class Participant {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id ;
 
+    @Column(unique = true, nullable = false)
+    private String username;
+
+    @Column(unique = true, nullable = false)
+    private String email;
+
     @Column(nullable = false)
     private LocalDateTime joinedAt;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn( name = "user_id", nullable = false)
+    @JoinColumn( name = "joined_user_id", nullable = false)
     private User joinedUser;
 
     @ManyToOne(fetch = FetchType.LAZY)

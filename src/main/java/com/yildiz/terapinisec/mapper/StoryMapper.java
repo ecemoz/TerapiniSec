@@ -10,7 +10,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import java.util.List;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = StoryViewMapper.class)
 public interface StoryMapper {
 
     Story toStory(StoryCreateDto storyCreateDto);

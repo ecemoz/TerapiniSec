@@ -8,6 +8,7 @@ public class ParticipantDto {
 
     private Long id ;
     private LocalDateTime joinedAt;
-    private String username;
+    private String participantName;
+    private String participantEmail;
     private Long sessionId;
 }
