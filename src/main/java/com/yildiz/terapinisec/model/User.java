@@ -134,9 +134,6 @@ public class User {
     @OneToMany(mappedBy = "fileUploader")
     private List<LibraryDocument> libraryDocuments;
 
-    @OneToMany(mappedBy = "notiRecievier")
-    private List<Notification> notifications;
-
     @OneToMany(mappedBy = "documentUploader")
     private List<FileStorage> documents;
 
@@ -175,5 +172,4 @@ public class User {
 //o	OneToMany – MeditationSession: Kullanıcının meditasyon ve mindfulness seansları.
 //o	OneToMany – VoiceMessage: Kullanıcı tarafından gönderilen sesli mesajlar.
 //o	OneToMany – LibraryDocument: Psikologların yüklediği belgeler.
-//o	OneToMany – Notification: Kullanıcının aldığı bildirimler.
 //o	OneToMany – FileStorage: Kullanıcının yüklediği dosyalar.
