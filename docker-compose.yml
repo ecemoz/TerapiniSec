@@ -12,6 +12,7 @@ services:
 
   kafka:
     image: bitnami/kafka:latest
+
     container_name: kafka
     environment:
       - KAFKA_BROKER_ID=1
