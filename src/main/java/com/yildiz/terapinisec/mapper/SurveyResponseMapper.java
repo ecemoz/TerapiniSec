@@ -2,18 +2,43 @@ package com.yildiz.terapinisec.mapper;
 
 import com.yildiz.terapinisec.dto.SurveyResponseCreateDto;
 import com.yildiz.terapinisec.dto.SurveyResponsePostDto;
+import com.yildiz.terapinisec.model.Survey;
 import com.yildiz.terapinisec.model.SurveyResponse;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-;
+import com.yildiz.terapinisec.model.User;
+import org.springframework.stereotype.Component;
 
-@Mapper(componentModel = "spring")
-public interface SurveyResponseMapper {
+@Component
+public class SurveyResponseMapper {
 
-    @Mapping(source = "userId" , target = "responsedBy.id")
-    @Mapping(source = "surveyId" , target = "survey.id" )
-    SurveyResponse toSurveyResponse(SurveyResponseCreateDto surveyResponseCreateDto);
+    public SurveyResponse toSurveyResponse(SurveyResponseCreateDto createDto, User user, Survey survey) {
+        if (createDto == null || user == null || survey == null) {
+            return null;
+        }
 
-    @Mapping( source = "responsedBy.username" , target = "respondedByUsername")
-    SurveyResponsePostDto toSurveyResponseResponseDto(SurveyResponse surveyResponse);
+        return SurveyResponse.builder()
+                .responses(createDto.getResponses())
+                .responsedBy(user)
+                .survey(survey)
+                .build();
+    }
+
+    public SurveyResponsePostDto toSurveyResponsePostDto(SurveyResponse surveyResponse) {
+        if (surveyResponse == null) {
+            return null;
+        }
+
+        return SurveyResponsePostDto.builder()
+                .id(surveyResponse.getId())
+                .responses(surveyResponse.getResponses())
+                .submittedDate(surveyResponse.getSubmittedDate())
+                .respondedByUsername(
+                        surveyResponse.getResponsedBy() != null
+                                ? surveyResponse.getResponsedBy().getUsername()
+                                : null)
+                .surveyId(
+                        surveyResponse.getSurvey() != null
+                                ? surveyResponse.getSurvey().getId()
+                                : null)
+                .build();
+    }
 }

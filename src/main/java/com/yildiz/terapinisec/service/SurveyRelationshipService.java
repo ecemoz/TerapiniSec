@@ -6,6 +6,8 @@ import com.yildiz.terapinisec.mapper.SurveyResponseMapper;
 import com.yildiz.terapinisec.model.Survey;
 import com.yildiz.terapinisec.model.SurveyResponse;
 import com.yildiz.terapinisec.repository.SurveyResponseRepository;
+import com.yildiz.terapinisec.repository.SurveyRepository;
+import com.yildiz.terapinisec.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -25,19 +27,30 @@ public class SurveyRelationshipService {
     @Autowired
     private SurveyResponseRepository surveyResponseRepository;
 
+    @Autowired
+    private SurveyRepository surveyRepository;
+
+    @Autowired
+    private UserRepository userRepository;
+
+
     public List<SurveyResponsePostDto> getResponsesBySurvey(Long surveyId) {
         return surveyResponseService.findBySurveyId(surveyId);
     }
 
     public SurveyResponsePostDto addResponseToSurvey(Long surveyId, SurveyResponseCreateDto surveyResponseCreateDto) {
-        Survey survey = surveyService.getSurveyEntityById(surveyId)
+        Survey survey = surveyRepository.findById(surveyId)
                 .orElseThrow(() -> new RuntimeException("Survey not found"));
 
-        SurveyResponse surveyResponse = surveyResponseMapper.toSurveyResponse(surveyResponseCreateDto);
-        surveyResponse.setSurvey(survey);
+        SurveyResponse surveyResponse = surveyResponseMapper.toSurveyResponse(
+                surveyResponseCreateDto,
+                userRepository.findById(surveyResponseCreateDto.getUserId())
+                        .orElseThrow(() -> new RuntimeException("User not found")),
+                survey);
 
         SurveyResponse createdResponse = surveyResponseRepository.save(surveyResponse);
-        return surveyResponseMapper.toSurveyResponseResponseDto(createdResponse);
+
+        return surveyResponseMapper.toSurveyResponsePostDto(createdResponse);
     }
 
     public void deleteSurveyWithResponses(Long surveyId) {
