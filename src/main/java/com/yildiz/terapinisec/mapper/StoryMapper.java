@@ -1,9 +1,6 @@
 package com.yildiz.terapinisec.mapper;
 
-import com.yildiz.terapinisec.dto.StoryCreateDto;
-import com.yildiz.terapinisec.dto.StoryDetailedResponseDto;
-import com.yildiz.terapinisec.dto.StoryResponseDto;
-import com.yildiz.terapinisec.dto.StoryUpdateDto;
+import com.yildiz.terapinisec.dto.*;
 import com.yildiz.terapinisec.model.Story;
 import org.springframework.stereotype.Component;
 import java.util.List;
@@ -56,7 +53,7 @@ public class StoryMapper {
                                 ? story.getStoryViews().stream()
                                 .map(storyView -> StoryViewResponseDto.builder()
                                         .id(storyView.getId())
-                                        .viewerUsername(storyView.getViewer().getUsername())
+                                        .userId(storyView.getUser() != null ? storyView.getUser().getId() : null)
                                         .viewedAt(storyView.getViewedAt())
                                         .build())
                                 .collect(Collectors.toList())
@@ -64,6 +61,7 @@ public class StoryMapper {
                 )
                 .build();
     }
+
 
     public void updateStoryFromDto(StoryUpdateDto updateDto, Story story) {
         if (updateDto == null || story == null) {

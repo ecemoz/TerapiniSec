@@ -33,6 +33,7 @@ public class StoryViewService {
     private StoryViewMapper storyViewMapper;
 
     public StoryViewResponseDto createStoryView(StoryViewCreateDto storyViewCreateDto) {
+
         Story story = storyRepository.findById(storyViewCreateDto.getStoryId())
                 .orElseThrow(() -> new RuntimeException("Story Not Found"));
 
@@ -43,13 +44,12 @@ public class StoryViewService {
             throw new RuntimeException("User has already viewed this story.");
         }
 
-        StoryView storyView = storyViewMapper.toStoryView(storyViewCreateDto);
-        storyView.setStory(story);
-        storyView.setUser(user);
-
+        StoryView storyView = storyViewMapper.toStoryView(storyViewCreateDto, story, user);
         StoryView savedStoryView = storyViewRepository.save(storyView);
+
         return storyViewMapper.toStoryViewResponseDto(savedStoryView);
     }
+
 
     public boolean hasUserViewedStory(Long storyId,Long userId) {
         return storyViewRepository.existsByStoryIdAndUserId(storyId,userId);
@@ -81,7 +81,7 @@ public class StoryViewService {
 
     public Page<StoryViewResponseDto> getViewsForStory(Long storyId, Pageable pageable) {
         Page<StoryView> storyViews = storyViewRepository.findByStoryId(storyId, pageable);
-        return storyViewMapper.toStoryViewResponseDtoList(storyViews);
+        return storyViews.map(storyViewMapper::toStoryViewResponseDto);
     }
 
     public Page<StoryViewResponseDto>getViewsForUser(Long userId, Pageable pageable) {
