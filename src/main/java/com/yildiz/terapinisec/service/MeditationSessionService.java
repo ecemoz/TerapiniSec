@@ -3,8 +3,12 @@ package com.yildiz.terapinisec.service;
 import com.yildiz.terapinisec.dto.MeditationSessionCreateDto;
 import com.yildiz.terapinisec.dto.MeditationSessionResponseDto;
 import com.yildiz.terapinisec.mapper.MeditationSessionMapper;
+import com.yildiz.terapinisec.model.MeditationContent;
 import com.yildiz.terapinisec.model.MeditationSession;
+import com.yildiz.terapinisec.model.User;
+import com.yildiz.terapinisec.repository.MeditationContentRepository;
 import com.yildiz.terapinisec.repository.MeditationSessionRepository;
+import com.yildiz.terapinisec.repository.UserRepository;
 import com.yildiz.terapinisec.util.MeditationSessionType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,6 +24,13 @@ public class MeditationSessionService {
     @Autowired
     private MeditationSessionMapper meditationSessionMapper;
 
+    @Autowired
+    private UserRepository userRepository;
+
+    @Autowired
+    private MeditationContentRepository meditationContentRepository;
+
+
     public List<MeditationSessionResponseDto> getAllMeditationSession() {
         List<MeditationSession> sessions = meditationSessionRepository.findAll();
         return sessions.stream()
@@ -34,10 +45,18 @@ public class MeditationSessionService {
     }
 
     public MeditationSessionResponseDto createMeditationSession(MeditationSessionCreateDto meditationSessionCreateDto) {
-       MeditationSession session = meditationSessionMapper.toMeditationSession(meditationSessionCreateDto);
-       MeditationSession savedSession = meditationSessionRepository.save(session);
-       return meditationSessionMapper.toMeditationSessionResponseDto(savedSession);
+
+        User meditator = userRepository.findById(meditationSessionCreateDto.getMeditatorId())
+                .orElseThrow(() -> new RuntimeException("User not found with ID: " + meditationSessionCreateDto.getMeditatorId()));
+
+        MeditationContent meditationContent = meditationContentRepository.findById(meditationSessionCreateDto.getMeditationContentId())
+                .orElseThrow(() -> new RuntimeException("Meditation content not found with ID: " + meditationSessionCreateDto.getMeditationContentId()));
+
+        MeditationSession session = meditationSessionMapper.toMeditationSession(meditationSessionCreateDto, meditator, meditationContent);
+        MeditationSession savedSession = meditationSessionRepository.save(session);
+        return meditationSessionMapper.toMeditationSessionResponseDto(savedSession);
     }
+
 
     public  List<MeditationSessionResponseDto>findByMeditatorId(Long id) {
         List<MeditationSession> sessions = meditationSessionRepository.findByMeditatorId(id);
