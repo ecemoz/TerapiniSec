@@ -1,9 +1,11 @@
 package com.yildiz.terapinisec.dto;
 
 import com.yildiz.terapinisec.util.FileType;
+import lombok.Builder;
 import lombok.Data;
 
 @Data
+@Builder
 public class FileStorageCreateDto {
 
     private String fileName;

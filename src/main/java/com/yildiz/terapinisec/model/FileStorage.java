@@ -2,11 +2,14 @@ package com.yildiz.terapinisec.model;
 
 import com.yildiz.terapinisec.util.FileType;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+
 import java.time.LocalDateTime;
 
 @Entity
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 @Table(name = "filestorage")

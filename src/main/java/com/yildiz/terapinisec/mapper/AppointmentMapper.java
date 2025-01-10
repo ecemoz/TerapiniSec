@@ -12,7 +12,6 @@ import java.util.stream.Collectors;
 @Component
 public class AppointmentMapper {
 
-    // Create DTO -> Model dönüşümü
     public Appointment toAppointment(AppointmentCreateDto createDto, User client, User therapist) {
         if (createDto == null) {
             return null;
@@ -26,7 +25,6 @@ public class AppointmentMapper {
                 .build();
     }
 
-    // Model -> Response DTO dönüşümü
     public AppointmentResponseDto toAppointmentResponseDto(Appointment appointment) {
         if (appointment == null) {
             return null;
@@ -53,14 +51,13 @@ public class AppointmentMapper {
         appointment.setAppointmentStatus(updateDto.getAppointmentStatus());
     }
 
-    // Liste dönüşümü: Model -> Response DTO
     public List<AppointmentResponseDto> toAppointmentResponseDtoList(List<Appointment> appointments) {
         if (appointments == null || appointments.isEmpty()) {
             return List.of();
         }
 
         return appointments.stream()
-                .map(this::toAppointmentResponseDto) // Statik olmayan metoda "this" ile erişim
+                .map(this::toAppointmentResponseDto)
                 .collect(Collectors.toList());
     }
 }

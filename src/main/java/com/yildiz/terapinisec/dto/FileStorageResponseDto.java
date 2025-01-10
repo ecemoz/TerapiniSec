@@ -1,10 +1,12 @@
 package com.yildiz.terapinisec.dto;
 
 import com.yildiz.terapinisec.util.FileType;
+import lombok.Builder;
 import lombok.Data;
 import java.time.LocalDateTime;
 
 @Data
+@Builder
 public class FileStorageResponseDto {
 
     private Long id;
