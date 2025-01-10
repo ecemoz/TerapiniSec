@@ -2,10 +2,12 @@ package com.yildiz.terapinisec.model;
 
 import com.yildiz.terapinisec.util.MeditationSessionType;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Entity
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 @Table(name = "meditationcontents")

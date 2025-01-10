@@ -5,7 +5,9 @@ import com.yildiz.terapinisec.dto.MeditationContentResponseDto;
 import com.yildiz.terapinisec.dto.MeditationContentUpdateDto;
 import com.yildiz.terapinisec.mapper.MeditationContentMapper;
 import com.yildiz.terapinisec.model.MeditationContent;
+import com.yildiz.terapinisec.model.User;
 import com.yildiz.terapinisec.repository.MeditationContentRepository;
+import com.yildiz.terapinisec.repository.UserRepository;
 import com.yildiz.terapinisec.util.MeditationSessionType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,6 +23,9 @@ public class MeditationContentService {
     @Autowired
     private MeditationContentMapper meditationContentMapper;
 
+    @Autowired
+    private UserRepository userRepository;
+
     public List<MeditationContentResponseDto> getAllMeditationContent() {
        List<MeditationContent> contents = meditationContentRepository.findAll();
        return contents.stream()
@@ -35,7 +40,10 @@ public class MeditationContentService {
     }
 
     public MeditationContentResponseDto createMeditationContent(MeditationContentCreateDto meditationContentCreateDto) {
-        MeditationContent content = meditationContentMapper.toMeditationContent(meditationContentCreateDto);
+        User createdBy = userRepository.findById(meditationContentCreateDto.getCreatedById())
+                .orElseThrow(() -> new RuntimeException("User not found with ID: " + meditationContentCreateDto.getCreatedById()));
+
+        MeditationContent content = meditationContentMapper.toMeditationContent(meditationContentCreateDto, createdBy);
         MeditationContent savedContent = meditationContentRepository.save(content);
         return meditationContentMapper.toMeditationContentResponseDto(savedContent);
     }

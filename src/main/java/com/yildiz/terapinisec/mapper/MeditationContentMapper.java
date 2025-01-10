@@ -4,19 +4,64 @@ import com.yildiz.terapinisec.dto.MeditationContentCreateDto;
 import com.yildiz.terapinisec.dto.MeditationContentResponseDto;
 import com.yildiz.terapinisec.dto.MeditationContentUpdateDto;
 import com.yildiz.terapinisec.model.MeditationContent;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
+import com.yildiz.terapinisec.model.User;
+import org.springframework.stereotype.Component;
+import java.util.List;
+import java.util.stream.Collectors;
 
-@Mapper(componentModel = "spring")
-public interface MeditationContentMapper {
+@Component
+public class MeditationContentMapper {
 
-    @Mapping(source = "createdById" , target = "createdBy.id")
-    MeditationContent toMeditationContent(MeditationContentCreateDto meditationContentCreateDto);
+    public MeditationContent toMeditationContent(MeditationContentCreateDto createDto, User createdBy) {
+        if (createDto == null || createdBy == null) {
+            return null;
+        }
 
-    @Mapping(source = "createdBy.username" , target = "createdByUsername")
-    MeditationContentResponseDto toMeditationContentResponseDto(MeditationContent meditationContent);
-    
-    void updateMeditationContentFromDto(MeditationContentUpdateDto meditationContentUpdateDto, @MappingTarget MeditationContent meditationContent);
+        return MeditationContent.builder()
+                .title(createDto.getTitle())
+                .description(createDto.getDescription())
+                .meditationSessionType(createDto.getMeditationSessionType())
+                .contentUrl(createDto.getContentUrl())
+                .isPublic(createDto.isPublic())
+                .createdBy(createdBy)
+                .build();
+    }
+
+    public MeditationContentResponseDto toMeditationContentResponseDto(MeditationContent meditationContent) {
+        if (meditationContent == null) {
+            return null;
+        }
+
+        return MeditationContentResponseDto.builder()
+                .id(meditationContent.getId())
+                .title(meditationContent.getTitle())
+                .description(meditationContent.getDescription())
+                .meditationSessionType(meditationContent.getMeditationSessionType())
+                .contentUrl(meditationContent.getContentUrl())
+                .isPublic(meditationContent.isPublic())
+                .createdByUsername(meditationContent.getCreatedBy() != null ? meditationContent.getCreatedBy().getUsername() : null)
+                .build();
+    }
+
+    public void updateMeditationContentFromDto(MeditationContentUpdateDto updateDto, MeditationContent meditationContent) {
+        if (updateDto == null || meditationContent == null) {
+            return;
+        }
+
+        meditationContent.setTitle(updateDto.getTitle());
+        meditationContent.setDescription(updateDto.getDescription());
+        meditationContent.setMeditationSessionType(updateDto.getMeditationSessionType());
+        meditationContent.setContentUrl(updateDto.getContentUrl());
+        meditationContent.setPublic(updateDto.isPublic());
+    }
+
+    public List<MeditationContentResponseDto> toMeditationContentResponseDtoList(List<MeditationContent> meditationContents) {
+        if (meditationContents == null || meditationContents.isEmpty()) {
+            return List.of();
+        }
+
+        return meditationContents.stream()
+                .map(this::toMeditationContentResponseDto)
+                .collect(Collectors.toList());
+    }
 }
-
