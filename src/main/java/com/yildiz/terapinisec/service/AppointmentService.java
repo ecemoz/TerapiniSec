@@ -27,7 +27,7 @@ public class AppointmentService {
     public List<AppointmentResponseDto> getAllAppointments() {
         List<Appointment> appointments = appointmentRepository.findAll();
         return appointments.stream()
-                .map(appointmentMapper::toAppointmentResponseDto)
+                .map(appointmentMapper::toAppointmentResponseDto) // Non-static metot çağrısı
                 .collect(Collectors.toList());
     }
 
@@ -37,8 +37,8 @@ public class AppointmentService {
         return appointmentMapper.toAppointmentResponseDto(appointment);
     }
 
-    public AppointmentResponseDto createAppointment(AppointmentCreateDto appointmentCreateDto) {
-        Appointment appointment = appointmentMapper.toAppointment(appointmentCreateDto);
+    public AppointmentResponseDto createAppointment(AppointmentCreateDto appointmentCreateDto, User client, User therapist) {
+        Appointment appointment = appointmentMapper.toAppointment(appointmentCreateDto, client, therapist);
         Appointment savedAppointment = appointmentRepository.save(appointment);
         return appointmentMapper.toAppointmentResponseDto(savedAppointment);
     }

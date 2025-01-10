@@ -3,27 +3,64 @@ package com.yildiz.terapinisec.mapper;
 import com.yildiz.terapinisec.dto.AppointmentCreateDto;
 import com.yildiz.terapinisec.dto.AppointmentResponseDto;
 import com.yildiz.terapinisec.dto.AppointmentUpdateDto;
-import com.yildiz.terapinisec.dto.FileStorageResponseDto;
 import com.yildiz.terapinisec.model.Appointment;
-import org.mapstruct.IterableMapping;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
+import com.yildiz.terapinisec.model.User;
+import org.springframework.stereotype.Component;
 import java.util.List;
+import java.util.stream.Collectors;
 
-@Mapper
-public interface AppointmentMapper {
+@Component
+public class AppointmentMapper {
 
-    @Mapping(source = "appointmentClientId" , target = "appointmentClients.id")
-    @Mapping(source = "therapistId" , target = "therapist.id")
-    Appointment toAppointment(AppointmentCreateDto appointmentCreateDto);
+    // Create DTO -> Model dönüşümü
+    public Appointment toAppointment(AppointmentCreateDto createDto, User client, User therapist) {
+        if (createDto == null) {
+            return null;
+        }
 
-    @Mapping(source = "appointmentClients.username" , target = "appointmentClientUsername")
-    @Mapping(source = "therapist.username" , target = "therapistUsername")
-    AppointmentResponseDto toAppointmentResponseDto(Appointment appointment);
+        return Appointment.builder()
+                .appointmentDate(createDto.getAppointmentTime())
+                .appointmentStatus(createDto.getAppointmentStatus())
+                .appointmentClients(client)
+                .therapist(therapist)
+                .build();
+    }
 
-    void updateAppointmentFromDto(AppointmentUpdateDto appointmentUpdateDto, @MappingTarget Appointment appointment);
+    // Model -> Response DTO dönüşümü
+    public AppointmentResponseDto toAppointmentResponseDto(Appointment appointment) {
+        if (appointment == null) {
+            return null;
+        }
 
-    @IterableMapping( elementTargetType = FileStorageResponseDto.class)
-    List<AppointmentResponseDto> toAppointmentResponseDtoList(List<Appointment> appointments);
+        return AppointmentResponseDto.builder()
+                .id(appointment.getId())
+                .appointmentDate(appointment.getAppointmentDate())
+                .appointmentStatus(appointment.getAppointmentStatus())
+                .appointmentClientUsername(appointment.getAppointmentClients() != null
+                        ? appointment.getAppointmentClients().getUsername() : null)
+                .therapistUsername(appointment.getTherapist() != null
+                        ? appointment.getTherapist().getUsername() : null)
+                .build();
+    }
+
+    // Update DTO -> Model dönüşümü
+    public void updateAppointmentFromDto(AppointmentUpdateDto updateDto, Appointment appointment) {
+        if (updateDto == null || appointment == null) {
+            return;
+        }
+
+        appointment.setAppointmentDate(updateDto.getAppointmentDate());
+        appointment.setAppointmentStatus(updateDto.getAppointmentStatus());
+    }
+
+    // Liste dönüşümü: Model -> Response DTO
+    public List<AppointmentResponseDto> toAppointmentResponseDtoList(List<Appointment> appointments) {
+        if (appointments == null || appointments.isEmpty()) {
+            return List.of();
+        }
+
+        return appointments.stream()
+                .map(this::toAppointmentResponseDto) // Statik olmayan metoda "this" ile erişim
+                .collect(Collectors.toList());
+    }
 }
