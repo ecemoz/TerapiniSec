@@ -2,16 +2,17 @@ package com.yildiz.terapinisec.model;
 
 import com.yildiz.terapinisec.util.GoalType;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Entity
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 @Getter
 @Setter
 @Table(name = "goals")
-
 public class Goal {
 
     @Id

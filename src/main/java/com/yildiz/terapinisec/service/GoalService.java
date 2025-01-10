@@ -5,7 +5,9 @@ import com.yildiz.terapinisec.dto.GoalResponseDto;
 import com.yildiz.terapinisec.dto.GoalUpdateDto;
 import com.yildiz.terapinisec.mapper.GoalMapper;
 import com.yildiz.terapinisec.model.Goal;
+import com.yildiz.terapinisec.model.User;
 import com.yildiz.terapinisec.repository.GoalRepository;
+import com.yildiz.terapinisec.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -19,6 +21,9 @@ public class GoalService {
 
     @Autowired
     private GoalMapper goalMapper;
+
+    @Autowired
+    private UserRepository userRepository;
 
     public List<GoalResponseDto> getAllGoals() {
         List<Goal> goals = goalRepository.findAll();
@@ -34,10 +39,14 @@ public class GoalService {
     }
 
     public GoalResponseDto createGoal(GoalCreateDto goalCreateDto) {
-        Goal goal = goalMapper.toGoal(goalCreateDto);
+        User goalOwner = userRepository.findById(goalCreateDto.getGoalOwnerId())
+                .orElseThrow(() -> new RuntimeException("Goal owner not found"));
+
+        Goal goal = goalMapper.toGoal(goalCreateDto, goalOwner);
         Goal savedGoal = goalRepository.save(goal);
         return goalMapper.toGoalResponseDto(savedGoal);
     }
+
 
     public GoalResponseDto updateGoal(Long id , GoalUpdateDto goalUpdateDto) {
         Goal existingGoal = goalRepository.findById(id)
