@@ -6,7 +6,6 @@ import com.yildiz.terapinisec.model.VoiceMessage;
 import org.mapstruct.IterableMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-
 import java.util.List;
 
 @Mapper(componentModel = "spring")

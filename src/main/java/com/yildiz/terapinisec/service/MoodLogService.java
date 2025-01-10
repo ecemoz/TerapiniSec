@@ -5,7 +5,9 @@ import com.yildiz.terapinisec.dto.MoodLogResponseDto;
 import com.yildiz.terapinisec.dto.MoodLogUpdateDto;
 import com.yildiz.terapinisec.mapper.MoodLogMapper;
 import com.yildiz.terapinisec.model.MoodLog;
+import com.yildiz.terapinisec.model.User;
 import com.yildiz.terapinisec.repository.MoodLogRepository;
+import com.yildiz.terapinisec.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
@@ -21,6 +23,9 @@ public class MoodLogService {
     @Autowired
     private MoodLogMapper moodLogMapper;
 
+    @Autowired
+    private UserRepository userRepository;
+
     public List<MoodLogResponseDto> getAllMoodLog() {
         List<MoodLog> moodLogs = moodLogRepository.findAll();
         return moodLogs.stream()
@@ -35,10 +40,15 @@ public class MoodLogService {
     }
 
     public MoodLogResponseDto createMoodLog(MoodLogCreateDto moodLogCreateDto) {
-        MoodLog moodLog = moodLogMapper.toMoodLog(moodLogCreateDto);
+        // Mood owner (User) bulunuyor
+        User moodOwner = userRepository.findById(moodLogCreateDto.getMoodOwnerId())
+                .orElseThrow(() -> new RuntimeException("User not found with ID: " + moodLogCreateDto.getMoodOwnerId()));
+
+        MoodLog moodLog = moodLogMapper.toMoodLog(moodLogCreateDto, moodOwner);
         MoodLog savedMoodLog = moodLogRepository.save(moodLog);
         return moodLogMapper.toMoodLogResponseDto(savedMoodLog);
     }
+
 
     public MoodLogResponseDto updateMoodLog(Long id, MoodLogUpdateDto moodLogUpdateDto) {
         MoodLog existingMoodLog = moodLogRepository.findById(id)

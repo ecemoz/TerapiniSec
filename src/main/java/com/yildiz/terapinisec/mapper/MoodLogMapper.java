@@ -4,18 +4,56 @@ import com.yildiz.terapinisec.dto.MoodLogCreateDto;
 import com.yildiz.terapinisec.dto.MoodLogResponseDto;
 import com.yildiz.terapinisec.dto.MoodLogUpdateDto;
 import com.yildiz.terapinisec.model.MoodLog;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
+import com.yildiz.terapinisec.model.User;
+import org.springframework.stereotype.Component;
+import java.util.List;
+import java.util.stream.Collectors;
 
-@Mapper(componentModel = "spring")
-public interface MoodLogMapper {
+@Component
+public class MoodLogMapper {
 
-    @Mapping(source = "moodOwnerId", target = "moodOwner.id")
-    MoodLog toMoodLog (MoodLogCreateDto moodLogCreateDto);
+    public MoodLog toMoodLog(MoodLogCreateDto createDto, User moodOwner) {
+        if (createDto == null || moodOwner == null) {
+            return null;
+        }
 
-    @Mapping(source = "moodOwner.username" , target = "moodOwnerUsername")
-    MoodLogResponseDto toMoodLogResponseDto(MoodLog moodLog);
+        return MoodLog.builder()
+                .userMoods(createDto.getUserMoods())
+                .description(createDto.getDescription())
+                .moodOwner(moodOwner)
+                .build();
+    }
 
-    void updateMoodLogFromDto (MoodLogUpdateDto moodLogUpdateDto , @MappingTarget MoodLog moodLog);
+    public MoodLogResponseDto toMoodLogResponseDto(MoodLog moodLog) {
+        if (moodLog == null) {
+            return null;
+        }
+
+        return MoodLogResponseDto.builder()
+                .id(moodLog.getId())
+                .usermoods(moodLog.getUserMoods())
+                .description(moodLog.getDescription())
+                .logDateTime(moodLog.getLogDateTime())
+                .moodOwnerUsername(moodLog.getMoodOwner() != null ? moodLog.getMoodOwner().getUsername() : null)
+                .build();
+    }
+
+    public void updateMoodLogFromDto(MoodLogUpdateDto updateDto, MoodLog moodLog) {
+        if (updateDto == null || moodLog == null) {
+            return;
+        }
+
+        moodLog.setUserMoods(updateDto.getUsermoods());
+        moodLog.setDescription(updateDto.getDescription());
+    }
+
+    public List<MoodLogResponseDto> toMoodLogResponseDtoList(List<MoodLog> moodLogs) {
+        if (moodLogs == null || moodLogs.isEmpty()) {
+            return List.of();
+        }
+
+        return moodLogs.stream()
+                .map(this::toMoodLogResponseDto)
+                .collect(Collectors.toList());
+    }
 }
