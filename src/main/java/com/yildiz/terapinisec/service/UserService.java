@@ -1,9 +1,6 @@
 package com.yildiz.terapinisec.service;
 
-import com.yildiz.terapinisec.dto.UserCreateDto;
-import com.yildiz.terapinisec.dto.UserLoginDto;
-import com.yildiz.terapinisec.dto.UserResponseDto;
-import com.yildiz.terapinisec.dto.UserUpdateDto;
+import com.yildiz.terapinisec.dto.*;
 import com.yildiz.terapinisec.mapper.UserMapper;
 import com.yildiz.terapinisec.model.User;
 import com.yildiz.terapinisec.repository.UserRepository;
@@ -14,7 +11,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
-
 
 @Service
 public class UserService {
@@ -36,14 +32,13 @@ public class UserService {
 
     public UserResponseDto updateUserPhoneNumber(Long userId, String phoneNumber) {
         return userRepository.findById(userId)
-                        .map(user-> {
-                            phoneNumberValidationService.validatePhoneNumber(phoneNumber);
-                            user.setPhoneNumber(phoneNumber);
-                            User updatedUser=userRepository.save(user);
-                            return userMapper.toUserResponseDto(updatedUser);
-                        })
-                .orElseThrow(()->new RuntimeException("User not found"));
-
+                .map(user -> {
+                    phoneNumberValidationService.validatePhoneNumber(phoneNumber);
+                    user.setPhoneNumber(phoneNumber);
+                    User updatedUser = userRepository.save(user);
+                    return userMapper.toUserResponseDto(updatedUser);
+                })
+                .orElseThrow(() -> new RuntimeException("User not found"));
     }
 
     public UserResponseDto makeUserPremium(Long userId) {
@@ -51,7 +46,7 @@ public class UserService {
     }
 
     public UserResponseDto removeUserPremium(Long userId) {
-       return premiumService.downgradeFromPremium(userId);
+        return premiumService.downgradeFromPremium(userId);
     }
 
     public void activePremium(Long userId) {
@@ -63,57 +58,47 @@ public class UserService {
     }
 
     public List<UserResponseDto> getAllUsers() {
-        List<User>users = userRepository.findAll();
+        List<User> users = userRepository.findAll();
         return userMapper.toUserResponseDtoList(users);
     }
 
     public UserResponseDto getUserById(Long id) {
         User user = userRepository.findById(id)
-                .orElseThrow(()->new RuntimeException("User not found"));
+                .orElseThrow(() -> new RuntimeException("User not found"));
         return userMapper.toUserResponseDto(user);
     }
 
     public UserResponseDto createUser(UserCreateDto userCreateDto) {
         User user = userMapper.toUser(userCreateDto);
-
         user.setPassword(passwordEncoder.encode(userCreateDto.getPassword()));
         user.setPhoneNumber(phoneNumberValidationService.validatePhoneNumber(userCreateDto.getPhoneNumber()));
         User savedUser = userRepository.save(user);
         return userMapper.toUserResponseDto(savedUser);
     }
 
-    public User updateUser(Long id, UserUpdateDto userUpdateDto) {
+    public UserResponseDto updateUser(Long id, UserUpdateDto userUpdateDto) {
         return userRepository.findById(id)
                 .map(existingUser -> {
-                    userMapper.updateUserFromDto(userUpdateDto,existingUser);
-
+                    userMapper.updateUserFromDto(userUpdateDto, existingUser);
                     if (existingUser.getUserRole().equals(UserRole.PSYCHOLOGIST)) {
                         updatePsychologistFields(existingUser, userUpdateDto);
-                    } else if (existingUser.getUserRole().equals(UserRole.ADMIN)) {
-                        updateAdminFields(existingUser, userUpdateDto);
                     }
-                    return userRepository.save(existingUser);
-
+                    User updatedUser = userRepository.save(existingUser);
+                    return userMapper.toUserResponseDto(updatedUser);
                 })
-                .orElseThrow(() -> new RuntimeException("User not found."));
+                .orElseThrow(() -> new RuntimeException("User not found"));
     }
-
 
     private void updatePsychologistFields(User existingUser, UserUpdateDto userUpdateDto) {
         if (userUpdateDto.getSpecialization() != null) {
             existingUser.setSpecializations(userUpdateDto.getSpecialization());
         }
-
         if (userUpdateDto.getYearsOfExperience() != null) {
             existingUser.setYearsOfExperience(userUpdateDto.getYearsOfExperience());
         }
-
         if (userUpdateDto.getAvailableTimes() != null) {
             existingUser.setAvailableTimes(userUpdateDto.getAvailableTimes());
         }
-    }
-
-    private void updateAdminFields(User existingUser, UserUpdateDto userUpdateDto) {
     }
 
     public void deleteUser(Long id) {
@@ -125,8 +110,8 @@ public class UserService {
     }
 
     public UserResponseDto findByUsername(String username) {
-       User user = userRepository.findByUsername(username);
-       return userMapper.toUserResponseDto(user);
+        User user = userRepository.findByUsername(username);
+        return userMapper.toUserResponseDto(user);
     }
 
     public UserResponseDto findByFirstNameAndLastName(String firstName, String lastName) {
@@ -135,21 +120,21 @@ public class UserService {
     }
 
     public UserResponseDto findByEmail(String email) {
-       User user = userRepository.findByEmail(email);
-       return userMapper.toUserResponseDto(user);
+        User user = userRepository.findByEmail(email);
+        return userMapper.toUserResponseDto(user);
     }
 
     public UserResponseDto findByPhoneNumber(String phoneNumber) {
-       User user = userRepository.findByPhoneNumber(phoneNumber);
-       return userMapper.toUserResponseDto(user);
+        User user = userRepository.findByPhoneNumber(phoneNumber);
+        return userMapper.toUserResponseDto(user);
     }
 
-    public List<UserResponseDto>findByRole (UserRole role) {
-        List<User>users = userRepository.findByRole(role);
+    public List<UserResponseDto> findByRole(UserRole role) {
+        List<User> users = userRepository.findByRole(role);
         return userMapper.toUserResponseDtoList(users);
     }
 
-    public List<UserResponseDto>findByLastLoginDateTimeBefore(LocalDateTime dateTime) {
+    public List<UserResponseDto> findByLastLoginDateTimeBefore(LocalDateTime dateTime) {
         List<User> users = userRepository.findByLastLoginDateTimeBefore(dateTime);
         return userMapper.toUserResponseDtoList(users);
     }
@@ -159,31 +144,28 @@ public class UserService {
         return userMapper.toUserResponseDtoList(users);
     }
 
-    public List<UserResponseDto>findByIsPremiumTrue(){
+    public List<UserResponseDto> findByIsPremiumTrue() {
         List<User> users = userRepository.findByIsPremiumTrue();
         return userMapper.toUserResponseDtoList(users);
     }
 
-    public List<UserResponseDto>findByIsPremiumFalse(){
+    public List<UserResponseDto> findByIsPremiumFalse() {
         List<User> users = userRepository.findByIsPremiumFalse();
         return userMapper.toUserResponseDtoList(users);
     }
 
-    public List<UserResponseDto>findBySpecializationContains(Specialization specialization) {
+    public List<UserResponseDto> findBySpecializationContains(Specialization specialization) {
         List<User> users = userRepository.findBySpecializationContains(specialization);
         return userMapper.toUserResponseDtoList(users);
     }
 
-    public List<UserResponseDto>findByYearsOfExperienceGreaterThan(Integer years) {
+    public List<UserResponseDto> findByYearsOfExperienceGreaterThan(Integer years) {
         List<User> users = userRepository.findByYearsOfExperienceGreaterThan(years);
         return userMapper.toUserResponseDtoList(users);
     }
 
     public boolean authenticate(UserLoginDto userLoginDto) {
         User user = userRepository.findByUsernameOrEmail(userLoginDto.getUsernameOrEmail());
-        if (user != null && passwordEncoder.matches(userLoginDto.getPassword(), user.getPassword())) {
-            return true;
-        }
-        return false;
+        return user != null && passwordEncoder.matches(userLoginDto.getPassword(), user.getPassword());
     }
 }

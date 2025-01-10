@@ -1,11 +1,6 @@
 package com.yildiz.terapinisec.controller;
 
-import com.yildiz.terapinisec.dto.UserCreateDto;
-import com.yildiz.terapinisec.dto.UserLoginDto;
-import com.yildiz.terapinisec.dto.UserResponseDto;
-import com.yildiz.terapinisec.dto.UserUpdateDto;
-import com.yildiz.terapinisec.mapper.UserMapper;
-import com.yildiz.terapinisec.model.User;
+import com.yildiz.terapinisec.dto.*;
 import com.yildiz.terapinisec.service.UserService;
 import com.yildiz.terapinisec.util.Specialization;
 import com.yildiz.terapinisec.util.UserRole;
@@ -13,8 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -24,9 +18,6 @@ public class UserController {
 
     @Autowired
     private UserService userService;
-
-    @Autowired
-    private UserMapper userMapper;
 
     @GetMapping
     public ResponseEntity<List<UserResponseDto>> getAllUsers() {
@@ -50,9 +41,7 @@ public class UserController {
 
     @PutMapping("/{id}")
     public ResponseEntity<UserResponseDto> updateUser(@PathVariable Long id, @RequestBody UserUpdateDto userUpdateDto) {
-        User updatedUser = userService.updateUser(id, userUpdateDto);
-        UserResponseDto responseDto = userMapper.toUserResponseDto(updatedUser);
-        return ResponseEntity.ok(responseDto);
+        return ResponseEntity.ok(userService.updateUser(id, userUpdateDto));
     }
 
     @PutMapping("/{id}/premium")
@@ -77,7 +66,7 @@ public class UserController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/{role}")
+    @GetMapping("/role/{role}")
     public ResponseEntity<List<UserResponseDto>> findByRole(@PathVariable UserRole role) {
         return ResponseEntity.ok(userService.findByRole(role));
     }
@@ -102,7 +91,7 @@ public class UserController {
         return ResponseEntity.ok(userService.findByIsPremiumFalse());
     }
 
-    @GetMapping("/speacialization")
+    @GetMapping("/specialization")
     public ResponseEntity<List<UserResponseDto>> findBySpecializationContains(@RequestParam Specialization specialization) {
         return ResponseEntity.ok(userService.findBySpecializationContains(specialization));
     }
@@ -122,7 +111,7 @@ public class UserController {
         return ResponseEntity.ok(userService.findByUsername(username));
     }
 
-    @GetMapping("/firstname/lastname")
+    @GetMapping("/firstname-lastname")
     public ResponseEntity<UserResponseDto> findByFirstnameAndLastname(@RequestParam String firstname, @RequestParam String lastname) {
         return ResponseEntity.ok(userService.findByFirstNameAndLastName(firstname, lastname));
     }
@@ -132,7 +121,7 @@ public class UserController {
         return ResponseEntity.ok(userService.findByEmail(email));
     }
 
-    @GetMapping("/phoneNumber")
+    @GetMapping("/phone-number")
     public ResponseEntity<UserResponseDto> findByPhoneNumber(@RequestParam String phoneNumber) {
         return ResponseEntity.ok(userService.findByPhoneNumber(phoneNumber));
     }

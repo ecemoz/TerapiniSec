@@ -4,23 +4,49 @@ import com.yildiz.terapinisec.dto.TaskCreateDto;
 import com.yildiz.terapinisec.dto.TaskResponseDto;
 import com.yildiz.terapinisec.dto.TaskUpdateDto;
 import com.yildiz.terapinisec.model.Task;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
-import org.mapstruct.factory.Mappers;
+import com.yildiz.terapinisec.model.User;
+import org.springframework.stereotype.Component;
 
-import java.util.List;
+@Component
+public class TaskMapper {
 
-@Mapper(componentModel = "spring")
-public interface TaskMapper {
+    public Task toTask(TaskCreateDto taskCreateDto, User assignee) {
+        if (taskCreateDto == null || assignee == null) {
+            return null;
+        }
 
-    @Mapping(target = "assignees.id", source = "assigneeId")
-    Task toTask(TaskCreateDto taskCreateDto);
+        return Task.builder()
+                .taskName(taskCreateDto.getTaskName())
+                .taskDescription(taskCreateDto.getTaskDescription())
+                .dueDate(taskCreateDto.getDueDate())
+                .isCompleted(false) // Yeni oluşturulan görevler tamamlanmamış olarak başlar
+                .assignees(assignee)
+                .build();
+    }
 
-    @Mapping (target = "assigneeId" , source = "assignees.id")
-    TaskResponseDto toTaskResponseDto(Task task);
+    public TaskResponseDto toTaskResponseDto(Task task) {
+        if (task == null) {
+            return null;
+        }
 
-    void updateTaskFromDto(TaskUpdateDto taskUpdateDto, @MappingTarget Task task );
+        return TaskResponseDto.builder()
+                .id(task.getId())
+                .taskName(task.getTaskName())
+                .taskDescription(task.getTaskDescription())
+                .dueDate(task.getDueDate())
+                .isCompleted(task.isCompleted())
+                .assigneeId(task.getAssignees() != null ? task.getAssignees().getId() : null)
+                .build();
+    }
 
-    List<TaskResponseDto> taskResponseDtoList(List<Task> tasks);
+    public void updateTaskFromDto(TaskUpdateDto taskUpdateDto, Task task) {
+        if (taskUpdateDto == null || task == null) {
+            return;
+        }
+
+        task.setTaskName(taskUpdateDto.getTaskName());
+        task.setTaskDescription(taskUpdateDto.getTaskDescription());
+        task.setDueDate(taskUpdateDto.getDueDate());
+        task.setCompleted(taskUpdateDto.isCompleted());
+    }
 }
