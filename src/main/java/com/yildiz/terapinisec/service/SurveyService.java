@@ -5,6 +5,7 @@ import com.yildiz.terapinisec.dto.SurveyPostDto;
 import com.yildiz.terapinisec.dto.SurveyUpdateDto;
 import com.yildiz.terapinisec.mapper.SurveyMapper;
 import com.yildiz.terapinisec.model.Survey;
+import com.yildiz.terapinisec.model.User;
 import com.yildiz.terapinisec.repository.SurveyRepository;
 import com.yildiz.terapinisec.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,12 +40,14 @@ public class SurveyService {
     }
 
     public SurveyPostDto createSurvey(SurveyCreateDto surveyCreateDto) {
-        Survey survey = surveyMapper.toSurvey(surveyCreateDto);
-        survey.setCreatedBy(userRepository.findById(surveyCreateDto.getCreatedById())
-        .orElseThrow(() -> new RuntimeException("User not found")));
+        User user = userRepository.findById(surveyCreateDto.getCreatedById())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        Survey survey = surveyMapper.toSurvey(surveyCreateDto, user);
         Survey savedSurvey = surveyRepository.save(survey);
         return surveyMapper.toSurveyPostDto(savedSurvey);
     }
+
 
     public SurveyPostDto updateSurvey(Long id , SurveyUpdateDto surveyUpdateDto) {
        Survey survey = surveyRepository.findById(id)

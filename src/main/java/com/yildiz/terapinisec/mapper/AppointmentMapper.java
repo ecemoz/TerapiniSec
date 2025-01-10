@@ -41,7 +41,6 @@ public class AppointmentMapper {
                 .build();
     }
 
-    // Update DTO -> Model dönüşümü
     public void updateAppointmentFromDto(AppointmentUpdateDto updateDto, Appointment appointment) {
         if (updateDto == null || appointment == null) {
             return;

@@ -4,30 +4,49 @@ import com.yildiz.terapinisec.dto.SurveyCreateDto;
 import com.yildiz.terapinisec.dto.SurveyPostDto;
 import com.yildiz.terapinisec.dto.SurveyUpdateDto;
 import com.yildiz.terapinisec.model.Survey;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import org.mapstruct.MappingTarget;
-import org.mapstruct.factory.Mappers;
+import com.yildiz.terapinisec.model.User;
+import org.springframework.stereotype.Component;
 
-@Mapper(componentModel = "spring")
-public interface SurveyMapper {
+@Component
+public class SurveyMapper {
 
+    public Survey toSurvey(SurveyCreateDto createDto, User createdBy) {
+        if (createDto == null || createdBy == null) {
+            return null;
+        }
 
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "surveyCreatedAt", ignore = true)
-    @Mapping(target = "surveyResponses" , ignore = true)
-    @Mapping(source = "createdById" , target = "createdBy.id")
-    Survey toSurvey (SurveyCreateDto surveyCreateDto);
+        return Survey.builder()
+                .title(createDto.getTitle())
+                .description(createDto.getDescription())
+                .createdBy(createdBy)
+                .build();
+    }
 
-    @Mapping(source = "createdBy.id" , target = "createdById")
-    SurveyCreateDto toSurveyCreateDto(Survey survey);
+    public SurveyPostDto toSurveyPostDto(Survey survey) {
+        if (survey == null) {
+            return null;
+        }
 
-    @Mapping(source = "createdBy.id", target = "createdById")
-    SurveyPostDto toSurveyPostDto(Survey survey);
+        return SurveyPostDto.builder()
+                .id(survey.getId())
+                .title(survey.getTitle())
+                .description(survey.getDescription())
+                .surveyCreatedAt(survey.getSurveyCreatedAt())
+                .createdById(survey.getCreatedBy() != null ? survey.getCreatedBy().getId() : null)
+                .build();
+    }
 
-    @Mapping(target = "id", ignore = true)
-    @Mapping(target = "surveyCreatedAt", ignore = true)
-    @Mapping(target = "surveyResponses" , ignore = true)
-    @Mapping( target = "createdBy" , ignore = true)
-    void updateSurveyFromDto(SurveyUpdateDto surveyUpdateDto, @MappingTarget Survey survey);
+    public void updateSurveyFromDto(SurveyUpdateDto updateDto, Survey survey) {
+        if (updateDto == null || survey == null) {
+            return;
+        }
+
+        if (updateDto.getTitle() != null) {
+            survey.setTitle(updateDto.getTitle());
+        }
+
+        if (updateDto.getDescription() != null) {
+            survey.setDescription(updateDto.getDescription());
+        }
+    }
 }
