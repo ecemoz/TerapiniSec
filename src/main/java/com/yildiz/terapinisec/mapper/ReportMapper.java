@@ -62,7 +62,7 @@ public class ReportMapper {
                 .map(this::toReportResponseDto)
                 .collect(Collectors.toList());
     }
-    
+
     public List<ReportDetailedDto> toReportDetailedDtoList(List<Report> reports) {
         if (reports == null || reports.isEmpty()) {
             return List.of();

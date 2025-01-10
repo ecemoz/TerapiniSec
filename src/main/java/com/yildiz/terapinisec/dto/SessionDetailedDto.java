@@ -2,12 +2,14 @@ package com.yildiz.terapinisec.dto;
 
 import com.yildiz.terapinisec.model.Participant;
 import com.yildiz.terapinisec.util.SessionType;
+import lombok.Builder;
 import lombok.Data;
-import org.springframework.web.bind.support.SessionStatus;
+import com.yildiz.terapinisec.util.SessionStatus;
 import java.time.LocalDateTime;
 import java.util.List;
 
 @Data
+@Builder
 public class SessionDetailedDto {
 
     private Long id;
