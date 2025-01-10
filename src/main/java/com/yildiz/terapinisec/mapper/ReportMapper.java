@@ -4,24 +4,72 @@ import com.yildiz.terapinisec.dto.ReportCreateDto;
 import com.yildiz.terapinisec.dto.ReportDetailedDto;
 import com.yildiz.terapinisec.dto.ReportResponseDto;
 import com.yildiz.terapinisec.model.Report;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import com.yildiz.terapinisec.model.User;
+import org.springframework.stereotype.Component;
 import java.util.List;
+import java.util.stream.Collectors;
 
-@Mapper(componentModel = "spring")
-public interface ReportMapper {
+@Component
+public class ReportMapper {
 
-    @Mapping(source = "userId" , target = "reportOwner.id")
-    Report toReport(ReportCreateDto reportCreateDto);
+    public Report toReport(ReportCreateDto createDto, User reportOwner) {
+        if (createDto == null || reportOwner == null) {
+            return null;
+        }
 
-    @Mapping( source = "reportOwner.username" , target = "reportOwnerUsername")
-    ReportResponseDto toReportResponseDto(Report report);
+        return Report.builder()
+                .reportSituation(createDto.getReportSituation())
+                .content(createDto.getContent())
+                .reportOwner(reportOwner)
+                .build();
+    }
 
-    @Mapping(source = "reportOwner.username" , target = "reportOwnerUsername")
-    @Mapping(source = "reportOwner.email" , target = "reportOwnerEmail")
-    ReportDetailedDto toReportDetailedDto(Report report);
+    public ReportResponseDto toReportResponseDto(Report report) {
+        if (report == null) {
+            return null;
+        }
 
-    List<ReportResponseDto> toReportResponseDtoList(List<Report> reports);
+        return ReportResponseDto.builder()
+                .id(report.getId())
+                .reportSituation(report.getReportSituation())
+                .content(report.getContent())
+                .reportCreatedAt(report.getReportCreatedAt())
+                .reportOwnerUsername(report.getReportOwner() != null ? report.getReportOwner().getUsername() : null)
+                .build();
+    }
 
-    List<ReportDetailedDto> toReportDetailedDtoList(List<Report> reports);
+    public ReportDetailedDto toReportDetailedDto(Report report) {
+        if (report == null) {
+            return null;
+        }
+
+        return ReportDetailedDto.builder()
+                .id(report.getId())
+                .reportSituation(report.getReportSituation())
+                .content(report.getContent())
+                .reportCreatedAt(report.getReportCreatedAt())
+                .reportOwnerUsername(report.getReportOwner() != null ? report.getReportOwner().getUsername() : null)
+                .reportOwnerEmail(report.getReportOwner() != null ? report.getReportOwner().getEmail() : null)
+                .build();
+    }
+
+    public List<ReportResponseDto> toReportResponseDtoList(List<Report> reports) {
+        if (reports == null || reports.isEmpty()) {
+            return List.of();
+        }
+
+        return reports.stream()
+                .map(this::toReportResponseDto)
+                .collect(Collectors.toList());
+    }
+    
+    public List<ReportDetailedDto> toReportDetailedDtoList(List<Report> reports) {
+        if (reports == null || reports.isEmpty()) {
+            return List.of();
+        }
+
+        return reports.stream()
+                .map(this::toReportDetailedDto)
+                .collect(Collectors.toList());
+    }
 }
