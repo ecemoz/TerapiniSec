@@ -5,7 +5,9 @@ import com.yildiz.terapinisec.dto.SleepLogDetailedDto;
 import com.yildiz.terapinisec.dto.SleepLogResponseDto;
 import com.yildiz.terapinisec.mapper.SleepLogMapper;
 import com.yildiz.terapinisec.model.SleepLog;
+import com.yildiz.terapinisec.model.User;
 import com.yildiz.terapinisec.repository.SleepLogRepository;
+import com.yildiz.terapinisec.repository.UserRepository;
 import com.yildiz.terapinisec.util.SleepQuality;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -24,6 +26,9 @@ public class SleepLogService {
     @Autowired
     private SleepLogMapper sleepLogMapper;
 
+    @Autowired
+    private UserRepository userRepository;
+
 
     public List<SleepLogResponseDto> getAllSleepLogs() {
         List<SleepLog> sleepLogs = sleepLogRepository.findAll();
@@ -37,19 +42,26 @@ public class SleepLogService {
     }
 
     public SleepLogResponseDto createSleepLog(SleepLogCreateDto sleepLogCreateDto) {
-        SleepLog sleepLog = sleepLogMapper.toSleepLog(sleepLogCreateDto);
+
+        User sleeper = userRepository.findById(sleepLogCreateDto.getUserId())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        SleepLog sleepLog = sleepLogMapper.toSleepLog(sleepLogCreateDto, sleeper);
         SleepLog savedSleepLog = sleepLogRepository.save(sleepLog);
         return sleepLogMapper.toSleepLogResponseDto(savedSleepLog);
     }
 
-    public SleepLogResponseDto updateSleepLog(Long id ,SleepLogCreateDto sleepLogCreateDto) {
-       SleepLog existingSleepLog = sleepLogRepository.findById(id)
-               .orElseThrow(() -> new RuntimeException("SleepLog not found"));
+    public SleepLogResponseDto updateSleepLog(Long id, SleepLogCreateDto sleepLogCreateDto) {
+        SleepLog existingSleepLog = sleepLogRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("SleepLog not found"));
 
-       SleepLog updatedSleepLog = sleepLogMapper.toSleepLog(sleepLogCreateDto);
-       updatedSleepLog.setId(existingSleepLog.getId());
-       SleepLog savedSleepLog = sleepLogRepository.save(updatedSleepLog);
-       return sleepLogMapper.toSleepLogResponseDto(savedSleepLog);
+        User sleeper = userRepository.findById(sleepLogCreateDto.getUserId())
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        SleepLog updatedSleepLog = sleepLogMapper.toSleepLog(sleepLogCreateDto, sleeper);
+        updatedSleepLog.setId(existingSleepLog.getId());
+        SleepLog savedSleepLog = sleepLogRepository.save(updatedSleepLog);
+        return sleepLogMapper.toSleepLogResponseDto(savedSleepLog);
     }
 
     public void deleteSleepLog(Long id) {

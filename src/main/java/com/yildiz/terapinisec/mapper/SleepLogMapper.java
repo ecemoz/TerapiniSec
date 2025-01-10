@@ -4,24 +4,72 @@ import com.yildiz.terapinisec.dto.SleepLogCreateDto;
 import com.yildiz.terapinisec.dto.SleepLogDetailedDto;
 import com.yildiz.terapinisec.dto.SleepLogResponseDto;
 import com.yildiz.terapinisec.model.SleepLog;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
+import com.yildiz.terapinisec.model.User;
+import org.springframework.stereotype.Component;
 import java.util.List;
+import java.util.stream.Collectors;
 
-@Mapper(componentModel = "spring")
-public interface SleepLogMapper {
+@Component
+public class SleepLogMapper {
 
-    @Mapping(source = "userId" , target = "sleeper.id")
-    SleepLog toSleepLog(SleepLogCreateDto sleepLogCreateDto);
+    public SleepLog toSleepLog(SleepLogCreateDto createDto, User sleeper) {
+        if (createDto == null || sleeper == null) {
+            return null;
+        }
 
-    @Mapping(source = "sleeper.username" , target = "sleeperUsername")
-    SleepLogResponseDto toSleepLogResponseDto(SleepLog sleepLog);
+        return SleepLog.builder()
+                .sleepDuration(createDto.getSleepDuration())
+                .sleepQuality(createDto.getSleepQuality())
+                .sleeper(sleeper)
+                .build();
+    }
 
-    @Mapping(source = "sleeper.username" , target = "sleeperUsername")
-    @Mapping(source = "sleeper.id" , target = "sleeperId")
-    SleepLogDetailedDto toSleepLogDetailedDto(SleepLog sleepLog);
+    public SleepLogResponseDto toSleepLogResponseDto(SleepLog sleepLog) {
+        if (sleepLog == null) {
+            return null;
+        }
 
-    List<SleepLogResponseDto> toSleepLogResponseDtoList(List<SleepLog> sleepLogs);
+        return SleepLogResponseDto.builder()
+                .id(sleepLog.getId())
+                .sleepDuration(sleepLog.getSleepDuration())
+                .sleepQuality(sleepLog.getSleepQuality())
+                .sleepDate(sleepLog.getSleepDate())
+                .sleeperUsername(sleepLog.getSleeper() != null ? sleepLog.getSleeper().getUsername() : null)
+                .build();
+    }
 
-    List<SleepLogDetailedDto> toSleepLogDetailedDtoList(List<SleepLog> sleepLogs);
+    public SleepLogDetailedDto toSleepLogDetailedDto(SleepLog sleepLog) {
+        if (sleepLog == null) {
+            return null;
+        }
+
+        return SleepLogDetailedDto.builder()
+                .id(sleepLog.getId())
+                .sleepDuration(sleepLog.getSleepDuration())
+                .sleepQuality(sleepLog.getSleepQuality())
+                .sleepDate(sleepLog.getSleepDate())
+                .sleeperUsername(sleepLog.getSleeper() != null ? sleepLog.getSleeper().getUsername() : null)
+                .sleeperId(sleepLog.getSleeper() != null ? sleepLog.getSleeper().getId() : null)
+                .build();
+    }
+
+    public List<SleepLogResponseDto> toSleepLogResponseDtoList(List<SleepLog> sleepLogs) {
+        if (sleepLogs == null || sleepLogs.isEmpty()) {
+            return List.of();
+        }
+
+        return sleepLogs.stream()
+                .map(this::toSleepLogResponseDto)
+                .collect(Collectors.toList());
+    }
+
+    public List<SleepLogDetailedDto> toSleepLogDetailedDtoList(List<SleepLog> sleepLogs) {
+        if (sleepLogs == null || sleepLogs.isEmpty()) {
+            return List.of();
+        }
+
+        return sleepLogs.stream()
+                .map(this::toSleepLogDetailedDto)
+                .collect(Collectors.toList());
+    }
 }
