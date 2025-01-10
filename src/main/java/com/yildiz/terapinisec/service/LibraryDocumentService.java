@@ -5,7 +5,9 @@ import com.yildiz.terapinisec.dto.LibraryDocumentResponseDto;
 import com.yildiz.terapinisec.dto.LibraryDocumentUpdateDto;
 import com.yildiz.terapinisec.mapper.LibraryDocumentMapper;
 import com.yildiz.terapinisec.model.LibraryDocument;
+import com.yildiz.terapinisec.model.User;
 import com.yildiz.terapinisec.repository.LibraryDocumentRepository;
+import com.yildiz.terapinisec.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -23,6 +25,9 @@ public class LibraryDocumentService {
     @Autowired
     private LibraryDocumentMapper libraryDocumentMapper;
 
+    @Autowired
+    private UserRepository userRepository;
+
     public Page<LibraryDocumentResponseDto> getAllLibraryDocuments(int page, int size) {
         Pageable pageable = PageRequest.of(page,size);
         Page<LibraryDocument> documents = libraryDocumentRepository.findAll(pageable);
@@ -36,10 +41,15 @@ public class LibraryDocumentService {
     }
 
     public LibraryDocumentResponseDto createLibraryDocument(LibraryDocumentCreateDto libraryDocumentCreateDto) {
-        LibraryDocument libraryDocument = libraryDocumentMapper.toLibraryDocument(libraryDocumentCreateDto);
+
+        User uploader = userRepository.findById(libraryDocumentCreateDto.getFileUploaderId())
+                .orElseThrow(() -> new RuntimeException("Uploader not found"));
+
+        LibraryDocument libraryDocument = libraryDocumentMapper.toLibraryDocument(libraryDocumentCreateDto, uploader);
         LibraryDocument savedDocument = libraryDocumentRepository.save(libraryDocument);
         return libraryDocumentMapper.toLibraryDocumentResponseDto(savedDocument);
     }
+
 
     public LibraryDocumentResponseDto updateLibraryDocument(Long id , LibraryDocumentUpdateDto libraryDocumentUpdateDto) {
         LibraryDocument existingDocument = libraryDocumentRepository.findById(id)
