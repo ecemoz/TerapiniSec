@@ -2,22 +2,34 @@ package com.yildiz.terapinisec.mapper;
 
 import com.yildiz.terapinisec.dto.VoiceMessageCreateDto;
 import com.yildiz.terapinisec.dto.VoiceMessageResponseDto;
+import com.yildiz.terapinisec.model.User;
 import com.yildiz.terapinisec.model.VoiceMessage;
-import org.mapstruct.IterableMapping;
-import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
-import java.util.List;
+import org.springframework.stereotype.Component;
 
-@Mapper(componentModel = "spring")
-public interface VoiceMessageMapper {
+@Component
+public class VoiceMessageMapper {
 
-    @Mapping(target = "speaker" , ignore = true)
-    VoiceMessage toEntity(VoiceMessageCreateDto voiceMessageCreateDto);
+    public VoiceMessage toVoiceMessage(VoiceMessageCreateDto createDto, User speaker, User listener) {
+        if (createDto == null || speaker == null || listener == null) {
+            return null;
+        }
+        return VoiceMessage.builder()
+                .audioUrl(createDto.getAudioUrl())
+                .speaker(speaker)
+                .listener(listener)
+                .build();
+    }
 
-    @Mapping(source = "speaker.id" , target = "speakerId")
-    @Mapping(source = "listener.id" , target = "listenerId")
-    VoiceMessageResponseDto toResponseDto(VoiceMessage voiceMessage);
-
-    @IterableMapping(elementTargetType = VoiceMessageResponseDto.class)
-    List<VoiceMessageResponseDto> toVoiceMessageResponseDtoList(List<VoiceMessage> voiceMessages);
+    public VoiceMessageResponseDto toVoiceMessageResponseDto(VoiceMessage voiceMessage) {
+        if (voiceMessage == null) {
+            return null;
+        }
+        return VoiceMessageResponseDto.builder()
+                .id(voiceMessage.getId())
+                .audioUrl(voiceMessage.getAudioUrl())
+                .timestamp(voiceMessage.getTimeStamp())
+                .speakerId(voiceMessage.getSpeaker() != null ? voiceMessage.getSpeaker().getId() : null)
+                .listenerId(voiceMessage.getListener() != null ? voiceMessage.getListener().getId() : null)
+                .build();
+    }
 }
