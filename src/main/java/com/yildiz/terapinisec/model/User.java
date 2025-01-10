@@ -36,12 +36,11 @@ public class User {
     @Column(nullable = false)
     private String phoneNumber;
 
-    public String setPhoneNumber(String phoneNumber) {
+    public void setPhoneNumber(String phoneNumber) {
         if (!PhoneNumberUtil.isValidPhoneNumber(phoneNumber)) {
             throw new IllegalArgumentException("Invalid phone number");
         }
         this.phoneNumber = phoneNumber;
-        return this.phoneNumber;
     }
 
     @Column(nullable = false, unique = true)
@@ -60,29 +59,23 @@ public class User {
     @Column(nullable = false)
     private LocalDateTime lastLoginDateTime;
 
-    @Column(nullable = false)
+    @Column
     private LocalDateTime premiumStartDateTime;
 
-    @Column(nullable = false)
+    @Column
     private LocalDateTime premiumEndDateTime;
 
     @Column(nullable = false)
-    public boolean isPremium = false;
+    private boolean isPremium = false;
 
     @PrePersist
     protected void onCreate() {
         this.registrationDateTime = LocalDateTime.now();
-        if (this.isPremium) {
-            this.premiumStartDateTime = LocalDateTime.now();
-        }
     }
 
     @PreUpdate
     protected void onUpdate() {
         this.lastLoginDateTime = LocalDateTime.now();
-        if (this.isPremium) {
-            this.premiumEndDateTime = LocalDateTime.now();
-        }
     }
 
     @ElementCollection(targetClass = Specialization.class)
@@ -90,59 +83,58 @@ public class User {
     @Enumerated(EnumType.STRING)
     private List<Specialization> specializations;
 
-    @Column(nullable = false)
+    @Column
     private int yearsOfExperience;
 
     @ElementCollection
     @CollectionTable(name = "user_available_times", joinColumns = @JoinColumn(name = "user_id"))
     private List<LocalDateTime> availableTimes;
 
-    @OneToMany(mappedBy = "moodOwner")
+    @OneToMany(mappedBy = "moodOwner", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MoodLog> moodLogs;
 
-    @OneToMany(mappedBy = "assignees")
+    @OneToMany(mappedBy = "assignees", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Task> tasks;
 
-    @ManyToMany(mappedBy = "viewedBy")
+    @ManyToMany(mappedBy = "viewedBy", cascade = CascadeType.ALL)
     private List<StoryView> storyViews;
 
-    @OneToMany(mappedBy = "reportOwner")
+    @OneToMany(mappedBy = "reportOwner", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Report> reports;
 
-    @OneToMany(mappedBy = "goalOwner")
+    @OneToMany(mappedBy = "goalOwner", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Goal> goals;
 
-    @OneToMany(mappedBy = "joinedUser")
+    @OneToMany(mappedBy = "joinedUser", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Participant> participants;
 
-    @OneToMany(mappedBy = "responsedBy")
+    @OneToMany(mappedBy = "responsedBy", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SurveyResponse> surveyResponses;
 
-    @OneToMany(mappedBy = "sleeper")
+    @OneToMany(mappedBy = "sleeper", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<SleepLog> sleepLogs;
 
-    @OneToMany(mappedBy = "appointmentClients")
+    @OneToMany(mappedBy = "appointmentClients", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Appointment> appointments;
 
-    @OneToMany(mappedBy = "meditator")
+    @OneToMany(mappedBy = "meditator", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<MeditationSession> meditationSessions;
 
-    @OneToMany(mappedBy = "speaker")
+    @OneToMany(mappedBy = "speaker", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<VoiceMessage> voiceMessages;
 
-    @OneToMany(mappedBy = "listener")
+    @OneToMany(mappedBy = "listener", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<VoiceMessage> listenerVoiceMessages;
 
-    @OneToMany(mappedBy = "fileUploader")
+    @OneToMany(mappedBy = "fileUploader", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<LibraryDocument> libraryDocuments;
 
-    @OneToMany(mappedBy = "documentUploader")
+    @OneToMany(mappedBy = "documentUploader", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<FileStorage> documents;
 
-    @OneToMany(mappedBy = "createdBy")
+    @OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Survey> surveys;
 }
-
 
 //o	id: Benzersiz kullanıcı kimliği.
 //o	username: Kullanıcı adı.

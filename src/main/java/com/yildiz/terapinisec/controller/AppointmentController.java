@@ -3,7 +3,6 @@ package com.yildiz.terapinisec.controller;
 import com.yildiz.terapinisec.dto.AppointmentCreateDto;
 import com.yildiz.terapinisec.dto.AppointmentResponseDto;
 import com.yildiz.terapinisec.dto.AppointmentUpdateDto;
-import com.yildiz.terapinisec.model.Appointment;
 import com.yildiz.terapinisec.model.User;
 import com.yildiz.terapinisec.service.AppointmentService;
 import com.yildiz.terapinisec.util.AppointmentStatus;
@@ -31,22 +30,26 @@ public class AppointmentController {
     }
 
     @PostMapping
-    public ResponseEntity<AppointmentResponseDto> createAppointment(@RequestBody AppointmentCreateDto appointmentCreateDto) {
-        return ResponseEntity.ok(appointmentService.createAppointment(appointmentCreateDto));
+    public ResponseEntity<AppointmentResponseDto> createAppointment(@RequestBody AppointmentCreateDto appointmentCreateDto,
+                                                                    @RequestParam Long clientId,
+                                                                    @RequestParam Long therapistId) {
+        return ResponseEntity.ok(appointmentService.createAppointment(appointmentCreateDto, clientId, therapistId));
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<AppointmentResponseDto> updateAppointment(@PathVariable Long id, @RequestBody AppointmentUpdateDto appointmentUpdateDto) {
-       return ResponseEntity.ok(appointmentService.updateAppointment(id, appointmentUpdateDto));
+        return ResponseEntity.ok(appointmentService.updateAppointment(id, appointmentUpdateDto));
     }
 
     @PutMapping("/{appointmentId}/status")
-    public ResponseEntity<Appointment> updateAppointmentStatus( @PathVariable Long appointmentId, @RequestParam AppointmentStatus appointmentStatus, @RequestBody User user) {
-        return ResponseEntity.ok(appointmentService.updateAppointmentStatus(appointmentId, appointmentStatus, user));
+    public ResponseEntity<AppointmentResponseDto> updateAppointmentStatus(@PathVariable Long appointmentId,
+                                                                          @RequestParam AppointmentStatus appointmentStatus,
+                                                                          @RequestParam Long userId) {
+        return ResponseEntity.ok(appointmentService.updateAppointmentStatus(appointmentId, appointmentStatus, userId));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<AppointmentResponseDto> deleteAppointment(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteAppointment(@PathVariable Long id) {
         appointmentService.deleteAppointment(id);
         return ResponseEntity.noContent().build();
     }
@@ -67,12 +70,13 @@ public class AppointmentController {
     }
 
     @GetMapping("/date-between/status")
-    public ResponseEntity<List<AppointmentResponseDto>> getAppointmentDateBetweenStatus
-            (@RequestParam LocalDateTime appointmentDate1, @RequestParam  LocalDateTime appointmentDate2,@RequestParam AppointmentStatus appointmentStatus) {
+    public ResponseEntity<List<AppointmentResponseDto>> getAppointmentDateBetweenStatus(@RequestParam LocalDateTime appointmentDate1,
+                                                                                        @RequestParam LocalDateTime appointmentDate2,
+                                                                                        @RequestParam AppointmentStatus appointmentStatus) {
         return ResponseEntity.ok(appointmentService.findByAppointmentDateBetweenAndStatus(appointmentDate1, appointmentDate2, appointmentStatus));
     }
 
-    @GetMapping("/{userId}")
+    @GetMapping("/user/{userId}")
     public ResponseEntity<List<AppointmentResponseDto>> getAppointmentByUserId(@PathVariable Long userId) {
         return ResponseEntity.ok(appointmentService.findAppointmentByUserId(userId));
     }

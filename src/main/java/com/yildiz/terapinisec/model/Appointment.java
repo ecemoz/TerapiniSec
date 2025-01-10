@@ -11,25 +11,25 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Getter
 @Setter
-@Table(name= "appointment")
+@Table(name = "appointment")
 public class Appointment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false)
     private LocalDateTime appointmentDate;
 
-    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private AppointmentStatus appointmentStatus = AppointmentStatus.PENDING;
+    @Column(nullable = false)
+    private AppointmentStatus appointmentStatus;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id",nullable = false)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "client_id", nullable = false)
     private User appointmentClients;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "therapist_id",nullable = false)
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "therapist_id", nullable = false)
     private User therapist;
 }

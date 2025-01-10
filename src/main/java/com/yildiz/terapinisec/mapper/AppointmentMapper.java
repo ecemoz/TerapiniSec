@@ -13,12 +13,12 @@ import java.util.stream.Collectors;
 public class AppointmentMapper {
 
     public Appointment toAppointment(AppointmentCreateDto createDto, User client, User therapist) {
-        if (createDto == null) {
+        if (createDto == null || client == null || therapist == null) {
             return null;
         }
 
         return Appointment.builder()
-                .appointmentDate(createDto.getAppointmentTime())
+                .appointmentDate(createDto.getAppointmentDate()) // Düzeltme: appointmentTime -> appointmentDate
                 .appointmentStatus(createDto.getAppointmentStatus())
                 .appointmentClients(client)
                 .therapist(therapist)
@@ -34,10 +34,16 @@ public class AppointmentMapper {
                 .id(appointment.getId())
                 .appointmentDate(appointment.getAppointmentDate())
                 .appointmentStatus(appointment.getAppointmentStatus())
-                .appointmentClientUsername(appointment.getAppointmentClients() != null
-                        ? appointment.getAppointmentClients().getUsername() : null)
-                .therapistUsername(appointment.getTherapist() != null
-                        ? appointment.getTherapist().getUsername() : null)
+                .appointmentClientUsername(
+                        appointment.getAppointmentClients() != null
+                                ? appointment.getAppointmentClients().getUsername()
+                                : null
+                )
+                .therapistUsername(
+                        appointment.getTherapist() != null
+                                ? appointment.getTherapist().getUsername()
+                                : null
+                )
                 .build();
     }
 
@@ -46,8 +52,12 @@ public class AppointmentMapper {
             return;
         }
 
-        appointment.setAppointmentDate(updateDto.getAppointmentDate());
-        appointment.setAppointmentStatus(updateDto.getAppointmentStatus());
+        if (updateDto.getAppointmentDate() != null) {
+            appointment.setAppointmentDate(updateDto.getAppointmentDate());
+        }
+        if (updateDto.getAppointmentStatus() != null) {
+            appointment.setAppointmentStatus(updateDto.getAppointmentStatus());
+        }
     }
 
     public List<AppointmentResponseDto> toAppointmentResponseDtoList(List<Appointment> appointments) {
