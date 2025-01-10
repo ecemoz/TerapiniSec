@@ -1,5 +1,6 @@
 package com.yildiz.terapinisec.mapper;
 
+import com.yildiz.terapinisec.model.Session;
 import com.yildiz.terapinisec.dto.ParticipantDto;
 import com.yildiz.terapinisec.model.Participant;
 import com.yildiz.terapinisec.model.User;
