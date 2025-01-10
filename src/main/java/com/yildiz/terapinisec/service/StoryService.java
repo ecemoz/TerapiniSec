@@ -43,7 +43,7 @@ public class StoryService {
         Story existingStory = storyRepository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Story not found"));
 
-        storyMapper.updateStory(storyUpdateDto, existingStory);
+        storyMapper.updateStoryFromDto(storyUpdateDto, existingStory);
         Story updatedStory = storyRepository.save(existingStory);
         return storyMapper.toStoryResponseDto(updatedStory);
     }
