@@ -96,21 +96,21 @@ public class TaskService {
     }
 
     public List<TaskResponseDto> findByUserId(Long userId) {
-        List<Task> tasks = taskRepository.findByUserId(userId);
+        List<Task> tasks = taskRepository.findByAssignees_Id(userId);
         return tasks.stream()
                 .map(taskMapper::toTaskResponseDto)
                 .collect(Collectors.toList());
     }
 
     public List<TaskResponseDto> findByUserIdAndIsCompletedFalse(Long userId) {
-        List<Task> tasks = taskRepository.findByUserIdAndIsCompletedFalse(userId);
+        List<Task> tasks = taskRepository.findByAssignees_IdAndIsCompletedFalse(userId);
         return tasks.stream()
                 .map(taskMapper::toTaskResponseDto)
                 .collect(Collectors.toList());
     }
 
     public List<TaskResponseDto> findByUserIdDueDateBefore(Long userId, LocalDateTime dueDate) {
-        List<Task> tasks = taskRepository.findByUserIdDueDateBefore(userId, dueDate);
+        List<Task> tasks = taskRepository.findByAssignees_IdAndDueDateBefore(userId, dueDate);
         return tasks.stream()
                 .map(taskMapper::toTaskResponseDto)
                 .collect(Collectors.toList());
