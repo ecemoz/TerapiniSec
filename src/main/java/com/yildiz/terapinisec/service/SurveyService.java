@@ -73,7 +73,7 @@ public class SurveyService {
     }
 
     public List<SurveyPostDto>findSurveyByUserId(Long userId){
-        List<Survey> surveys = surveyRepository.findByUserId(userId);
+        List<Survey> surveys = surveyRepository.findByCreatedById(userId);
         return surveys.stream()
                 .map(surveyMapper:: toSurveyPostDto)
                 .collect(Collectors.toList());

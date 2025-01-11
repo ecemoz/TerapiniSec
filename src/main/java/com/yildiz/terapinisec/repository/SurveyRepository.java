@@ -9,5 +9,5 @@ import java.util.List;
 public interface SurveyRepository extends JpaRepository<Survey, Long> {
 
     List<Survey> findByTitleContaining(String keyword);
-    List<Survey>findByUserId(Long userId);
+    List<Survey>findByCreatedById(Long userId);
 }
