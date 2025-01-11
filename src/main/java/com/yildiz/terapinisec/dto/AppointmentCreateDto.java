@@ -17,4 +17,9 @@ public class AppointmentCreateDto {
     private Long appointmentClientId;
     private Long therapistId;
     private AppointmentStatus appointmentStatus = AppointmentStatus.PENDING;
+
+    public AppointmentStatus getAppointmentStatus() {
+        return appointmentStatus;
+    }
+
 }

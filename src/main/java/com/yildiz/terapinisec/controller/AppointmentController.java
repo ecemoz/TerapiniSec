@@ -3,8 +3,11 @@ package com.yildiz.terapinisec.controller;
 import com.yildiz.terapinisec.dto.AppointmentCreateDto;
 import com.yildiz.terapinisec.dto.AppointmentResponseDto;
 import com.yildiz.terapinisec.dto.AppointmentUpdateDto;
+import com.yildiz.terapinisec.dto.UserResponseDto;
+import com.yildiz.terapinisec.mapper.UserMapper;
 import com.yildiz.terapinisec.model.User;
 import com.yildiz.terapinisec.service.AppointmentService;
+import com.yildiz.terapinisec.service.UserService;
 import com.yildiz.terapinisec.util.AppointmentStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +21,12 @@ public class AppointmentController {
 
     @Autowired
     private AppointmentService appointmentService;
+
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private UserMapper userMapper;
 
     @GetMapping
     public ResponseEntity<List<AppointmentResponseDto>> getAllAppointments() {
@@ -42,11 +51,18 @@ public class AppointmentController {
     }
 
     @PutMapping("/{appointmentId}/status")
-    public ResponseEntity<AppointmentResponseDto> updateAppointmentStatus(@PathVariable Long appointmentId,
-                                                                          @RequestParam AppointmentStatus appointmentStatus,
-                                                                          @RequestParam Long userId) {
-        return ResponseEntity.ok(appointmentService.updateAppointmentStatus(appointmentId, appointmentStatus, userId));
+    public ResponseEntity<AppointmentResponseDto> updateAppointmentStatus(
+            @PathVariable Long appointmentId,
+            @RequestParam AppointmentStatus appointmentStatus,
+            @RequestParam Long userId) {
+
+        UserResponseDto userResponseDto = userService.getUserById(userId);
+        User user = userMapper.toUser(userResponseDto);
+
+        AppointmentResponseDto updatedAppointment = appointmentService.updateAppointmentStatus(appointmentId, appointmentStatus, user);
+        return ResponseEntity.ok(updatedAppointment);
     }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteAppointment(@PathVariable Long id) {

@@ -3,7 +3,9 @@ package com.yildiz.terapinisec.service;
 import com.yildiz.terapinisec.dto.AppointmentCreateDto;
 import com.yildiz.terapinisec.dto.AppointmentResponseDto;
 import com.yildiz.terapinisec.dto.AppointmentUpdateDto;
+import com.yildiz.terapinisec.dto.UserResponseDto;
 import com.yildiz.terapinisec.mapper.AppointmentMapper;
+import com.yildiz.terapinisec.mapper.UserMapper;
 import com.yildiz.terapinisec.model.Appointment;
 import com.yildiz.terapinisec.model.User;
 import com.yildiz.terapinisec.repository.AppointmentRepository;
@@ -24,6 +26,12 @@ public class AppointmentService {
     @Autowired
     private AppointmentMapper appointmentMapper;
 
+    @Autowired
+    private UserService userService;
+
+    @Autowired
+    private UserMapper userMapper;
+
     public List<AppointmentResponseDto> getAllAppointments() {
         List<Appointment> appointments = appointmentRepository.findAll();
         return appointments.stream()
@@ -37,7 +45,13 @@ public class AppointmentService {
         return appointmentMapper.toAppointmentResponseDto(appointment);
     }
 
-    public AppointmentResponseDto createAppointment(AppointmentCreateDto appointmentCreateDto, User client, User therapist) {
+    public AppointmentResponseDto createAppointment(AppointmentCreateDto appointmentCreateDto, Long clientId, Long therapistId) {
+        UserResponseDto clientDto = userService.getUserById(clientId);
+        UserResponseDto therapistDto = userService.getUserById(therapistId);
+
+        User client = userMapper.toUser(clientDto);
+        User therapist = userMapper.toUser(therapistDto);
+
         Appointment appointment = appointmentMapper.toAppointment(appointmentCreateDto, client, therapist);
         Appointment savedAppointment = appointmentRepository.save(appointment);
         return appointmentMapper.toAppointmentResponseDto(savedAppointment);
@@ -52,14 +66,19 @@ public class AppointmentService {
         return appointmentMapper.toAppointmentResponseDto(updatedAppointment);
     }
 
-    public Appointment updateAppointmentStatus(Long appointmentId, AppointmentStatus newStatus, User user) {
+    public AppointmentResponseDto updateAppointmentStatus(Long appointmentId, AppointmentStatus newStatus, User user) {
         Appointment appointment = appointmentRepository.findById(appointmentId)
                 .orElseThrow(() -> new RuntimeException("Appointment not found"));
 
         validateUserRoleForStatusUpdate(user);
         validateStatusChange(appointment.getAppointmentStatus(), newStatus);
-        return appointmentRepository.save(appointment);
+
+        appointment.setAppointmentStatus(newStatus);
+        Appointment updatedAppointment = appointmentRepository.save(appointment);
+
+        return appointmentMapper.toAppointmentResponseDto(updatedAppointment);
     }
+
 
     private void validateUserRoleForStatusUpdate(User user) {
         if (user.getUserRole() != UserRole.ADMIN && user.getUserRole() != UserRole.PSYCHOLOGIST) {

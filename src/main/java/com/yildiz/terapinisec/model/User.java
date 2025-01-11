@@ -134,6 +134,10 @@ public class User {
 
     @OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Survey> surveys;
+
+    public UserRole getUserRole() {
+        return userRole;
+    }
 }
 
 //o	id: Benzersiz kullanıcı kimliği.

@@ -16,4 +16,9 @@ public class AppointmentUpdateDto {
 
     private LocalDateTime appointmentDate;
     private AppointmentStatus appointmentStatus;
+
+    public AppointmentStatus getAppointmentStatus() {
+        return appointmentStatus;
+    }
+
 }

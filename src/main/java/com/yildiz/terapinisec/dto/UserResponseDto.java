@@ -5,6 +5,7 @@ import com.yildiz.terapinisec.util.UserRole;
 import lombok.Builder;
 import lombok.Data;
 import java.time.LocalDateTime;
+import java.util.List;
 
 
 @Data
@@ -23,4 +24,6 @@ public class UserResponseDto {
     private UserRole userRole;
     private String specialization;
     private Integer yearsOfExperience;
+    private LocalDateTime birthday;
+    private List<LocalDateTime> availableTimes;
 }
