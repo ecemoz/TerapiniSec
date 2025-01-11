@@ -17,6 +17,6 @@ public interface SessionRepository extends JpaRepository<Session, Long> {
     List<Session>findBySessionDateTimeBetween(LocalDateTime startDateTime, LocalDateTime endDateTime);
     List<Session>findBySessionNameContainingIgnoreCase(String keyword);
 
-    @Query("SELECT s FROM Session s JOIN FETCH s.participants WHERE S.id = :sessionId")
-    Optional<Session>findByIdWithParticipants(@Param("sessionId") Long sessionId);
+    @Query("SELECT s FROM Session s JOIN FETCH s.participants WHERE s.id = :id")
+    Optional<Session> findByIdWithParticipants(@Param("id") Long id);
 }
