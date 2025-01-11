@@ -1,5 +1,6 @@
 package com.yildiz.terapinisec.repository;
 
+import com.yildiz.terapinisec.model.MeditationContent;
 import com.yildiz.terapinisec.model.MeditationSession;
 import com.yildiz.terapinisec.util.MeditationSessionType;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -10,7 +11,6 @@ import java.util.List;
 public interface MeditationSessionRepository extends JpaRepository<MeditationSession, Long> {
 
     List<MeditationSession>findByMeditatorId(Long id);
-    int countByMeditationId (Long id);
-    List<MeditationSession>findByMeditationTitleContaining (String keyword);
-    List<MeditationSession>findByMeditatorIdAndMeditationContentType(Long userId, MeditationSessionType type);
+    int countByMeditator_Id(Long userId);
+    List<MeditationSession> findByMeditatorIdAndMeditationContent_MeditationSessionType(Long userId, MeditationSessionType type);
 }

@@ -66,18 +66,11 @@ public class MeditationSessionService {
     }
 
     public  int countByMeditationId (Long id) {
-        return meditationSessionRepository.countByMeditationId(id);
-    }
-
-    public List<MeditationSessionResponseDto>findByMeditationTitleContaining (String keyword) {
-        List<MeditationSession> sessions = meditationSessionRepository.findByMeditationTitleContaining(keyword);
-        return sessions.stream()
-                .map(meditationSessionMapper::toMeditationSessionResponseDto)
-                .collect(Collectors.toList());
+        return meditationSessionRepository.countByMeditator_Id(id);
     }
 
     public List<MeditationSessionResponseDto>findByMeditatorIdAndMeditationContentType(Long userId, MeditationSessionType type) {
-        List<MeditationSession> sessions = meditationSessionRepository.findByMeditatorIdAndMeditationContentType(userId, type);
+        List<MeditationSession> sessions = meditationSessionRepository.findByMeditatorIdAndMeditationContent_MeditationSessionType(userId, type);
         return sessions.stream()
                 .map(meditationSessionMapper::toMeditationSessionResponseDto)
                 .collect(Collectors.toList());

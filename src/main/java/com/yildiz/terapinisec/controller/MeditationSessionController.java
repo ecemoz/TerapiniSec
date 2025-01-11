@@ -45,11 +45,6 @@ public class MeditationSessionController {
         return ResponseEntity.ok(meditationSessionService.countByMeditationId(id));
     }
 
-    @GetMapping("/meditationtitle")
-    public ResponseEntity<List<MeditationSessionResponseDto>> getByMeditationTitleContaining(@RequestParam String keyword) {
-        return ResponseEntity.ok(meditationSessionService.findByMeditationTitleContaining(keyword));
-    }
-
     @GetMapping("{id}/content-type")
     public ResponseEntity<List<MeditationSessionResponseDto>> findByMeditatorIdAndMeditationContentType(@PathVariable Long id , @RequestParam MeditationSessionType sessionType) {
         return ResponseEntity.ok(meditationSessionService.findByMeditatorIdAndMeditationContentType(id, sessionType));
