@@ -8,9 +8,11 @@ import com.yildiz.terapinisec.model.MoodLog;
 import com.yildiz.terapinisec.model.User;
 import com.yildiz.terapinisec.repository.MoodLogRepository;
 import com.yildiz.terapinisec.repository.UserRepository;
+import com.yildiz.terapinisec.util.UserMoods;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -66,23 +68,23 @@ public class MoodLogService {
         }
     }
 
-    public List<MoodLogResponseDto>findByMood(String mood) {
-        List<MoodLog> moodLogs = moodLogRepository.findByMood(mood);
+    public List<MoodLogResponseDto>findByMood(Collection<List<UserMoods>> userMoods) {
+        List<MoodLog> moodLogs = moodLogRepository.findByUserMoodsIn(userMoods);
         return moodLogs.stream()
                 .map(moodLogMapper::toMoodLogResponseDto)
                 .collect(Collectors.toList());
     }
 
-    public long countByMood(String mood) {
-        return moodLogRepository.countByMood(mood);
+    public long countByMood(List<UserMoods> userMoods) {
+        return moodLogRepository.countByUserMoodsIn(userMoods);
     }
 
     public MoodLog findByUserId(Long userId) {
-        return moodLogRepository.findByUserId(userId);
+        return moodLogRepository.findByMoodOwnerId(userId);
     }
 
-    public MoodLogResponseDto findByUserIdAndMood(Long userId, String mood) {
-        MoodLog moodLog = moodLogRepository.findByUserIdAndMood(userId, mood);
+    public MoodLogResponseDto findByUserIdAndMood(Long userId, Collection< List<UserMoods>>userMoods) {
+        MoodLog moodLog = moodLogRepository.findByMoodOwnerIdAndUserMoodsIn(userId,userMoods);
         return moodLogMapper.toMoodLogResponseDto(moodLog);
     }
 
@@ -94,18 +96,18 @@ public class MoodLogService {
     }
 
     public List<MoodLogResponseDto> findByUserIdAndLogDateTimeBetween(Long userId, LocalDateTime startDateTime, LocalDateTime endDateTime) {
-        List<MoodLog> moodLogs = moodLogRepository.findByUserIdAndLogDateTimeBetween(userId, startDateTime, endDateTime);
+        List<MoodLog> moodLogs = moodLogRepository.findByMoodOwnerIdAndLogDateTimeBetween(userId, startDateTime, endDateTime);
         return moodLogs.stream()
                 .map(moodLogMapper::toMoodLogResponseDto)
                 .collect(Collectors.toList());
     }
 
-    public long countByUserIdAndMood(Long userId, String mood) {
-        return moodLogRepository.countByUserIdAndMood(userId, mood);
+    public long countByUserIdAndMood(Long userId, List<UserMoods> mood) {
+        return moodLogRepository.countByMoodOwnerIdAndUserMoodsIn(userId, mood);
     }
 
     public MoodLogResponseDto findTopByUserIdOrderByMoodDesc(Long userId) {
-        MoodLog moodLog = moodLogRepository.findTopByUserIdOrderByMoodDesc(userId);
+        MoodLog moodLog = moodLogRepository.findTopByMoodOwnerIdOrderByUserMoodsDesc(userId);
         return moodLogMapper.toMoodLogResponseDto(moodLog);
     }
 }

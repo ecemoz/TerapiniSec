@@ -3,12 +3,15 @@ package com.yildiz.terapinisec.controller;
 import com.yildiz.terapinisec.dto.MoodLogCreateDto;
 import com.yildiz.terapinisec.dto.MoodLogResponseDto;
 import com.yildiz.terapinisec.dto.MoodLogUpdateDto;
+import com.yildiz.terapinisec.model.User;
 import com.yildiz.terapinisec.service.MoodLogService;
+import com.yildiz.terapinisec.util.UserMoods;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.List;
 
 @RestController
@@ -45,18 +48,18 @@ public class MoodLogController {
     }
 
     @GetMapping("/mood")
-    public ResponseEntity<List<MoodLogResponseDto>> findByMood(@RequestParam String mood) {
-        return ResponseEntity.ok(moodLogService.findByMood(mood));
+    public ResponseEntity<List<MoodLogResponseDto>> findByMood(@RequestParam Collection<List<UserMoods>> userMoods) {
+        return ResponseEntity.ok(moodLogService.findByMood(userMoods));
     }
 
     @GetMapping("/count/mood")
-    public ResponseEntity<Long> countByMood(@RequestParam String mood) {
+    public ResponseEntity<Long> countByMood(@RequestParam List<UserMoods> mood) {
         return ResponseEntity.ok(moodLogService.countByMood(mood));
     }
 
     @GetMapping("/{userId}/mood")
-    public ResponseEntity<MoodLogResponseDto> findByUserIdAndMood(@PathVariable Long userId, @RequestParam String mood) {
-        return ResponseEntity.ok(moodLogService.findByUserIdAndMood(userId, mood));
+    public ResponseEntity<MoodLogResponseDto> findByUserIdAndMood(@PathVariable Long userId, @RequestParam Collection< List<UserMoods>> userMoods) {
+        return ResponseEntity.ok(moodLogService.findByUserIdAndMood(userId, userMoods));
     }
 
     @GetMapping("/between")
@@ -76,7 +79,7 @@ public class MoodLogController {
     }
 
     @GetMapping("/{userId}/count")
-    public ResponseEntity<Long> countByUserIdAndMood(@PathVariable Long userId, @RequestParam String mood) {
+    public ResponseEntity<Long> countByUserIdAndMood(@PathVariable Long userId, @RequestParam List<UserMoods> mood) {
         return ResponseEntity.ok(moodLogService.countByUserIdAndMood(userId, mood));
     }
 
