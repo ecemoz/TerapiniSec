@@ -12,7 +12,7 @@ public class SleepLogResponseDto {
 
     private Long id;
     private Duration sleepDuration;
-    private SleepQuality sleepQuality;
+    private int sleepQuality;
     private LocalDateTime sleepDate;
     private String sleeperUsername;
 }

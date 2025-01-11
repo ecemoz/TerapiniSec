@@ -10,6 +10,6 @@ import java.time.Duration;
 public class SleepLogCreateDto {
 
     private Duration sleepDuration;
-    private SleepQuality sleepQuality;
+    private int sleepQuality;
     private Long userId;
 }

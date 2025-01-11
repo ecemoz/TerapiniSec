@@ -62,7 +62,7 @@ public class SleepLogController {
 
     @GetMapping("/{id}/sleepquality")
     public ResponseEntity<List<SleepLogResponseDto>> getSleepLogBySleepQualityAndSleeperId
-            (@PathVariable Long id, @RequestParam SleepQuality sleepQuality) {
+            (@PathVariable Long id, @RequestParam int sleepQuality) {
         return ResponseEntity.ok(sleepLogService.findBySleepQualityAndSleeperId(sleepQuality, id));
     }
 

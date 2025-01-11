@@ -88,8 +88,8 @@ public class SleepLogService {
          return sleepLogMapper.toSleepLogResponseDtoList(sleepLogs);
     }
 
-    public List<SleepLogResponseDto>findBySleepQualityAndSleeperId(SleepQuality sleepQuality, Long id) {
-        List<SleepLog> sleepLogs = sleepLogRepository.findBySleepQualityAndSleeperId(sleepQuality, id);
+    public List<SleepLogResponseDto>findBySleepQualityAndSleeperId(int sleepQuality, Long id) {
+        List<SleepLog> sleepLogs = sleepLogRepository.findBySleepQualityValueAndSleeperId(sleepQuality, id);
         return sleepLogMapper.toSleepLogResponseDtoList(sleepLogs);
     }
 

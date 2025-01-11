@@ -17,14 +17,13 @@ public class SleepLog {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id ;
+    private Long id;
 
     @Column(nullable = false)
     private Duration sleepDuration;
 
     @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
-    private SleepQuality sleepQuality;
+    private int sleepQualityValue;
 
     @Column(nullable = false)
     private LocalDateTime sleepDate;
@@ -35,6 +34,14 @@ public class SleepLog {
     }
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id",nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User sleeper;
+
+    public SleepQuality getSleepQuality() {
+        return SleepQuality.fromValue(this.sleepQualityValue);
+    }
+
+    public void setSleepQuality(SleepQuality sleepQuality) {
+        this.sleepQualityValue = sleepQuality.getValue();
+    }
 }
