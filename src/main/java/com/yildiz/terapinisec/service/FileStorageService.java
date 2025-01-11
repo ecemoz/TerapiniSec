@@ -100,7 +100,7 @@ public class FileStorageService {
     }
 
     public Page<FileStorageResponseDto> findByUploaderId(Long uploaderId, Pageable pageable) {
-        return fileStorageRepository.findByUploaderId(uploaderId, pageable)
+        return fileStorageRepository.findByDocumentUploaderId(uploaderId, pageable)
                 .map(fileStorageMapper::toFileStorageResponseDto);
     }
 
@@ -110,12 +110,12 @@ public class FileStorageService {
     }
 
     public List<FileStorageResponseDto> findByFileNameContainingOrDescriptionContaining(String keyword) {
-        List<FileStorage> fileStorages = fileStorageRepository.findByFileNameContainingOrDescriptionContaining(keyword);
+        List<FileStorage> fileStorages = fileStorageRepository.findByFileNameContaining(keyword);
         return fileStorageMapper.toFileStorageResponseDtoList(fileStorages);
     }
 
     public List<FileStorageResponseDto> findByUploaderIdAndFileType(Long uploaderId, FileType fileType) {
-        List<FileStorage> fileStorages = fileStorageRepository.findByUploaderIdAndFileType(uploaderId, fileType);
+        List<FileStorage> fileStorages = fileStorageRepository.findByDocumentUploaderIdAndFileType(uploaderId, fileType);
         return fileStorageMapper.toFileStorageResponseDtoList(fileStorages);
     }
 
@@ -125,17 +125,17 @@ public class FileStorageService {
     }
 
     public List<FileStorageResponseDto> findByUploaderIdAndIsPublicFalse(Long uploaderId) {
-        List<FileStorage> fileStorages = fileStorageRepository.findByUploaderIdAndIsPublicFalse(uploaderId);
+        List<FileStorage> fileStorages = fileStorageRepository.findByDocumentUploaderIdAndIsPublicFalse(uploaderId);
         return fileStorageMapper.toFileStorageResponseDtoList(fileStorages);
     }
 
     public List<FileStorageResponseDto> findByUploadDateBetween(LocalDateTime startDate, LocalDateTime endDate) {
-        List<FileStorage> fileStorages = fileStorageRepository.findByUploadDateBetween(startDate, endDate);
+        List<FileStorage> fileStorages = fileStorageRepository.findByFileUploadDateBetween(startDate, endDate);
         return fileStorageMapper.toFileStorageResponseDtoList(fileStorages);
     }
 
     public List<FileStorageResponseDto> findByUploaderIdAndUploadDateBetween(Long uploaderId, LocalDateTime startDate, LocalDateTime endDate) {
-        List<FileStorage> fileStorages = fileStorageRepository.findByUploaderIdAndUploadDateBetween(uploaderId, startDate, endDate);
+        List<FileStorage> fileStorages = fileStorageRepository.findByDocumentUploaderIdAndFileUploadDateBetween(uploaderId, startDate, endDate);
         return fileStorageMapper.toFileStorageResponseDtoList(fileStorages);
     }
 

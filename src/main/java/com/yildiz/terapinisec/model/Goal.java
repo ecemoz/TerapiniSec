@@ -19,10 +19,8 @@ public class Goal {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ElementCollection
-    @CollectionTable(name = "goal_types",joinColumns = @JoinColumn(name = "goal_logs"))
     @Enumerated(EnumType.STRING)
-    private List< GoalType > goalType;
+    private  GoalType  goalType;
 
     @Column(nullable = false)
     private String goalDescription;

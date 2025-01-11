@@ -36,12 +36,12 @@ public class AppointmentMapper {
                 .appointmentStatus(appointment.getAppointmentStatus())
                 .appointmentClientUsername(
                         appointment.getAppointmentClients() != null
-                                ? appointment.getAppointmentClients().getUsername()
+                                ? appointment.getAppointmentClients().getUserName()
                                 : null
                 )
                 .therapistUsername(
                         appointment.getTherapist() != null
-                                ? appointment.getTherapist().getUsername()
+                                ? appointment.getTherapist().getUserName()
                                 : null
                 )
                 .build();

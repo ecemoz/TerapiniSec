@@ -11,7 +11,7 @@ import java.util.List;
 public class GoalResponseDto {
 
     private Long id;
-    private List<GoalType> goalType;
+    private GoalType goalType;
     private String goalDescription;
     private LocalDateTime goalStartDate;
     private LocalDateTime goalEndDate;

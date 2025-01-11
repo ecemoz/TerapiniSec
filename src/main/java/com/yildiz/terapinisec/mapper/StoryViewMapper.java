@@ -46,7 +46,7 @@ public class StoryViewMapper {
                 .id(storyView.getId())
                 .viewedAt(storyView.getViewedAt())
                 .storyDescription(storyView.getStory() != null ? storyView.getStory().getDescription() : null)
-                .username(storyView.getUser() != null ? storyView.getUser().getUsername() : null)
+                .username(storyView.getUser() != null ? storyView.getUser().getUserName() : null)
                 .build();
     }
 

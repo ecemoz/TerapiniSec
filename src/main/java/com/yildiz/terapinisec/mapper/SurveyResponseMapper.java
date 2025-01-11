@@ -33,7 +33,7 @@ public class SurveyResponseMapper {
                 .submittedDate(surveyResponse.getSubmittedDate())
                 .respondedByUsername(
                         surveyResponse.getResponsedBy() != null
-                                ? surveyResponse.getResponsedBy().getUsername()
+                                ? surveyResponse.getResponsedBy().getUserName()
                                 : null)
                 .surveyId(
                         surveyResponse.getSurvey() != null

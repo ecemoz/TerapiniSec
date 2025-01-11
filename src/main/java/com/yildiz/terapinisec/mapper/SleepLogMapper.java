@@ -34,7 +34,7 @@ public class SleepLogMapper {
                 .sleepDuration(sleepLog.getSleepDuration())
                 .sleepQuality(sleepLog.getSleepQuality())
                 .sleepDate(sleepLog.getSleepDate())
-                .sleeperUsername(sleepLog.getSleeper() != null ? sleepLog.getSleeper().getUsername() : null)
+                .sleeperUsername(sleepLog.getSleeper() != null ? sleepLog.getSleeper().getUserName() : null)
                 .build();
     }
 
@@ -48,7 +48,7 @@ public class SleepLogMapper {
                 .sleepDuration(sleepLog.getSleepDuration())
                 .sleepQuality(sleepLog.getSleepQuality())
                 .sleepDate(sleepLog.getSleepDate())
-                .sleeperUsername(sleepLog.getSleeper() != null ? sleepLog.getSleeper().getUsername() : null)
+                .sleeperUsername(sleepLog.getSleeper() != null ? sleepLog.getSleeper().getUserName() : null)
                 .sleeperId(sleepLog.getSleeper() != null ? sleepLog.getSleeper().getId() : null)
                 .build();
     }

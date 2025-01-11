@@ -39,7 +39,7 @@ public class MeditationContentMapper {
                 .meditationSessionType(meditationContent.getMeditationSessionType())
                 .contentUrl(meditationContent.getContentUrl())
                 .isPublic(meditationContent.isPublic())
-                .createdByUsername(meditationContent.getCreatedBy() != null ? meditationContent.getCreatedBy().getUsername() : null)
+                .createdByUsername(meditationContent.getCreatedBy() != null ? meditationContent.getCreatedBy().getUserName() : null)
                 .build();
     }
 

@@ -22,7 +22,7 @@ public class User {
     private Long id;
 
     @Column(unique = true, nullable = false)
-    private String username;
+    private String userName;
 
     @Column(nullable = false)
     private String firstName;
@@ -68,6 +68,10 @@ public class User {
     @Column(nullable = false)
     private boolean isPremium = false;
 
+    public boolean isPremium() {
+        return isPremium;
+    }
+
     @PrePersist
     protected void onCreate() {
         this.registrationDateTime = LocalDateTime.now();
@@ -96,7 +100,7 @@ public class User {
     @OneToMany(mappedBy = "assignees", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Task> tasks;
 
-    @ManyToMany(mappedBy = "viewedBy", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<StoryView> storyViews;
 
     @OneToMany(mappedBy = "reportOwner", cascade = CascadeType.ALL, orphanRemoval = true)

@@ -34,7 +34,7 @@ public class MeditationSessionMapper {
                 .id(session.getId())
                 .meditationSessionDuration(session.getMeditationSessionDuration())
                 .meditationDateTime(session.getMeditationDateTime())
-                .meditatorUsername(session.getMeditator() != null ? session.getMeditator().getUsername() : null)
+                .meditatorUsername(session.getMeditator() != null ? session.getMeditator().getUserName() : null)
                 .meditationContentTitle(session.getMeditationContent() != null ? session.getMeditationContent().getTitle() : null)
                 .build();
     }

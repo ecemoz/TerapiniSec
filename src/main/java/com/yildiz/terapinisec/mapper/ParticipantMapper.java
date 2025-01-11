@@ -20,7 +20,7 @@ public class ParticipantMapper {
         return ParticipantDto.builder()
                 .id(participant.getId())
                 .joinedAt(participant.getJoinedAt())
-                .participantName(participant.getJoinedUser() != null ? participant.getJoinedUser().getUsername() : null)
+                .participantName(participant.getJoinedUser() != null ? participant.getJoinedUser().getUserName() : null)
                 .participantEmail(participant.getJoinedUser() != null ? participant.getJoinedUser().getEmail() : null)
                 .sessionId(participant.getSession() != null ? participant.getSession().getId() : null)
                 .build();

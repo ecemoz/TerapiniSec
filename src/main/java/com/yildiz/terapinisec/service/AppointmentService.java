@@ -115,17 +115,22 @@ public class AppointmentService {
     }
 
     public List<AppointmentResponseDto> findByStatus(AppointmentStatus status) {
-       List<Appointment> appointments = appointmentRepository.findByStatus(status);
+       List<Appointment> appointments = appointmentRepository.findByAppointmentStatus(status);
        return appointmentMapper.toAppointmentResponseDtoList(appointments);
     }
 
     public List<AppointmentResponseDto> findByAppointmentDateBetweenAndStatus(LocalDateTime appointmentDate1, LocalDateTime appointmentDate2, AppointmentStatus status) {
-        List<Appointment> appointments = appointmentRepository.findByAppointmentDateBetweenAndStatus(appointmentDate1, appointmentDate2, status);
+        List<Appointment> appointments = appointmentRepository.findByAppointmentDateBetweenAndAppointmentStatus(appointmentDate1, appointmentDate2, status);
         return appointmentMapper.toAppointmentResponseDtoList(appointments);
     }
 
-    public List<AppointmentResponseDto> findAppointmentByUserId(Long userId) {
-        List<Appointment> appointments = appointmentRepository.findByUserId(userId);
+    public List<AppointmentResponseDto> findAppointmentByClientId(Long userId) {
+        List<Appointment> appointments = appointmentRepository.findByAppointmentClients_Id(userId);
+        return appointmentMapper.toAppointmentResponseDtoList(appointments);
+    }
+
+    public List<AppointmentResponseDto> findAppointmentByTherapistId(Long userId) {
+        List<Appointment> appointments = appointmentRepository.findByTherapist_Id(userId);
         return appointmentMapper.toAppointmentResponseDtoList(appointments);
     }
 }

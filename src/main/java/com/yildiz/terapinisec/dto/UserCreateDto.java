@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Builder
 public class UserCreateDto {
 
-    private String username;
+    private String userName;
     private String firstName;
     private String lastName;
     private String email;

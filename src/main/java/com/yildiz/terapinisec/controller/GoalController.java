@@ -4,6 +4,7 @@ import com.yildiz.terapinisec.dto.GoalCreateDto;
 import com.yildiz.terapinisec.dto.GoalResponseDto;
 import com.yildiz.terapinisec.dto.GoalUpdateDto;
 import com.yildiz.terapinisec.service.GoalService;
+import com.yildiz.terapinisec.util.GoalType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -43,7 +44,7 @@ public class GoalController {
     }
 
     @GetMapping("/goaltype")
-    public ResponseEntity<List<GoalResponseDto>> getGoalByGoalType(@RequestParam String goalType) {
+    public ResponseEntity<List<GoalResponseDto>> getGoalByGoalType(@RequestParam GoalType goalType) {
         return ResponseEntity.ok(goalService.findByGoalType(goalType));
     }
 

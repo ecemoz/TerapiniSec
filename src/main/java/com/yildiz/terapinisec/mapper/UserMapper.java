@@ -16,7 +16,7 @@ public class UserMapper {
         }
 
         return User.builder()
-                .username(userCreateDto.getUsername())
+                .userName(userCreateDto.getUserName())
                 .firstName(userCreateDto.getFirstName())
                 .lastName(userCreateDto.getLastName())
                 .email(userCreateDto.getEmail())
@@ -35,7 +35,7 @@ public class UserMapper {
 
         return User.builder()
                 .id(userResponseDto.getId())
-                .username(userResponseDto.getUsername())
+                .userName(userResponseDto.getUserName())
                 .firstName(userResponseDto.getFirstName())
                 .lastName(userResponseDto.getLastName())
                 .email(userResponseDto.getEmail())
@@ -56,7 +56,7 @@ public class UserMapper {
 
         return UserDto.builder()
                 .id(user.getId())
-                .username(user.getUsername())
+                .userName(user.getUserName())
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
                 .email(user.getEmail())
@@ -81,7 +81,7 @@ public class UserMapper {
 
         return UserResponseDto.builder()
                 .id(user.getId())
-                .username(user.getUsername())
+                .userName(user.getUserName())
                 .firstName(user.getFirstName())
                 .lastName(user.getLastName())
                 .email(user.getEmail())
@@ -105,8 +105,8 @@ public class UserMapper {
             return;
         }
 
-        if (userUpdateDto.getUsername() != null) {
-            user.setUsername(userUpdateDto.getUsername());
+        if (userUpdateDto.getUserName() != null) {
+            user.setUserName(userUpdateDto.getUserName());
         }
         if (userUpdateDto.getFirstName() != null) {
             user.setFirstName(userUpdateDto.getFirstName());

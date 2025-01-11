@@ -34,7 +34,7 @@ public class MoodLogMapper {
                 .usermoods(moodLog.getUserMoods())
                 .description(moodLog.getDescription())
                 .logDateTime(moodLog.getLogDateTime())
-                .moodOwnerUsername(moodLog.getMoodOwner() != null ? moodLog.getMoodOwner().getUsername() : null)
+                .moodOwnerUsername(moodLog.getMoodOwner() != null ? moodLog.getMoodOwner().getUserName() : null)
                 .build();
     }
 

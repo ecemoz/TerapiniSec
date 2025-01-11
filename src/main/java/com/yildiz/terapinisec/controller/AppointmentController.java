@@ -92,8 +92,13 @@ public class AppointmentController {
         return ResponseEntity.ok(appointmentService.findByAppointmentDateBetweenAndStatus(appointmentDate1, appointmentDate2, appointmentStatus));
     }
 
-    @GetMapping("/user/{userId}")
-    public ResponseEntity<List<AppointmentResponseDto>> getAppointmentByUserId(@PathVariable Long userId) {
-        return ResponseEntity.ok(appointmentService.findAppointmentByUserId(userId));
+    @GetMapping("/client/{userId}")
+    public ResponseEntity<List<AppointmentResponseDto>> getAppointmentByClientId(@PathVariable Long userId) {
+        return ResponseEntity.ok(appointmentService.findAppointmentByClientId(userId));
+    }
+
+    @GetMapping("/therapist/{userId}")
+    public ResponseEntity<List<AppointmentResponseDto>> getAppointmentByTherapistId(@PathVariable Long userId) {
+        return ResponseEntity.ok(appointmentService.findAppointmentByTherapistId(userId));
     }
 }

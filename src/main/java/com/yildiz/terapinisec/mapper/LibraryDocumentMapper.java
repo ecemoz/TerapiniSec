@@ -41,7 +41,7 @@ public class LibraryDocumentMapper {
                 .isPublic(libraryDocument.isPublic())
                 .accesibleByPremiumOnly(libraryDocument.isAccesibleByPremiumOnly())
                 .fileUploaderUsername(libraryDocument.getFileUploader() != null
-                        ? libraryDocument.getFileUploader().getUsername()
+                        ? libraryDocument.getFileUploader().getUserName()
                         : null)
                 .build();
     }

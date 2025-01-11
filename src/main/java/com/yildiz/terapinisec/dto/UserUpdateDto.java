@@ -10,7 +10,7 @@ import java.util.List;
 @Builder
 public class UserUpdateDto {
 
-    private String username;
+    private String userName;
     private String firstName;
     private String lastName;
     private String email;

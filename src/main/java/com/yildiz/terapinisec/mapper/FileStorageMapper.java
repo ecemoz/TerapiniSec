@@ -24,7 +24,7 @@ public class FileStorageMapper {
                 .fileType(createDto.getFileType())
                 .fileUrl(createDto.getFileUrl())
                 .fileSize(createDto.getFileSize())
-                .isFilePublic(createDto.isFilePublic())
+                .isPublic(createDto.isFilePublic())
                 .documentUploader(uploader)
                 .build();
     }
@@ -43,9 +43,9 @@ public class FileStorageMapper {
                 .fileUrl(fileStorage.getFileUrl())
                 .fileUploadDate(fileStorage.getFileUploadDate())
                 .fileSize(fileStorage.getFileSize())
-                .isFilePublic(fileStorage.isFilePublic())
+                .isFilePublic(fileStorage.isPublic())
                 .documentUploaderUsername(fileStorage.getDocumentUploader() != null
-                        ? fileStorage.getDocumentUploader().getUsername()
+                        ? fileStorage.getDocumentUploader().getUserName()
                         : null)
                 .build();
     }
@@ -61,7 +61,7 @@ public class FileStorageMapper {
         fileStorage.setFileType(updateDto.getFileType());
         fileStorage.setFileUrl(updateDto.getFileUrl());
         fileStorage.setFileSize(updateDto.getFileSize());
-        fileStorage.setFilePublic(updateDto.isFilePublic());
+        fileStorage.setPublic(updateDto.isFilePublic());
     }
 
     public List<FileStorageResponseDto> toFileStorageResponseDtoList(List<FileStorage> fileStorages) {

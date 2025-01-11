@@ -8,6 +8,7 @@ import com.yildiz.terapinisec.model.Goal;
 import com.yildiz.terapinisec.model.User;
 import com.yildiz.terapinisec.repository.GoalRepository;
 import com.yildiz.terapinisec.repository.UserRepository;
+import com.yildiz.terapinisec.util.GoalType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -65,7 +66,7 @@ public class GoalService {
         }
     }
 
-    public List<GoalResponseDto>findByGoalType(String goalType) {
+    public List<GoalResponseDto>findByGoalType(GoalType goalType) {
        List<Goal> goals = goalRepository.findByGoalType(goalType);
         return goals.stream()
                 .map(goalMapper::toGoalResponseDto)
@@ -73,14 +74,14 @@ public class GoalService {
     }
 
     public List<GoalResponseDto>findByIsCompletedTrue() {
-        List<Goal> goals = goalRepository.findByIsCompletedTrue();
+        List<Goal> goals = goalRepository.findByGoalCompleteTrue();
         return goals.stream()
                 .map(goalMapper::toGoalResponseDto)
                 .collect(Collectors.toList());
     }
 
     public List<GoalResponseDto>findByIsCompletedFalse() {
-       List<Goal> goals = goalRepository.findByIsCompletedFalse();
+       List<Goal> goals = goalRepository.findByGoalCompleteFalse();
         return goals.stream()
                 .map(goalMapper::toGoalResponseDto)
                 .collect(Collectors.toList());
@@ -94,7 +95,7 @@ public class GoalService {
     }
 
     public List<GoalResponseDto>findByGoalOwnerIdAndIsCompletedFalse(Long userId) {
-        List<Goal> goals = goalRepository.findByGoalOwnerIdAndIsCompletedFalse(userId);
+        List<Goal> goals = goalRepository.findByGoalOwnerIdAndGoalCompleteFalse(userId);
         return goals.stream()
                 .map(goalMapper::toGoalResponseDto)
                 .collect(Collectors.toList());

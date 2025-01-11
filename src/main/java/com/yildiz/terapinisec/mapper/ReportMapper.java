@@ -34,7 +34,7 @@ public class ReportMapper {
                 .reportSituation(report.getReportSituation())
                 .content(report.getContent())
                 .reportCreatedAt(report.getReportCreatedAt())
-                .reportOwnerUsername(report.getReportOwner() != null ? report.getReportOwner().getUsername() : null)
+                .reportOwnerUsername(report.getReportOwner() != null ? report.getReportOwner().getUserName() : null)
                 .build();
     }
 
@@ -48,7 +48,7 @@ public class ReportMapper {
                 .reportSituation(report.getReportSituation())
                 .content(report.getContent())
                 .reportCreatedAt(report.getReportCreatedAt())
-                .reportOwnerUsername(report.getReportOwner() != null ? report.getReportOwner().getUsername() : null)
+                .reportOwnerUsername(report.getReportOwner() != null ? report.getReportOwner().getUserName() : null)
                 .reportOwnerEmail(report.getReportOwner() != null ? report.getReportOwner().getEmail() : null)
                 .build();
     }

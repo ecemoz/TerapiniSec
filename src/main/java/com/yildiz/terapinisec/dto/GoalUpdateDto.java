@@ -10,7 +10,7 @@ import java.util.List;
 @Builder
 public class GoalUpdateDto {
 
-    private List<GoalType> goalType;
+    private GoalType goalType;
     private String goalDescription;
     private LocalDateTime goalEndDate;
     private boolean goalComplete;

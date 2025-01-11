@@ -12,13 +12,13 @@ import java.util.List;
 @Repository
 public interface FileStorageRepository extends JpaRepository<FileStorage, Long> {
 
-    Page<FileStorage>findByUploaderId(Long uploaderId, Pageable pageable);
+    Page<FileStorage>findByDocumentUploaderId(Long uploaderId, Pageable pageable);
     List<FileStorage> findByFileType(FileType fileType);
-    List<FileStorage>findByFileNameContainingOrDescriptionContaining(String fileNameKeyWord);
-    List<FileStorage>findByUploaderIdAndFileType(Long uploaderId, FileType fileType);
+    List<FileStorage> findByFileNameContaining(String fileNameKeyWord);
+    List<FileStorage>findByDocumentUploaderIdAndFileType(Long uploaderId, FileType fileType);
     List<FileStorage>findByIsPublicTrue();
-    List<FileStorage>findByUploaderIdAndIsPublicFalse(Long uploaderId);
-    List<FileStorage>findByUploadDateBetween(LocalDateTime startDate, LocalDateTime endDate);
-    List<FileStorage>findByUploaderIdAndUploadDateBetween(Long uploaderId, LocalDateTime startDate, LocalDateTime endDate);
+    List<FileStorage>findByDocumentUploaderIdAndIsPublicFalse(Long uploaderId);
+    List<FileStorage>findByFileUploadDateBetween(LocalDateTime startDate, LocalDateTime endDate);
+    List<FileStorage>findByDocumentUploaderIdAndFileUploadDateBetween(Long uploaderId, LocalDateTime startDate, LocalDateTime endDate);
     FileStorage findByFileName(String fileName);
 }

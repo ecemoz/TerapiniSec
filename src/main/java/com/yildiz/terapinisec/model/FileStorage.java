@@ -44,7 +44,7 @@ public class FileStorage {
     private float fileSize;
 
     @Column(nullable = false)
-    private boolean isFilePublic = true;
+    private boolean isPublic = true;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "document_uploader_id", nullable = false)

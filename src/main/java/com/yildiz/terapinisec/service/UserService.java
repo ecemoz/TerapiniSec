@@ -110,7 +110,7 @@ public class UserService {
     }
 
     public UserResponseDto findByUsername(String username) {
-        User user = userRepository.findByUsername(username);
+        User user = userRepository.findByUserName(username);
         return userMapper.toUserResponseDto(user);
     }
 
@@ -130,7 +130,7 @@ public class UserService {
     }
 
     public List<UserResponseDto> findByRole(UserRole role) {
-        List<User> users = userRepository.findByRole(role);
+        List<User> users = userRepository.findByUserRole(role);
         return userMapper.toUserResponseDtoList(users);
     }
 
@@ -155,7 +155,7 @@ public class UserService {
     }
 
     public List<UserResponseDto> findBySpecializationContains(Specialization specialization) {
-        List<User> users = userRepository.findBySpecializationContains(specialization);
+        List<User> users = userRepository.findBySpecializationsContaining(specialization);
         return userMapper.toUserResponseDtoList(users);
     }
 
@@ -165,7 +165,7 @@ public class UserService {
     }
 
     public boolean authenticate(UserLoginDto userLoginDto) {
-        User user = userRepository.findByUsernameOrEmail(userLoginDto.getUsernameOrEmail());
+        User user = userRepository.findByUserNameOrEmail(userLoginDto.getUserNameOrEmail(), userLoginDto.getUserNameOrEmail());
         return user != null && passwordEncoder.matches(userLoginDto.getPassword(), user.getPassword());
     }
 }

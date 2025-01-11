@@ -37,7 +37,7 @@ public class GoalMapper {
                 .goalStartDate(goal.getGoalStartDate())
                 .goalEndDate(goal.getGoalEndDate())
                 .goalComplete(goal.isGoalComplete())
-                .goalOwnerUsername(goal.getGoalOwner() != null ? goal.getGoalOwner().getUsername() : null)
+                .goalOwnerUsername(goal.getGoalOwner() != null ? goal.getGoalOwner().getUserName() : null)
                 .build();
     }
 
