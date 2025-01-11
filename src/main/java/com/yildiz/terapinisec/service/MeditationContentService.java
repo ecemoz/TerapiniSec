@@ -72,7 +72,7 @@ public class MeditationContentService {
     }
 
     public  List<MeditationContentResponseDto>findByType(MeditationSessionType type) {
-        List<MeditationContent> contents = meditationContentRepository.findByType(type);
+        List<MeditationContent> contents = meditationContentRepository.findByMeditationSessionType(type);
         return contents.stream()
                 .map(meditationContentMapper::toMeditationContentResponseDto)
                 .collect(Collectors.toList());

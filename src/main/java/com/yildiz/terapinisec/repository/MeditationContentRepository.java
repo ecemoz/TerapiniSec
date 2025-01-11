@@ -10,7 +10,7 @@ import java.util.List;
 public interface MeditationContentRepository  extends JpaRepository<MeditationContent, Long> {
 
     List<MeditationContent>findByIsPublicTrue();
-    List<MeditationContent>findByType(MeditationSessionType type);
+    List<MeditationContent>findByMeditationSessionType(MeditationSessionType type);
     List<MeditationContent>findByIsPublicFalse();
     List<MeditationContent>findByCreatedById(Long userId);
 }
