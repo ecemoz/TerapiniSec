@@ -10,10 +10,11 @@ import java.util.List;
 @Repository
 public interface LibraryDocumentRepository extends JpaRepository<LibraryDocument, Long> {
 
-Page<LibraryDocument>findByIsPublicTrue(Pageable pageable);
-Page<LibraryDocument>findByUploaderId(Long uploaderId, Pageable pageable);
-List<LibraryDocument>findByUploaderIdAndIsPublicTrue(Long uploaderId);
-List<LibraryDocument>findByTitleContainingOrDescriptionContaining(String titleKeyword, String descriptionKeyword);
-List<LibraryDocument>findByAccesibleByPremiumOnlyTrue();
-List<LibraryDocument>findByUploaderIdAndAccessibleByPremiumOnlyTrue(Long uploaderId);
+    Page<LibraryDocument> findByIsPublicTrue(Pageable pageable);
+    Page<LibraryDocument> findByFileUploaderId(Long uploaderId, Pageable pageable);
+    List<LibraryDocument> findByFileUploaderIdAndIsPublicTrue(Long uploaderId);
+    List<LibraryDocument> findByTitleContainingOrDescriptionContaining(String titleKeyword, String descriptionKeyword);
+    List<LibraryDocument> findByAccesibleByPremiumOnlyTrue();
+    List<LibraryDocument> findByFileUploaderIdAndAccesibleByPremiumOnlyTrue(Long uploaderId);
+
 }

@@ -74,12 +74,12 @@ public class LibraryDocumentService {
     }
 
     public Page<LibraryDocumentResponseDto>findByUploaderId(Long uploaderId, Pageable pageable) {
-        Page<LibraryDocument> documents = libraryDocumentRepository.findByUploaderId(uploaderId, pageable);
+        Page<LibraryDocument> documents = libraryDocumentRepository.findByFileUploaderId(uploaderId, pageable);
         return documents.map(libraryDocumentMapper::toLibraryDocumentResponseDto);
     }
 
     public List<LibraryDocumentResponseDto> findByUploaderIdAndIsPublicTrue(Long uploaderId) {
-        List<LibraryDocument> documents = libraryDocumentRepository.findByUploaderIdAndIsPublicTrue(uploaderId);
+        List<LibraryDocument> documents = libraryDocumentRepository.findByFileUploaderIdAndIsPublicTrue(uploaderId);
         return documents.stream()
                 .map(libraryDocumentMapper::toLibraryDocumentResponseDto)
                 .collect(Collectors.toList());
@@ -100,7 +100,7 @@ public class LibraryDocumentService {
     }
 
     public List<LibraryDocumentResponseDto>findByUploaderIdAndAccessibleByPremiumOnlyTrue(Long uploaderId) {
-        List<LibraryDocument> documents = libraryDocumentRepository.findByUploaderIdAndAccessibleByPremiumOnlyTrue(uploaderId);
+        List<LibraryDocument> documents = libraryDocumentRepository.findByFileUploaderIdAndAccesibleByPremiumOnlyTrue(uploaderId);
         return documents.stream()
                 .map(libraryDocumentMapper::toLibraryDocumentResponseDto)
                 .collect(Collectors.toList());
