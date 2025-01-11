@@ -181,9 +181,9 @@ public class ReportService {
         return suggestions.toString();
     }
 
-    public ReportResponseDto findByReportType(String reportType) {
-        Report report = reportRepository.findByReportType(reportType)
-                .orElseThrow(()-> new RuntimeException("Report not found for type:" + reportType));
+    public ReportResponseDto findByReportType(ReportSituation reportSituation) {
+        Report report = reportRepository.findByReportSituation(reportSituation)
+                .orElseThrow(()-> new RuntimeException("Report not found for type:" + reportSituation));
         return reportMapper.toReportResponseDto(report);
     }
 
@@ -193,9 +193,9 @@ public class ReportService {
         return reportMapper.toReportResponseDto(report);
     }
 
-    public ReportResponseDto findByReportOwnerIdAndReportType(Long userId, String reportType) {
-        Report report = reportRepository.findByReportOwnerIdAndReportType(userId, reportType)
-                .orElseThrow(()-> new RuntimeException("Report not found for user:" + userId + " and type:" + reportType));
+    public ReportResponseDto findByReportOwnerIdAndReportType(Long userId, ReportSituation reportSituation) {
+        Report report = reportRepository.findByReportOwnerIdAndReportSituation(userId, reportSituation)
+                .orElseThrow(()-> new RuntimeException("Report not found for user:" + userId + " and type:" + reportSituation));
         return reportMapper.toReportResponseDto(report);
     }
 

@@ -2,6 +2,7 @@ package com.yildiz.terapinisec.controller;
 
 import com.yildiz.terapinisec.dto.ReportResponseDto;
 import com.yildiz.terapinisec.service.ReportService;
+import com.yildiz.terapinisec.util.ReportSituation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
@@ -27,8 +28,8 @@ public class ReportController {
     }
 
     @GetMapping("/type")
-    public ResponseEntity<ReportResponseDto> getReportByType(@RequestParam String reportType) {
-        return ResponseEntity.ok(reportService.findByReportType(reportType));
+    public ResponseEntity<ReportResponseDto> getReportByType(@RequestParam ReportSituation reportSituation) {
+        return ResponseEntity.ok(reportService.findByReportType(reportSituation));
     }
 
     @GetMapping("/user/{userId}")
@@ -37,8 +38,8 @@ public class ReportController {
     }
 
     @GetMapping("/{userId}/type")
-    public ResponseEntity<ReportResponseDto> getReportByOwnerIdAndType(@PathVariable Long userId, @RequestParam String reportType) {
-        return ResponseEntity.ok(reportService.findByReportOwnerIdAndReportType(userId, reportType));
+        public ResponseEntity<ReportResponseDto> getReportByOwnerIdAndType(@PathVariable Long userId, @RequestParam ReportSituation reportSituation) {
+        return ResponseEntity.ok(reportService.findByReportOwnerIdAndReportType(userId, reportSituation));
     }
 
     @GetMapping("/date")
