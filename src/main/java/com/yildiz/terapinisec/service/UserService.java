@@ -50,12 +50,20 @@ public class UserService {
         return premiumService.downgradeFromPremium(userId);
     }
 
-    public void activePremium(Long userId) {
-        if (premiumService.isPremiumActive(userId)) {
-            System.out.println("You are premium member");
-        } else {
-            System.out.println("You are not premium member");
-        }
+    public UserPremiumStatusResponse activePremium(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+
+        boolean isPremium = user.isPremium();
+
+        String message = isPremium
+                ? "You are a premium member."
+                : "You are not a premium member.";
+
+        return UserPremiumStatusResponse.builder()
+                .isPremium(isPremium)
+                .message(message)
+                .build();
     }
 
     public List<UserResponseDto> getAllUsers() {

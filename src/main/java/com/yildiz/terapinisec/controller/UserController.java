@@ -55,9 +55,9 @@ public class UserController {
     }
 
     @GetMapping("/{id}/premium/status")
-    public ResponseEntity<Void> checkPremiumStatus(@PathVariable Long id) {
-        userService.activePremium(id);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<UserPremiumStatusResponse> checkPremiumStatus(@PathVariable Long id) {
+        UserPremiumStatusResponse response = userService.activePremium(id);
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{id}")
