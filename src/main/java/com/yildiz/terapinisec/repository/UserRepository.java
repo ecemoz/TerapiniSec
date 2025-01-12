@@ -8,6 +8,7 @@ import org.springframework.stereotype.Repository;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
@@ -46,5 +47,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<User> findByYearsOfExperienceGreaterThan(Integer years);
 
     // Kullanıcı adı veya e-posta adresine göre kullanıcıyı bul
-    User findByUserNameOrEmail(String userName, String email);
+    Optional<User> findByUserNameOrEmail(String userName, String email);
 }

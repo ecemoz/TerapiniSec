@@ -7,6 +7,7 @@ import com.yildiz.terapinisec.repository.UserRepository;
 import com.yildiz.terapinisec.util.Specialization;
 import com.yildiz.terapinisec.util.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
@@ -79,15 +80,31 @@ public class UserService {
     public UserResponseDto updateUser(Long id, UserUpdateDto userUpdateDto) {
         return userRepository.findById(id)
                 .map(existingUser -> {
+                    if (existingUser.getUserRole() == UserRole.USER) {
+                        existingUser.setSpecializations(null);
+                        existingUser.setYearsOfExperience(null);
+                        existingUser.setAvailableTimes(null);
+
+                        if (userUpdateDto.getSpecialization() != null ||
+                                userUpdateDto.getYearsOfExperience() != null ||
+                                userUpdateDto.getAvailableTimes() != null) {
+                            throw new IllegalArgumentException("USER role cannot update psychologist-specific fields");
+                        }
+                    }
+
                     userMapper.updateUserFromDto(userUpdateDto, existingUser);
-                    if (existingUser.getUserRole().equals(UserRole.PSYCHOLOGIST)) {
+
+                    if (existingUser.getUserRole() == UserRole.PSYCHOLOGIST) {
                         updatePsychologistFields(existingUser, userUpdateDto);
                     }
+
                     User updatedUser = userRepository.save(existingUser);
                     return userMapper.toUserResponseDto(updatedUser);
                 })
                 .orElseThrow(() -> new RuntimeException("User not found"));
     }
+
+
 
     private void updatePsychologistFields(User existingUser, UserUpdateDto userUpdateDto) {
         if (userUpdateDto.getSpecialization() != null) {
@@ -165,7 +182,14 @@ public class UserService {
     }
 
     public boolean authenticate(UserLoginDto userLoginDto) {
-        User user = userRepository.findByUserNameOrEmail(userLoginDto.getUserNameOrEmail(), userLoginDto.getUserNameOrEmail());
-        return user != null && passwordEncoder.matches(userLoginDto.getPassword(), user.getPassword());
+        User user = userRepository.findByUserNameOrEmail(userLoginDto.getUserNameOrEmail(),userLoginDto.getUserNameOrEmail())
+                .orElseThrow(() -> new UsernameNotFoundException("User not found"));
+
+        if (passwordEncoder.matches(userLoginDto.getPassword(), user.getPassword())) {
+            user.setLastLoginDateTime(LocalDateTime.now());
+            userRepository.save(user);
+            return true;
+        }
+        return false;
     }
 }

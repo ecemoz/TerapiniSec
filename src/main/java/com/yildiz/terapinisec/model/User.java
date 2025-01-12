@@ -78,18 +78,13 @@ public class User {
         this.lastLoginDateTime = this.registrationDateTime;
     }
 
-    @PreUpdate
-    protected void onUpdate() {
-        this.lastLoginDateTime = LocalDateTime.now();
-    }
-
     @ElementCollection(targetClass = Specialization.class)
     @CollectionTable(name = "user_specializations", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)
     private List<Specialization> specializations;
 
     @Column
-    private int yearsOfExperience;
+    private Integer yearsOfExperience;
 
     @ElementCollection
     @CollectionTable(name = "user_available_times", joinColumns = @JoinColumn(name = "user_id"))
