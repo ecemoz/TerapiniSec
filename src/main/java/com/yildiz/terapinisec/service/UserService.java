@@ -140,7 +140,8 @@ public class UserService {
     }
 
     public UserResponseDto findByFirstNameAndLastName(String firstName, String lastName) {
-        User user = userRepository.findByFirstNameAndLastName(firstName, lastName);
+        User user = userRepository.findByFirstNameAndLastName(firstName, lastName)
+                .orElseThrow(() -> new RuntimeException("User not found with firstname: " + firstName + " and lastname: " + lastName));
         return userMapper.toUserResponseDto(user);
     }
 

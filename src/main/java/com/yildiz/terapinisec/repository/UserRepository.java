@@ -17,7 +17,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     User findByUserName(String username);
 
     // Kullanıcı adı ve soyadına göre kullanıcıyı bul
-    User findByFirstNameAndLastName(String firstName, String lastName);
+    Optional<User> findByFirstNameAndLastName(String firstName, String lastName);
 
     // E-posta adresine göre kullanıcıyı bul
     User findByEmail(String email);

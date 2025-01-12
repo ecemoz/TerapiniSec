@@ -112,8 +112,8 @@ public class UserController {
     }
 
     @GetMapping("/firstname-lastname")
-    public ResponseEntity<UserResponseDto> findByFirstnameAndLastname(@RequestParam String firstname, @RequestParam String lastname) {
-        return ResponseEntity.ok(userService.findByFirstNameAndLastName(firstname, lastname));
+    public ResponseEntity<UserResponseDto> findByFirstnameAndLastname(@RequestParam String firstName, @RequestParam String lastName) {
+        return ResponseEntity.ok(userService.findByFirstNameAndLastName(firstName, lastName));
     }
 
     @GetMapping("/email")
