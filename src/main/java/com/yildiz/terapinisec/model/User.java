@@ -75,6 +75,7 @@ public class User {
     @PrePersist
     protected void onCreate() {
         this.registrationDateTime = LocalDateTime.now();
+        this.lastLoginDateTime = this.registrationDateTime;
     }
 
     @PreUpdate
