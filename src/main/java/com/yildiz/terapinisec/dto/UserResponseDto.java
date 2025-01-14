@@ -26,4 +26,5 @@ public class UserResponseDto {
     private Integer yearsOfExperience;
     private LocalDateTime birthday;
     private List<LocalDateTime> availableTimes;
+    private String userNameOrEmail;
 }
