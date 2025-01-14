@@ -4,6 +4,7 @@ import com.yildiz.terapinisec.dto.*;
 import com.yildiz.terapinisec.mapper.UserMapper;
 import com.yildiz.terapinisec.model.User;
 import com.yildiz.terapinisec.repository.UserRepository;
+import com.yildiz.terapinisec.util.JwtUtil;
 import com.yildiz.terapinisec.util.Specialization;
 import com.yildiz.terapinisec.util.UserRole;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,9 @@ public class UserService {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private JwtUtil jwtUtil;
 
     public UserResponseDto updateUserPhoneNumber(Long userId, String phoneNumber) {
         User user = userRepository.findById(userId)
@@ -226,15 +230,26 @@ public class UserService {
         return userMapper.toUserResponseDtoList(users);
     }
 
-    public boolean authenticate(UserLoginDto userLoginDto) {
+    public String authenticate(UserLoginDto userLoginDto) {
         User user = userRepository.findByUserNameOrEmail(userLoginDto.getUserNameOrEmail(), userLoginDto.getUserNameOrEmail())
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with username or email: " + userLoginDto.getUserNameOrEmail()));
 
         if (passwordEncoder.matches(userLoginDto.getPassword(), user.getPassword())) {
             user.setLastLoginDateTime(LocalDateTime.now());
             userRepository.save(user);
-            return true;
+
+            UserResponseDto userResponseDto = userMapper.toUserResponseDto(user);
+            return jwtUtil.generateToken(userResponseDto);
+        } else {
+            throw new IllegalArgumentException("Invalid credentials");
         }
-        return false;
+    }
+
+    public boolean validateToken(String token) {
+        String usernameOrEmail = jwtUtil.extractUsernameOrEmail(token);
+        User user = userRepository.findByUserNameOrEmail(usernameOrEmail, usernameOrEmail)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with username or email: " + usernameOrEmail));
+        UserResponseDto userResponseDto = userMapper.toUserResponseDto(user);
+        return jwtUtil.validateToken(token, userResponseDto);
     }
 }

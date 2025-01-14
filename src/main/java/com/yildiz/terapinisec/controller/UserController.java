@@ -112,6 +112,17 @@ public class UserController {
         }
     }
 
+    @GetMapping("/validate-token")
+    public ResponseEntity<ApiResponse<Boolean>> validateToken(@RequestParam String token) {
+        try {
+            boolean isValid = userService.validateToken(token);
+            return ResponseEntity.ok(new ApiResponse<>(true, "Token validation result.", isValid));
+        } catch (Exception ex) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                    .body(new ApiResponse<>(false, "Invalid token: " + ex.getMessage(), false));
+        }
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<ApiResponse<UserResponseDto>> updateUser(@PathVariable Long id, @RequestBody UserUpdateDto userUpdateDto) {
         try {
@@ -279,21 +290,23 @@ public class UserController {
     }
 
     @PostMapping("/authenticate")
-    public ResponseEntity<ApiResponse<Boolean>> authenticate(@RequestBody UserLoginDto userLoginDto) {
+    public ResponseEntity<ApiResponse<String>> authenticate(@RequestBody UserLoginDto userLoginDto) {
         try {
-            boolean isAuthenticated = userService.authenticate(userLoginDto);
-            if (isAuthenticated) {
-                ApiResponse<Boolean> response = new ApiResponse<>(true, "Authentication successful.", true);
-                return ResponseEntity.ok(response);
-            } else {
-                ApiResponse<Boolean> response = new ApiResponse<>(false, "Authentication failed. Invalid credentials.", false);
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
-            }
+            String token = userService.authenticate(userLoginDto);
+
+            ApiResponse<String> response = new ApiResponse<>(true, "Authentication successful.", token);
+            return ResponseEntity.ok(response);
+
         } catch (UsernameNotFoundException ex) {
-            ApiResponse<Boolean> response = new ApiResponse<>(false, "Authentication failed: " + ex.getMessage(), false);
+            ApiResponse<String> response = new ApiResponse<>(false, "Authentication failed: " + ex.getMessage(), null);
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+
+        } catch (IllegalArgumentException ex) {
+            ApiResponse<String> response = new ApiResponse<>(false, "Authentication failed: " + ex.getMessage(), null);
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(response);
+
         } catch (RuntimeException ex) {
-            ApiResponse<Boolean> response = new ApiResponse<>(false, "Authentication failed: " + ex.getMessage(), false);
+            ApiResponse<String> response = new ApiResponse<>(false, "Authentication failed: " + ex.getMessage(), null);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
     }
