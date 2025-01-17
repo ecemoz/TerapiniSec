@@ -48,11 +48,12 @@ public class SecurityConfig {
 
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/users/authenticate").permitAll()
+                        .requestMatchers("/users/register").permitAll()
                         .anyRequest().authenticated()
                 )
 
                 .exceptionHandling(Customizer.withDefaults());
-        
+
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();

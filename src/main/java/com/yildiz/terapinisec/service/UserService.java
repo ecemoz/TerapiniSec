@@ -259,4 +259,22 @@ public class UserService {
         UserResponseDto userResponseDto = userMapper.toUserResponseDto(user);
         return jwtUtil.validateToken(token, userResponseDto);
     }
+
+    public UserResponseDto registerNewUser(UserCreateDto userCreateDto) {
+
+        if (userRepository.findByUserName(userCreateDto.getUserName()) != null) {
+                throw new IllegalArgumentException("Username already exists.");
+            }
+        if (userRepository.findByEmail(userCreateDto.getEmail()) != null) {
+                throw new IllegalArgumentException("Email already exists.");
+            }
+
+        User newUser = userMapper.toUser(userCreateDto);
+        newUser.setPassword(passwordEncoder.encode(userCreateDto.getPassword()));
+        String validPhone = phoneNumberValidationService.validatePhoneNumber(userCreateDto.getPhoneNumber());
+        newUser.setPhoneNumber(validPhone);
+        newUser.setUserRole(UserRole.USER);
+        User savedUser = userRepository.save(newUser);
+        return userMapper.toUserResponseDto(savedUser);
+        }
 }

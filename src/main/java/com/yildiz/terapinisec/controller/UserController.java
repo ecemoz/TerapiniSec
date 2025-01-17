@@ -394,4 +394,22 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
     }
+
+    @PostMapping("/register")
+    public ResponseEntity<ApiResponse<UserResponseDto>> register(@RequestBody UserCreateDto userCreateDto) {
+        try {
+            // userService.registerNewUser metodu, otomatik olarak USER rolü atanarak yeni kullanıcı oluşturur
+            UserResponseDto createdUser = userService.registerNewUser(userCreateDto);
+
+            ApiResponse<UserResponseDto> response = new ApiResponse<>(true, "User registered successfully.", createdUser);
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+
+        } catch (IllegalArgumentException ex) {
+            ApiResponse<UserResponseDto> response = new ApiResponse<>(false, "Failed to register user: " + ex.getMessage(), null);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        } catch (RuntimeException ex) {
+            ApiResponse<UserResponseDto> response = new ApiResponse<>(false, "Failed to register user: " + ex.getMessage(), null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(response);
+        }
+    }
 }
