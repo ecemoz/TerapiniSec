@@ -8,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
@@ -58,6 +59,7 @@ public class UserController {
         }
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @GetMapping
     public ResponseEntity<ApiResponse<List<UserResponseDto>>> getAllUsers() {
         try {
@@ -70,6 +72,7 @@ public class UserController {
         }
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN','PSYCHOLOGIST','USER')")
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<UserResponseDto>> getUserById(@PathVariable Long id) {
         try {
@@ -83,6 +86,7 @@ public class UserController {
     }
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN','PSYCHOLOGIST','USER')")
     public ResponseEntity<ApiResponse<UserResponseDto>> createUser(@RequestBody UserCreateDto userCreateDto) {
         try {
             UserResponseDto createdUser = userService.createUser(userCreateDto);
@@ -98,6 +102,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}/update-phone")
+    @PreAuthorize("hasAnyRole('ADMIN','PSYCHOLOGIST','USER')")
     public ResponseEntity<ApiResponse<UserResponseDto>> updateUserPhoneNumber(@PathVariable Long id, @RequestParam String phoneNumber) {
         try {
             UserResponseDto updatedUser = userService.updateUserPhoneNumber(id, phoneNumber);
@@ -113,6 +118,7 @@ public class UserController {
     }
 
     @GetMapping("/validate-token")
+    @PreAuthorize("hasAnyRole('ADMIN','PSYCHOLOGIST','USER')")
     public ResponseEntity<ApiResponse<Boolean>> validateToken(@RequestParam String token) {
         try {
             boolean isValid = userService.validateToken(token);
