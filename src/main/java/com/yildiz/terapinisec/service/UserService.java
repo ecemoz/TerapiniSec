@@ -166,6 +166,13 @@ public class UserService {
         return userMapper.toUserResponseDto(user);
     }
 
+    public UserResponseDto findByUserNameOrEmail(String userNameOrEmail) {
+        User user = userRepository.findByUserNameOrEmail(userNameOrEmail, userNameOrEmail)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with username or email: " + userNameOrEmail));
+        return userMapper.toUserResponseDto(user);
+    }
+
+
     public UserResponseDto findByPhoneNumber(String phoneNumber) {
         User user = userRepository.findByPhoneNumber(phoneNumber);
         if (user == null) {
