@@ -130,6 +130,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN') or #id == principal.id")
     public ResponseEntity<ApiResponse<UserResponseDto>> updateUser(@PathVariable Long id, @RequestBody UserUpdateDto userUpdateDto) {
         try {
             UserResponseDto updatedUser = userService.updateUser(id, userUpdateDto);
@@ -148,6 +149,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}/premium")
+    @PreAuthorize("hasRole('ADMIN') or #id == principal.id")
     public ResponseEntity<ApiResponse<UserResponseDto>> makeUserPremium(@PathVariable Long id) {
         try {
             UserResponseDto premiumUser = userService.makeUserPremium(id);
@@ -163,6 +165,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}/premium/remove")
+    @PreAuthorize("hasRole('ADMIN') or #id == principal.id")
     public ResponseEntity<ApiResponse<UserResponseDto>> removeUserPremium(@PathVariable Long id) {
         try {
             UserResponseDto nonPremiumUser = userService.removeUserPremium(id);
@@ -178,6 +181,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}/premium/status")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<UserPremiumStatusResponse>> checkPremiumStatus(@PathVariable Long id) {
         try {
             UserPremiumStatusResponse status = userService.activePremium(id);
@@ -193,6 +197,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN') or #id == principal.id")
     public ResponseEntity<ApiResponse<Void>> deleteUser(@PathVariable Long id) {
         try {
             userService.deleteUser(id);
@@ -208,6 +213,7 @@ public class UserController {
     }
 
     @GetMapping("/role/{role}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<List<UserResponseDto>>> findByRole(@PathVariable UserRole role) {
         try {
             List<UserResponseDto> users = userService.findByRole(role);
@@ -220,6 +226,7 @@ public class UserController {
     }
 
     @GetMapping("/last-login/before")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<List<UserResponseDto>>> findByLastLoginBefore(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dateTime) {
         try {
@@ -233,6 +240,7 @@ public class UserController {
     }
 
     @GetMapping("/last-login/after")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<List<UserResponseDto>>> findByLastLoginAfter(
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dateTime) {
         try {
@@ -246,6 +254,7 @@ public class UserController {
     }
 
     @GetMapping("/premium/true")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<List<UserResponseDto>>> findByPremiumTrue() {
         try {
             List<UserResponseDto> users = userService.findByIsPremiumTrue();
@@ -258,6 +267,7 @@ public class UserController {
     }
 
     @GetMapping("/premium/false")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<ApiResponse<List<UserResponseDto>>> findByPremiumFalse() {
         try {
             List<UserResponseDto> users = userService.findByIsPremiumFalse();
@@ -270,6 +280,7 @@ public class UserController {
     }
 
     @GetMapping("/specialization")
+    @PreAuthorize("hasAnyRole('ADMIN','PSYCHOLOGIST','USER')")
     public ResponseEntity<ApiResponse<List<UserResponseDto>>> findBySpecializationContains(
             @RequestParam Specialization specialization) {
         try {
@@ -283,6 +294,7 @@ public class UserController {
     }
 
     @GetMapping("/experience/greater-than")
+    @PreAuthorize("hasAnyRole('ADMIN','PSYCHOLOGIST','USER')")
     public ResponseEntity<ApiResponse<List<UserResponseDto>>> findByExperienceGreaterThan(
             @RequestParam Integer years) {
         try {
@@ -296,6 +308,7 @@ public class UserController {
     }
 
     @PostMapping("/authenticate")
+    @PreAuthorize("hasAnyRole('ADMIN','PSYCHOLOGIST','USER')")
     public ResponseEntity<ApiResponse<String>> authenticate(@RequestBody UserLoginDto userLoginDto) {
         try {
             String token = userService.authenticate(userLoginDto);
@@ -318,6 +331,7 @@ public class UserController {
     }
 
     @GetMapping("/username")
+    @PreAuthorize("hasAnyRole('ADMIN','PSYCHOLOGIST','USER')")
     public ResponseEntity<ApiResponse<UserResponseDto>> findByUsername(@RequestParam String username) {
         try {
             UserResponseDto user = userService.findByUsername(username);
@@ -333,6 +347,7 @@ public class UserController {
     }
 
     @GetMapping("/firstname-lastname")
+    @PreAuthorize("hasAnyRole('ADMIN','PSYCHOLOGIST','USER')")
     public ResponseEntity<ApiResponse<UserResponseDto>> findByFirstnameAndLastname(
             @RequestParam String firstName, @RequestParam String lastName) {
         try {
@@ -349,6 +364,7 @@ public class UserController {
     }
 
     @GetMapping("/email")
+    @PreAuthorize("hasAnyRole('ADMIN','PSYCHOLOGIST')")
     public ResponseEntity<ApiResponse<UserResponseDto>> findByEmail(@RequestParam String email) {
         try {
             UserResponseDto user = userService.findByEmail(email);
@@ -364,6 +380,7 @@ public class UserController {
     }
 
     @GetMapping("/phone-number")
+    @PreAuthorize("hasAnyRole('ADMIN','PSYCHOLOGIST')")
     public ResponseEntity<ApiResponse<UserResponseDto>> findByPhoneNumber(@RequestParam String phoneNumber) {
         try {
             UserResponseDto user = userService.findByPhoneNumber(phoneNumber);

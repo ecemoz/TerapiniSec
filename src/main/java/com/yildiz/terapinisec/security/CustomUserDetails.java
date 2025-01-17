@@ -38,7 +38,7 @@ public class CustomUserDetails implements UserDetails {
     public String getPassword() {
         return password;
     }
-    
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return authorities;
