@@ -25,7 +25,7 @@ public class CustomUserDetailsService implements UserDetailsService {
                         new UsernameNotFoundException("User not found with username or email: " + usernameOrEmail));
 
 
-        GrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + user.getUserRole().name());
+        GrantedAuthority authority = new SimpleGrantedAuthority(user.getUserRole().name());
 
         return new CustomUserDetails(
                 user.getId(),
