@@ -1,22 +1,24 @@
 # 1. OpenJDK 17 kullan
-FROM openjdk:17-jdk-slim AS build
+FROM openjdk:17-jdk-slim
 
-# 2. Çalışma dizinini ayarla
+# 2. Çalışma dizinini belirle
 WORKDIR /app
 
-# 3. Maven proje dosyalarını kopyala ve bağımlılıkları indir
+# 3. Maven Wrapper dosyalarını kopyala
 COPY pom.xml mvnw ./
 COPY .mvn .mvn
+
+# 4. mvnw dosyasına çalıştırma izni ver
+RUN chmod +x mvnw
+
+# 5. Bağımlılıkları indir (offline çalışma için)
 RUN ./mvnw dependency:go-offline
 
-# 4. Proje dosyalarını kopyala ve build et
-COPY src ./src
+# 6. Proje dosyalarını kopyala
+COPY . .
+
+# 7. Maven ile projeyi derle
 RUN ./mvnw clean package -DskipTests
 
-# 5. Son imaj oluştur (runtime için)
-FROM openjdk:17-jdk-slim
-WORKDIR /app
-COPY --from=build /app/target/*.jar app.jar
-
-# 6. Uygulamayı çalıştır
-ENTRYPOINT ["java", "-jar", "/app.jar"]
+# 8. Sonuçta oluşan jar dosyasını kullan
+CMD ["java", "-jar", "target/terapinisec.jar"]
