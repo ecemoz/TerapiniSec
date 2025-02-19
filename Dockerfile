@@ -19,13 +19,17 @@ RUN ./mvnw clean package -DskipTests
 FROM openjdk:17-jdk-slim
 WORKDIR /app
 
-# Derleme aşamasından oluşan JAR dosyasını kopyala
-COPY --from=build /app/target/terapinisec-0.0.1-SNAPSHOT.jar app.jar
+# Render'ın varsayılan başlangıç komutunun ("java -jar target/*.jar") çalışabilmesi için target klasörünü oluştur
+RUN mkdir target
+
+# Derleme aşamasından oluşturulan JAR dosyasını target klasörüne kopyala
+COPY --from=build /app/target/terapinisec-0.0.1-SNAPSHOT.jar target/
 
 # Health check ve port ayarları
 ENV HEALTH_CHECK_PATH="/actuator/health"
 ENV SERVER_PORT=8080
 EXPOSE 8080
 
-# Uygulamayı çalıştır (ENTRYPOINT Dockerfile'da belirtilen komutu Render'ın varsayılan start komutunun üzerine yazar)
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# Render, CMD'de belirtilen komut yoksa varsayılan olarak "java -jar target/*.jar" komutunu kullanır.
+# Eğer isterseniz aşağıdaki CMD satırını da kullanabilirsiniz:
+CMD ["java", "-jar", "target/terapinisec-0.0.1-SNAPSHOT.jar"]
