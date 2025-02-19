@@ -1,38 +1,31 @@
-# 1. OpenJDK 17 kullan
-FROM openjdk:17-jdk-slim
-
-# 2. Çalışma dizinini belirle
+# Stage 1: Build - Maven ile projeyi derle
+FROM openjdk:17-jdk-slim AS build
 WORKDIR /app
 
-# 3. Maven Wrapper dosyalarını kopyala
+# Maven Wrapper dosyalarını kopyala
 COPY pom.xml mvnw ./
 COPY .mvn .mvn
 
-# 4. mvnw dosyasına çalıştırma izni ver
+# mvnw dosyasına çalıştırma izni ver ve bağımlılıkları indir
 RUN chmod +x mvnw
-
-# 5. Bağımlılıkları önceden indir (Cache için)
 RUN ./mvnw dependency:go-offline
 
-# 6. Proje dosyalarını kopyala
+# Proje dosyalarını kopyala ve derle
 COPY . .
-
-# 7. Tekrar mvnw çalıştırma izni ver (Önlem için)
 RUN chmod +x mvnw
-
-# 8. Maven ile projeyi derle
 RUN ./mvnw clean package -DskipTests
 
-# 9. Çalışacak JAR dosyasını belirle
-ARG JAR_FILE=target/terapinisec-0.0.1-SNAPSHOT.jar
-RUN cp ${JAR_FILE} app.jar
+# Stage 2: Run - Çalışma ortamı
+FROM openjdk:17-jdk-slim
+WORKDIR /app
 
-# 10. Health check için ENV değişkeni ekle
+# Derleme aşamasından oluşan JAR dosyasını kopyala
+COPY --from=build /app/target/terapinisec-0.0.1-SNAPSHOT.jar app.jar
+
+# Health check ve port ayarları
 ENV HEALTH_CHECK_PATH="/actuator/health"
 ENV SERVER_PORT=8080
-
-# 11. Portu dışa aç
 EXPOSE 8080
 
-# 12. Çalıştırma komutu
-CMD ["java", "-jar", "/app.jar"]
+# Uygulamayı çalıştır (ENTRYPOINT Dockerfile'da belirtilen komutu Render'ın varsayılan start komutunun üzerine yazar)
+ENTRYPOINT ["java", "-jar", "app.jar"]
