@@ -91,4 +91,8 @@ public class SurveyResponseService {
             throw new RuntimeException("Survey Response not found.");
         }
     }
+
+    public boolean hasUserRespondedToSurvey(Long surveyId, Long userId) {
+        return surveyResponseRepository.existsBySurveyIdAndUserId(surveyId, userId);
+    }
 }
