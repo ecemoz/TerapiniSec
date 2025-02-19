@@ -11,14 +11,17 @@ COPY .mvn .mvn
 # 4. mvnw dosyasına çalıştırma izni ver
 RUN chmod +x mvnw
 
-# 5. Bağımlılıkları indir (offline çalışma için)
+# 5. Bağımlılıkları indir
 RUN ./mvnw dependency:go-offline
 
 # 6. Proje dosyalarını kopyala
 COPY . .
 
-# 7. Maven ile projeyi derle
+# 7. **Tekrar chmod +x ekleyelim (Önlem için)**
+RUN chmod +x mvnw
+
+# 8. Maven ile projeyi derle
 RUN ./mvnw clean package -DskipTests
 
-# 8. Sonuçta oluşan jar dosyasını kullan
+# 9. Sonuçta oluşan jar dosyasını kullan
 CMD ["java", "-jar", "target/terapinisec.jar"]
