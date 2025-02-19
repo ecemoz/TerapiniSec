@@ -130,7 +130,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN') or #id == principal.id")
+    @PreAuthorize("hasRole('ADMIN') or @securityService.isSelf(#id)")
     public ResponseEntity<ApiResponse<UserResponseDto>> updateUser(@PathVariable Long id, @RequestBody UserUpdateDto userUpdateDto) {
         try {
             UserResponseDto updatedUser = userService.updateUser(id, userUpdateDto);
@@ -149,7 +149,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}/premium")
-    @PreAuthorize("hasRole('ADMIN') or #id == principal.id")
+    @PreAuthorize("hasRole('ADMIN') or @securityService.isSelf(#id)")
     public ResponseEntity<ApiResponse<UserResponseDto>> makeUserPremium(@PathVariable Long id) {
         try {
             UserResponseDto premiumUser = userService.makeUserPremium(id);
@@ -165,7 +165,7 @@ public class UserController {
     }
 
     @PutMapping("/{id}/premium/remove")
-    @PreAuthorize("hasRole('ADMIN') or #id == principal.id")
+    @PreAuthorize("hasRole('ADMIN') or @securityService.isSelf(#id)")
     public ResponseEntity<ApiResponse<UserResponseDto>> removeUserPremium(@PathVariable Long id) {
         try {
             UserResponseDto nonPremiumUser = userService.removeUserPremium(id);
@@ -197,7 +197,7 @@ public class UserController {
     }
 
     @DeleteMapping("/{id}")
-    @PreAuthorize("hasRole('ADMIN') or #id == principal.id")
+    @PreAuthorize("hasRole('ADMIN') or @securityService.isSelf(#id)")
     public ResponseEntity<ApiResponse<Void>> deleteUser(@PathVariable Long id) {
         try {
             userService.deleteUser(id);
