@@ -74,4 +74,10 @@ public class StoryService {
         }
         return storyMapper.toStoryResponseDto(story);
     }
+
+    public boolean isUserOwnerOfStory(Long userId, Long storyId) {
+        Story story = storyRepository.findById(storyId)
+                .orElseThrow(() -> new RuntimeException("Story not found"));
+        return story.getOwner().getId().equals(userId);
+    }
 }

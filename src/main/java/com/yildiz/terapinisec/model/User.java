@@ -135,6 +135,9 @@ public class User {
     @OneToMany(mappedBy = "createdBy", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Survey> surveys;
 
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Story> stories;
+
     public UserRole getUserRole() {
         return userRole;
     }

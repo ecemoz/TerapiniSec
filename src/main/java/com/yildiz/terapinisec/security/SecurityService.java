@@ -1,5 +1,6 @@
 package com.yildiz.terapinisec.security;
 
+import com.yildiz.terapinisec.service.StoryService;
 import com.yildiz.terapinisec.service.SurveyResponseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -10,6 +11,9 @@ public class SecurityService {
 
     @Autowired
     private SurveyResponseService surveyResponseService;
+
+    @Autowired
+    private StoryService storyService;
 
     public boolean isSelf(Long userId) {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -30,5 +34,14 @@ public class SecurityService {
             return ((CustomUserDetails) principal).getId();
         }
         return null;
+    }
+
+    public boolean isStoryOwner(Long storyId) {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof CustomUserDetails) {
+            Long currentUserId = ((CustomUserDetails) principal).getId();
+            return storyService.isUserOwnerOfStory(currentUserId, storyId);
+        }
+        return false;
     }
 }

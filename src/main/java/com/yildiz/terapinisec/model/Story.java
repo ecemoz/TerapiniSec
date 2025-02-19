@@ -41,6 +41,10 @@ public class Story {
     @OneToMany(mappedBy = "story", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.LAZY)
     private List<StoryView> storyViews;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    private User owner;
+
     public void incrementViewCount() {
         this.viewCount++;
     }

@@ -8,6 +8,7 @@ import com.yildiz.terapinisec.service.StoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
@@ -19,21 +20,25 @@ public class StoryController {
     private StoryService storyService;
 
     @GetMapping
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<List<StoryResponseDto>> getAllStory() {
         return ResponseEntity.ok(storyService.getAllStories());
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<StoryDetailedResponseDto> getStoryById(@PathVariable Long id) {
         return ResponseEntity.ok(storyService.getStoryById(id));
     }
 
     @PostMapping
+    @PreAuthorize("hasAnyRole('ADMIN','PSYCHOLOGIST')")
     public ResponseEntity<StoryResponseDto> createStory(@RequestBody StoryCreateDto storyCreateDto) {
         return ResponseEntity.ok(storyService.createStory(storyCreateDto));
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN') or @securityService.isStoryOwner(#id)")
     public ResponseEntity<StoryResponseDto> updateStory(@PathVariable Long id, @RequestBody StoryUpdateDto storyUpdateDto) {
         return ResponseEntity.ok(storyService.updateStory(id, storyUpdateDto));
     }
@@ -49,12 +54,14 @@ public class StoryController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN') or @securityService.isStoryOwner(#id)")
     ResponseEntity<Void> deleteStory(@PathVariable Long id) {
         storyService.deleteStory(id);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/active")
+    @PreAuthorize("isAuthenticated()")
     public ResponseEntity<StoryResponseDto> getActiveStory() {
         return ResponseEntity.ok(storyService.findActiveStory());
     }
