@@ -15,4 +15,5 @@ public interface ReportRepository  extends JpaRepository<Report, Long> {
     Optional<Report> findByReportOwnerId(Long userId);
     Optional<Report> findByReportOwnerIdAndReportSituation(Long userId, ReportSituation reportSituation);
     List<Report> findByReportCreatedAt(LocalDateTime reportCreatedAt);
+    boolean existsByReportOwnerIdAndReportSituation(Long userId, ReportSituation reportSituation);
 }

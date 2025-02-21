@@ -1,9 +1,7 @@
 package com.yildiz.terapinisec.security;
 
-import com.yildiz.terapinisec.service.SessionService;
-import com.yildiz.terapinisec.service.SleepLogService;
-import com.yildiz.terapinisec.service.StoryService;
-import com.yildiz.terapinisec.service.SurveyResponseService;
+import com.yildiz.terapinisec.service.*;
+import com.yildiz.terapinisec.util.ReportSituation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -22,6 +20,9 @@ public class SecurityService {
 
     @Autowired
     private SessionService sessionService;
+
+    @Autowired
+    private ReportService reportService;
 
 
     public boolean isSelf(Long userId) {
@@ -82,6 +83,15 @@ public class SecurityService {
         if (principal instanceof CustomUserDetails) {
             Long currentUserId = ((CustomUserDetails) principal).getId();
             return sessionService.isUserOwnerOfSession(currentUserId, sessionId);
+        }
+        return false;
+    }
+
+    public boolean isSelfReport(ReportSituation reportSituation) {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof CustomUserDetails) {
+            Long currentUserId = ((CustomUserDetails) principal).getId();
+            return reportService.isUserOwnerOfReport(currentUserId, reportSituation);
         }
         return false;
     }

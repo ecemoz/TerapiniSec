@@ -212,4 +212,8 @@ public class ReportService {
         }
         return reportMapper.toReportResponseDtoList(reports);
     }
+
+    public boolean isUserOwnerOfReport(Long userId, ReportSituation reportSituation) {
+        return reportRepository.existsByReportOwnerIdAndReportSituation(userId, reportSituation);
+    }
 }
