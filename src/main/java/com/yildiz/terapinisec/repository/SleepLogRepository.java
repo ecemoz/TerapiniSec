@@ -27,4 +27,6 @@ public interface SleepLogRepository extends JpaRepository<SleepLog, Long> {
     Optional<Double> findAverageSleepQualityByUserAndDateRange(@Param("userId") Long userId,
                                                                @Param("startDate") LocalDateTime startDate,
                                                                @Param("endDate") LocalDateTime endDate);
+
+    boolean existsByIdAndSleeperId(Long id, Long sleeperId);
 }

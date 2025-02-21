@@ -1,5 +1,7 @@
 package com.yildiz.terapinisec.security;
 
+import com.yildiz.terapinisec.service.SessionService;
+import com.yildiz.terapinisec.service.SleepLogService;
 import com.yildiz.terapinisec.service.StoryService;
 import com.yildiz.terapinisec.service.SurveyResponseService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,13 @@ public class SecurityService {
 
     @Autowired
     private StoryService storyService;
+
+    @Autowired
+    private SleepLogService sleepLogService;
+
+    @Autowired
+    private SessionService sessionService;
+
 
     public boolean isSelf(Long userId) {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -41,6 +50,38 @@ public class SecurityService {
         if (principal instanceof CustomUserDetails) {
             Long currentUserId = ((CustomUserDetails) principal).getId();
             return storyService.isUserOwnerOfStory(currentUserId, storyId);
+        }
+        return false;
+    }
+
+    public boolean isSleepLogOwner(Long sleepLogId) {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof CustomUserDetails) {
+            Long currentUserId = ((CustomUserDetails) principal).getId();
+            return sleepLogService.isUserOwnerOfSleepLog(currentUserId, sleepLogId);
+        }
+        return false;
+    }
+
+    public boolean isSelfUser() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        return principal instanceof CustomUserDetails;
+    }
+
+    public boolean isSessionParticipant(Long sessionId) {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof CustomUserDetails) {
+            Long currentUserId = ((CustomUserDetails) principal).getId();
+            return sessionService.isUserParticipantOfSession(currentUserId, sessionId);
+        }
+        return false;
+    }
+
+    public boolean isSessionOwner(Long sessionId) {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof CustomUserDetails) {
+            Long currentUserId = ((CustomUserDetails) principal).getId();
+            return sessionService.isUserOwnerOfSession(currentUserId, sessionId);
         }
         return false;
     }

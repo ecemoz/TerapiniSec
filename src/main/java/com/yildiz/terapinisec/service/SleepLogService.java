@@ -16,6 +16,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class SleepLogService {
@@ -65,36 +66,40 @@ public class SleepLogService {
     }
 
     public void deleteSleepLog(Long id) {
-        if(sleepLogRepository.existsById(id)) {
+        if (sleepLogRepository.existsById(id)) {
             sleepLogRepository.deleteById(id);
         } else {
-            throw new RuntimeException ("SleepLog not found");
+            throw new RuntimeException("SleepLog not found");
         }
     }
 
-    public Page<SleepLogResponseDto> getSleepLogByUserId(Long userId, int page , int size) {
+    public Page<SleepLogResponseDto> getSleepLogByUserId(Long userId, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         Page<SleepLog> sleepLogs = sleepLogRepository.findBySleeperId(userId, pageable);
         return sleepLogs.map(sleepLogMapper::toSleepLogResponseDto);
     }
 
-    public List<SleepLogResponseDto>findBySleepDate(LocalDateTime sleepDate){
+    public List<SleepLogResponseDto> findBySleepDate(LocalDateTime sleepDate) {
         List<SleepLog> sleepLogs = sleepLogRepository.findBySleepDate(sleepDate);
         return sleepLogMapper.toSleepLogResponseDtoList(sleepLogs);
     }
 
-    public List<SleepLogResponseDto>findBySleeperIdAndSleepDate(Long id, LocalDateTime sleepDate) {
-         List<SleepLog> sleepLogs = sleepLogRepository.findBySleeperIdAndSleepDate(id, sleepDate);
-         return sleepLogMapper.toSleepLogResponseDtoList(sleepLogs);
+    public List<SleepLogResponseDto> findBySleeperIdAndSleepDate(Long id, LocalDateTime sleepDate) {
+        List<SleepLog> sleepLogs = sleepLogRepository.findBySleeperIdAndSleepDate(id, sleepDate);
+        return sleepLogMapper.toSleepLogResponseDtoList(sleepLogs);
     }
 
-    public List<SleepLogResponseDto>findBySleepQualityAndSleeperId(int sleepQuality, Long id) {
+    public List<SleepLogResponseDto> findBySleepQualityAndSleeperId(int sleepQuality, Long id) {
         List<SleepLog> sleepLogs = sleepLogRepository.findBySleepQualityValueAndSleeperId(sleepQuality, id);
         return sleepLogMapper.toSleepLogResponseDtoList(sleepLogs);
     }
 
-    public List<SleepLogDetailedDto>findByUserWithDetails(Long userId) {
-        List<SleepLog>sleepLogs = sleepLogRepository.findByUserWithDetails(userId);
+    public List<SleepLogDetailedDto> findByUserWithDetails(Long userId) {
+        List<SleepLog> sleepLogs = sleepLogRepository.findByUserWithDetails(userId);
         return sleepLogMapper.toSleepLogDetailedDtoList(sleepLogs);
+    }
+
+    public boolean isUserOwnerOfSleepLog(Long userId, Long sleepLogId) {
+        return sleepLogRepository.existsByIdAndSleeperId(sleepLogId, userId);
     }
 }

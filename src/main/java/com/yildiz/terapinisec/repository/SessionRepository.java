@@ -19,4 +19,9 @@ public interface SessionRepository extends JpaRepository<Session, Long> {
 
     @Query("SELECT s FROM Session s JOIN FETCH s.participants WHERE s.id = :id")
     Optional<Session> findByIdWithParticipants(@Param("id") Long id);
+
+    @Query("SELECT COUNT(s) > 0 FROM Session s JOIN s.participants p WHERE s.id = :sessionId AND p.id = :userId")
+    boolean isUserParticipantOfSession(@Param("userId") Long userId, @Param("sessionId") Long sessionId);
+
+    boolean existsByIdAndSessionOwnerId(Long sessionId, Long sessionOwnerId);
 }

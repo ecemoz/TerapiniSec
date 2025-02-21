@@ -132,4 +132,12 @@ public class SessionService {
                 .orElseThrow(() -> new RuntimeException("Session not found with ID: " + sessionId));
         return sessionMapper.toSessionDetailedDto(session);
     }
+
+    public boolean isUserParticipantOfSession(Long userId, Long sessionId) {
+        return sessionRepository.isUserParticipantOfSession(sessionId, userId);
+    }
+
+    public boolean isUserOwnerOfSession(Long userId, Long sessionId) {
+        return sessionRepository.existsByIdAndSessionOwnerId(sessionId, userId);
+    }
 }

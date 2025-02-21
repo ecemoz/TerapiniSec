@@ -141,6 +141,9 @@ public class User {
     public UserRole getUserRole() {
         return userRole;
     }
+
+    @OneToMany(mappedBy = "sessionOwner", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Session> sessions;
 }
 
 //o	id: Benzersiz kullanıcı kimliği.

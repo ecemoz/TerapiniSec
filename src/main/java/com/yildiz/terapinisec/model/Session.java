@@ -40,4 +40,8 @@ public class Session {
 
     @OneToMany(mappedBy = "session" , fetch = FetchType.LAZY , cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Participant> participants;
+
+    @ManyToOne
+    @JoinColumn(name = "sessionOwner_id", nullable = false)
+    private User sessionOwner;
 }
