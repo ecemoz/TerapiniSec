@@ -1,18 +1,8 @@
-# --- Build Aşaması ---
 FROM maven:3.8.5-openjdk-17 AS build
-WORKDIR /app
-# Proje bağımlılıklarını önceden indiriyoruz
-COPY pom.xml .
-RUN mvn dependency:go-offline -B
-# Kaynak kodları kopyalayıp uygulamayı derliyoruz
-COPY src ./src
+COPY . .
 RUN mvn clean package -DskipTests
 
-# --- Çalıştırma Aşaması ---
-FROM openjdk:17-jdk-alpine
-WORKDIR /app
-# Derleme aşamasından üretilen JAR dosyasını kopyalıyoruz
-COPY --from=build /app/target/terapinisec-0.0.1-SNAPSHOT.jar app.jar
-# Render, default olarak 8080 portunu kullanır
+FROM openjdk:17.0.1-jdk-slim
+COPY --from=build /target/terapinisec-0.0.1-SNAPSHOT.jar demo.jar
 EXPOSE 8080
-ENTRYPOINT ["java", "-jar", "app.jar"]
+ENTRYPOINT ["java","-jar","demo.jar"]
