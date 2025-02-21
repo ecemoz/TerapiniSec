@@ -36,9 +36,9 @@ public class MoodLogService {
     }
 
     public MoodLogResponseDto getMoodLogById(Long id) {
-       MoodLog moodLog = moodLogRepository.findById(id)
-               .orElseThrow(() -> new IllegalArgumentException("MoodLog not found"));
-       return moodLogMapper.toMoodLogResponseDto(moodLog);
+        MoodLog moodLog = moodLogRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("MoodLog not found"));
+        return moodLogMapper.toMoodLogResponseDto(moodLog);
     }
 
     public MoodLogResponseDto createMoodLog(MoodLogCreateDto moodLogCreateDto) {
@@ -68,7 +68,7 @@ public class MoodLogService {
         }
     }
 
-    public List<MoodLogResponseDto>findByMood(Collection<List<UserMoods>> userMoods) {
+    public List<MoodLogResponseDto> findByMood(Collection<List<UserMoods>> userMoods) {
         List<MoodLog> moodLogs = moodLogRepository.findByUserMoodsIn(userMoods);
         return moodLogs.stream()
                 .map(moodLogMapper::toMoodLogResponseDto)
@@ -83,8 +83,8 @@ public class MoodLogService {
         return moodLogRepository.findByMoodOwnerId(userId);
     }
 
-    public MoodLogResponseDto findByUserIdAndMood(Long userId, Collection< List<UserMoods>>userMoods) {
-        MoodLog moodLog = moodLogRepository.findByMoodOwnerIdAndUserMoodsIn(userId,userMoods);
+    public MoodLogResponseDto findByUserIdAndMood(Long userId, Collection<List<UserMoods>> userMoods) {
+        MoodLog moodLog = moodLogRepository.findByMoodOwnerIdAndUserMoodsIn(userId, userMoods);
         return moodLogMapper.toMoodLogResponseDto(moodLog);
     }
 
@@ -109,5 +109,9 @@ public class MoodLogService {
     public MoodLogResponseDto findTopByUserIdOrderByMoodDesc(Long userId) {
         MoodLog moodLog = moodLogRepository.findTopByMoodOwnerIdOrderByUserMoodsDesc(userId);
         return moodLogMapper.toMoodLogResponseDto(moodLog);
+    }
+
+    public boolean isUserOwnerOfMoodLog(Long userId, Long moodLogId) {
+        return moodLogRepository.isUserOwnerOfMoodLog(userId, moodLogId);
     }
 }

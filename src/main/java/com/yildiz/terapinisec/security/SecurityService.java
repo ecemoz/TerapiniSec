@@ -24,6 +24,8 @@ public class SecurityService {
     @Autowired
     private ReportService reportService;
 
+    @Autowired
+    private MoodLogService moodLogService;
 
     public boolean isSelf(Long userId) {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -95,4 +97,14 @@ public class SecurityService {
         }
         return false;
     }
+
+    public boolean isMoodLogOwner(Long moodLogId) {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof CustomUserDetails) {
+            Long currentUserId = ((CustomUserDetails) principal).getId();
+            return moodLogService.isUserOwnerOfMoodLog(currentUserId, moodLogId);
+        }
+        return false;
+    }
+
 }

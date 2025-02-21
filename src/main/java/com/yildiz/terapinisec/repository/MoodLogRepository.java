@@ -24,4 +24,7 @@ public interface MoodLogRepository extends JpaRepository<MoodLog, Long> {
 
     @Query("SELECT m FROM MoodLog m WHERE m.moodOwner.id = :userId AND m.logDateTime BETWEEN :startDate AND :endDate")
     List<MoodLog> findMoodSummaryByUserAndDateRange(@Param("userId") Long userId, @Param("startDate") LocalDateTime startDate, @Param("endDate") LocalDateTime endDate);
+
+    @Query("SELECT CASE WHEN COUNT(m) > 0 THEN true ELSE false END FROM MoodLog m WHERE m.id = :moodLogId AND m.moodOwner.id = :userId")
+    boolean isUserOwnerOfMoodLog(@Param("userId") Long userId, @Param("moodLogId") Long moodLogId);
 }
