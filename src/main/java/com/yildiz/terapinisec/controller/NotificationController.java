@@ -1,5 +1,6 @@
 package com.yildiz.terapinisec.controller;
 
+import com.yildiz.terapinisec.security.SecurityService;
 import com.yildiz.terapinisec.service.NotificationProducerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -14,6 +15,9 @@ public class NotificationController {
 
     @Autowired
     private NotificationProducerService notificationProducerService;
+
+    @Autowired
+    private SecurityService securityService;
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN') or hasRole('PSYCHOLOGIST')")

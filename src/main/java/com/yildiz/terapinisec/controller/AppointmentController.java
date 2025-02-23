@@ -6,6 +6,7 @@ import com.yildiz.terapinisec.dto.AppointmentUpdateDto;
 import com.yildiz.terapinisec.dto.UserResponseDto;
 import com.yildiz.terapinisec.mapper.UserMapper;
 import com.yildiz.terapinisec.model.User;
+import com.yildiz.terapinisec.security.SecurityService;
 import com.yildiz.terapinisec.service.AppointmentService;
 import com.yildiz.terapinisec.service.UserService;
 import com.yildiz.terapinisec.util.AppointmentStatus;
@@ -28,6 +29,9 @@ public class AppointmentController {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private SecurityService securityService;
 
     @GetMapping
     @PreAuthorize("hasRole('ADMIN') or hasRole('PSYCHOLOGIST')")

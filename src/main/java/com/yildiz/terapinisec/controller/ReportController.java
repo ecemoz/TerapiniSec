@@ -1,6 +1,7 @@
 package com.yildiz.terapinisec.controller;
 
 import com.yildiz.terapinisec.dto.ReportResponseDto;
+import com.yildiz.terapinisec.security.SecurityService;
 import com.yildiz.terapinisec.service.ReportService;
 import com.yildiz.terapinisec.util.ReportSituation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,9 @@ public class ReportController {
 
     @Autowired
     private ReportService reportService;
+
+    @Autowired
+    private SecurityService securityService;
 
     @PostMapping("/weekly/{userId}")
     @PreAuthorize("hasRole('ADMIN')")

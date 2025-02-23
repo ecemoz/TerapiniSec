@@ -4,6 +4,7 @@ import com.yildiz.terapinisec.dto.SessionCreateDto;
 import com.yildiz.terapinisec.dto.SessionDetailedDto;
 import com.yildiz.terapinisec.dto.SessionResponseDto;
 import com.yildiz.terapinisec.model.Participant;
+import com.yildiz.terapinisec.security.SecurityService;
 import com.yildiz.terapinisec.service.SessionService;
 import com.yildiz.terapinisec.util.SessionType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,9 @@ public class SessionController {
 
     @Autowired
     private SessionService sessionService;
+
+    @Autowired
+    private SecurityService securityService;
 
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")

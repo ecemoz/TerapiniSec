@@ -1,6 +1,7 @@
 package com.yildiz.terapinisec.controller;
 
 import com.yildiz.terapinisec.dto.*;
+import com.yildiz.terapinisec.security.SecurityService;
 import com.yildiz.terapinisec.service.UserService;
 import com.yildiz.terapinisec.util.Specialization;
 import com.yildiz.terapinisec.util.UserRole;
@@ -20,6 +21,9 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private SecurityService securityService;
 
     public static class ApiResponse<T> {
         private boolean success;

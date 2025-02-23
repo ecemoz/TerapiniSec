@@ -2,6 +2,7 @@ package com.yildiz.terapinisec.controller;
 
 import com.yildiz.terapinisec.dto.FileStorageCreateDto;
 import com.yildiz.terapinisec.dto.FileStorageResponseDto;
+import com.yildiz.terapinisec.security.SecurityService;
 import com.yildiz.terapinisec.service.FileStorageService;
 import com.yildiz.terapinisec.util.FileType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,9 @@ public class FileStorageController {
 
     @Autowired
     private FileStorageService fileStorageService;
+
+    @Autowired
+    private SecurityService securityService;
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN') or hasRole('PSYCHOLOGIST')")

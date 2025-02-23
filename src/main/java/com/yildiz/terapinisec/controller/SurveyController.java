@@ -3,6 +3,7 @@ package com.yildiz.terapinisec.controller;
 import com.yildiz.terapinisec.dto.SurveyCreateDto;
 import com.yildiz.terapinisec.dto.SurveyPostDto;
 import com.yildiz.terapinisec.dto.SurveyUpdateDto;
+import com.yildiz.terapinisec.security.SecurityService;
 import com.yildiz.terapinisec.service.SurveyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,6 +17,9 @@ public class SurveyController {
 
     @Autowired
     SurveyService surveyService;
+
+    @Autowired
+    private SecurityService securityService;
 
     @GetMapping
     @PreAuthorize("isAuthenticated()")

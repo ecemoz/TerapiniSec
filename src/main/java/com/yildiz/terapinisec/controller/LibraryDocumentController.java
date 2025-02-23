@@ -3,6 +3,7 @@ package com.yildiz.terapinisec.controller;
 import com.yildiz.terapinisec.dto.LibraryDocumentCreateDto;
 import com.yildiz.terapinisec.dto.LibraryDocumentResponseDto;
 import com.yildiz.terapinisec.dto.LibraryDocumentUpdateDto;
+import com.yildiz.terapinisec.security.SecurityService;
 import com.yildiz.terapinisec.service.LibraryDocumentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -18,6 +19,9 @@ public class LibraryDocumentController {
 
     @Autowired
     private LibraryDocumentService libraryDocumentService;
+
+    @Autowired
+    private SecurityService securityService;
 
     @GetMapping
     @PreAuthorize("isAuthenticated()")

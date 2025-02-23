@@ -4,6 +4,7 @@ import com.yildiz.terapinisec.dto.StoryCreateDto;
 import com.yildiz.terapinisec.dto.StoryDetailedResponseDto;
 import com.yildiz.terapinisec.dto.StoryResponseDto;
 import com.yildiz.terapinisec.dto.StoryUpdateDto;
+import com.yildiz.terapinisec.security.SecurityService;
 import com.yildiz.terapinisec.service.StoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,10 @@ public class StoryController {
 
     @Autowired
     private StoryService storyService;
+
+    @Autowired
+    private SecurityService securityService;
+
 
     @GetMapping
     @PreAuthorize("isAuthenticated()")

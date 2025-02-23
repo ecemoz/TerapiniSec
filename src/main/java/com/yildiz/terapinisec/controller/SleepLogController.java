@@ -3,6 +3,7 @@ package com.yildiz.terapinisec.controller;
 import com.yildiz.terapinisec.dto.SleepLogCreateDto;
 import com.yildiz.terapinisec.dto.SleepLogDetailedDto;
 import com.yildiz.terapinisec.dto.SleepLogResponseDto;
+import com.yildiz.terapinisec.security.SecurityService;
 import com.yildiz.terapinisec.service.SleepLogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -18,6 +19,9 @@ public class SleepLogController {
 
     @Autowired
     private SleepLogService sleepLogService;
+
+    @Autowired
+    private SecurityService securityService;
 
     @GetMapping
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")

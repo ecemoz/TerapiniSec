@@ -3,6 +3,7 @@ package com.yildiz.terapinisec.controller;
 import com.yildiz.terapinisec.dto.StoryViewCreateDto;
 import com.yildiz.terapinisec.dto.StoryViewDetailedDto;
 import com.yildiz.terapinisec.dto.StoryViewResponseDto;
+import com.yildiz.terapinisec.security.SecurityService;
 import com.yildiz.terapinisec.service.StoryViewService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -19,6 +20,9 @@ public class StoryViewController {
 
     @Autowired
     private StoryViewService storyViewService;
+
+    @Autowired
+    private SecurityService securityService;
 
     @PostMapping
     @PreAuthorize("isAuthenticated()")

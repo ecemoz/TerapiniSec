@@ -2,6 +2,7 @@ package com.yildiz.terapinisec.controller;
 
 import com.yildiz.terapinisec.dto.SurveyResponseCreateDto;
 import com.yildiz.terapinisec.dto.SurveyResponsePostDto;
+import com.yildiz.terapinisec.security.SecurityService;
 import com.yildiz.terapinisec.service.SurveyResponseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,9 @@ public class SurveyResponseController {
 
     @Autowired
     private SurveyResponseService surveyResponseService;
+
+    @Autowired
+    private SecurityService securityService;
 
     @GetMapping
     @PreAuthorize("hasRole('ADMIN') or @securityService.isSelf(#id)")

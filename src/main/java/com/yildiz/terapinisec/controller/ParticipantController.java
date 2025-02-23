@@ -2,6 +2,7 @@ package com.yildiz.terapinisec.controller;
 
 import com.yildiz.terapinisec.dto.ParticipantDto;
 import com.yildiz.terapinisec.model.User;
+import com.yildiz.terapinisec.security.SecurityService;
 import com.yildiz.terapinisec.service.ParticipantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,9 @@ public class ParticipantController {
 
     @Autowired
     private ParticipantService participantService;
+
+    @Autowired
+    private SecurityService securityService;
 
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")

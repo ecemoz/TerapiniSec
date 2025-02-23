@@ -3,6 +3,7 @@ package com.yildiz.terapinisec.controller;
 import com.yildiz.terapinisec.dto.GoalCreateDto;
 import com.yildiz.terapinisec.dto.GoalResponseDto;
 import com.yildiz.terapinisec.dto.GoalUpdateDto;
+import com.yildiz.terapinisec.security.SecurityService;
 import com.yildiz.terapinisec.service.GoalService;
 import com.yildiz.terapinisec.util.GoalType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,9 @@ public class GoalController {
 
     @Autowired
     private GoalService goalService;
+
+    @Autowired
+    private SecurityService securityService;
 
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")

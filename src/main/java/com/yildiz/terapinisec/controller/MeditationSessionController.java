@@ -2,6 +2,7 @@ package com.yildiz.terapinisec.controller;
 
 import com.yildiz.terapinisec.dto.MeditationSessionCreateDto;
 import com.yildiz.terapinisec.dto.MeditationSessionResponseDto;
+import com.yildiz.terapinisec.security.SecurityService;
 import com.yildiz.terapinisec.service.MeditationSessionService;
 import com.yildiz.terapinisec.util.MeditationSessionType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,9 @@ public class MeditationSessionController {
 
     @Autowired
     private MeditationSessionService meditationSessionService;
+
+    @Autowired
+    private SecurityService securityService;
 
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")

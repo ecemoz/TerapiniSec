@@ -3,6 +3,7 @@ package com.yildiz.terapinisec.controller;
 import com.yildiz.terapinisec.dto.MoodLogCreateDto;
 import com.yildiz.terapinisec.dto.MoodLogResponseDto;
 import com.yildiz.terapinisec.dto.MoodLogUpdateDto;
+import com.yildiz.terapinisec.security.SecurityService;
 import com.yildiz.terapinisec.service.MoodLogService;
 import com.yildiz.terapinisec.util.UserMoods;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +21,9 @@ public class MoodLogController {
 
     @Autowired
     private MoodLogService moodLogService;
+
+    @Autowired
+    private SecurityService securityService;
 
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")

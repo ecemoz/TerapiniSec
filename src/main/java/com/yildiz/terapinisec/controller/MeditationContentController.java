@@ -3,6 +3,7 @@ package com.yildiz.terapinisec.controller;
 import com.yildiz.terapinisec.dto.MeditationContentCreateDto;
 import com.yildiz.terapinisec.dto.MeditationContentResponseDto;
 import com.yildiz.terapinisec.dto.MeditationContentUpdateDto;
+import com.yildiz.terapinisec.security.SecurityService;
 import com.yildiz.terapinisec.service.MeditationContentService;
 import com.yildiz.terapinisec.util.MeditationSessionType;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,9 @@ public class MeditationContentController {
 
     @Autowired
     private MeditationContentService meditationContentService;
+
+    @Autowired
+    private SecurityService securityService;
 
     @GetMapping
     @PreAuthorize("isAuthenticated()")
