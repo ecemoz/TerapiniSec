@@ -79,10 +79,6 @@ public class MoodLogService {
         return moodLogRepository.countByUserMoodsIn(userMoods);
     }
 
-    public MoodLog findByUserId(Long userId) {
-        return moodLogRepository.findByMoodOwnerId(userId);
-    }
-
     public MoodLogResponseDto findByUserIdAndMood(Long userId, Collection<List<UserMoods>> userMoods) {
         MoodLog moodLog = moodLogRepository.findByMoodOwnerIdAndUserMoodsIn(userId, userMoods);
         return moodLogMapper.toMoodLogResponseDto(moodLog);

@@ -1,5 +1,6 @@
 package com.yildiz.terapinisec.security;
 
+import com.yildiz.terapinisec.repository.MeditationSessionRepository;
 import com.yildiz.terapinisec.service.*;
 import com.yildiz.terapinisec.util.ReportSituation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,9 @@ public class SecurityService {
 
     @Autowired
     private MoodLogService moodLogService;
+
+    @Autowired
+    private MeditationSessionRepository meditationSessionRepository;
 
     public boolean isSelf(Long userId) {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -106,5 +110,4 @@ public class SecurityService {
         }
         return false;
     }
-
 }

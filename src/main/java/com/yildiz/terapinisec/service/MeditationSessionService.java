@@ -58,18 +58,18 @@ public class MeditationSessionService {
     }
 
 
-    public  List<MeditationSessionResponseDto>findByMeditatorId(Long id) {
+    public List<MeditationSessionResponseDto> findByMeditatorId(Long id) {
         List<MeditationSession> sessions = meditationSessionRepository.findByMeditatorId(id);
         return sessions.stream()
                 .map(meditationSessionMapper::toMeditationSessionResponseDto)
                 .collect(Collectors.toList());
     }
 
-    public  int countByMeditationId (Long id) {
+    public int countByMeditationId(Long id) {
         return meditationSessionRepository.countByMeditator_Id(id);
     }
 
-    public List<MeditationSessionResponseDto>findByMeditatorIdAndMeditationContentType(Long userId, MeditationSessionType type) {
+    public List<MeditationSessionResponseDto> findByMeditatorIdAndMeditationContentType(Long userId, MeditationSessionType type) {
         List<MeditationSession> sessions = meditationSessionRepository.findByMeditatorIdAndMeditationContent_MeditationSessionType(userId, type);
         return sessions.stream()
                 .map(meditationSessionMapper::toMeditationSessionResponseDto)
