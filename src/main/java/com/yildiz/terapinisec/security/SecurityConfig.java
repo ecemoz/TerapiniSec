@@ -58,9 +58,4 @@ public class SecurityConfig {
 
         return http.build();
     }
-
-    @Bean
-    public SecurityService securityService() {
-        return new SecurityService();
-    }
 }
