@@ -1,5 +1,6 @@
 package com.yildiz.terapinisec.security;
 
+import com.yildiz.terapinisec.repository.AppointmentRepository;
 import com.yildiz.terapinisec.service.*;
 import com.yildiz.terapinisec.util.ReportSituation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,6 +33,9 @@ public class SecurityService {
 
     @Autowired
     private GoalService goalService;
+
+    @Autowired
+    private AppointmentRepository appointmentRepository;
 
     public boolean isSelf(Long userId) {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -123,6 +127,15 @@ public class SecurityService {
         if (principal instanceof CustomUserDetails) {
             Long currentUserId = ((CustomUserDetails) principal).getId();
             return goalService.isUserOwnerOfGoal(currentUserId, goalId);
+        }
+        return false;
+    }
+
+    public boolean isAppointmentOwner(Long appointmentId) {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof CustomUserDetails) {
+            Long currentUserId = ((CustomUserDetails) principal).getId();
+            return appointmentRepository.existsByIdAndAppointmentClients_Id(appointmentId, currentUserId);
         }
         return false;
     }
