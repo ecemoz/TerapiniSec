@@ -1,6 +1,5 @@
 package com.yildiz.terapinisec.security;
 
-import com.yildiz.terapinisec.repository.MeditationSessionRepository;
 import com.yildiz.terapinisec.service.*;
 import com.yildiz.terapinisec.util.ReportSituation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +29,9 @@ public class SecurityService {
 
     @Autowired
     private PremiumService premiumService;
+
+    @Autowired
+    private GoalService goalService;
 
     public boolean isSelf(Long userId) {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -114,5 +116,14 @@ public class SecurityService {
 
     public boolean isPremiumUser() {
         return premiumService.isPremiumUser();
+    }
+
+    public boolean isGoalOwner(Long goalId) {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof CustomUserDetails) {
+            Long currentUserId = ((CustomUserDetails) principal).getId();
+            return goalService.isUserOwnerOfGoal(currentUserId, goalId);
+        }
+        return false;
     }
 }

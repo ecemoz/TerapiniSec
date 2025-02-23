@@ -24,4 +24,5 @@ public interface GoalRepository extends JpaRepository<Goal, Long> {
 
     @Query("SELECT COUNT(g) FROM Goal g WHERE g.goalOwner.id = :userId AND g.goalEndDate BETWEEN :startDate AND :endDate ")
     long countGoalsByUserAndDateRange (@Param("userId") Long userId, @Param("startDate")LocalDateTime startDate, @Param("endDate")LocalDateTime endDate);
+    boolean existsByIdAndGoalOwnerId(Long goalId, Long goalOwnerId);
 }

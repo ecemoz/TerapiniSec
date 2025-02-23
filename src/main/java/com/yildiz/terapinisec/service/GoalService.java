@@ -100,4 +100,8 @@ public class GoalService {
                 .map(goalMapper::toGoalResponseDto)
                 .collect(Collectors.toList());
     }
+
+    public boolean isUserOwnerOfGoal(Long userId, Long goalId) {
+        return goalRepository.existsByIdAndGoalOwnerId(goalId, userId);
+    }
 }
