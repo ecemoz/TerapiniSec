@@ -1,6 +1,7 @@
 package com.yildiz.terapinisec.security;
 
 import com.yildiz.terapinisec.repository.AppointmentRepository;
+import com.yildiz.terapinisec.repository.FileStorageRepository;
 import com.yildiz.terapinisec.service.*;
 import com.yildiz.terapinisec.util.ReportSituation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,9 @@ public class SecurityService {
 
     @Autowired
     private AppointmentRepository appointmentRepository;
+
+    @Autowired
+    private FileStorageRepository fileStorageRepository;
 
     public boolean isSelf(Long userId) {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -136,6 +140,15 @@ public class SecurityService {
         if (principal instanceof CustomUserDetails) {
             Long currentUserId = ((CustomUserDetails) principal).getId();
             return appointmentRepository.existsByIdAndAppointmentClients_Id(appointmentId, currentUserId);
+        }
+        return false;
+    }
+
+    public boolean isFileOwner(Long fileId) {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof CustomUserDetails) {
+            Long currentUserId = ((CustomUserDetails) principal).getId();
+            return fileStorageRepository.existsByIdAndDocumentUploaderId(fileId, currentUserId);
         }
         return false;
     }
