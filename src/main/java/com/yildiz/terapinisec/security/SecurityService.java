@@ -29,7 +29,7 @@ public class SecurityService {
     private MoodLogService moodLogService;
 
     @Autowired
-    private MeditationSessionRepository meditationSessionRepository;
+    private PremiumService premiumService;
 
     public boolean isSelf(Long userId) {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
@@ -109,5 +109,10 @@ public class SecurityService {
             return moodLogService.isUserOwnerOfMoodLog(currentUserId, moodLogId);
         }
         return false;
+    }
+
+
+    public boolean isPremiumUser() {
+        return premiumService.isPremiumUser();
     }
 }

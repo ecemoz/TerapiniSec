@@ -4,7 +4,9 @@ import com.yildiz.terapinisec.dto.UserResponseDto;
 import com.yildiz.terapinisec.mapper.UserMapper;
 import com.yildiz.terapinisec.model.User;
 import com.yildiz.terapinisec.repository.UserRepository;
+import com.yildiz.terapinisec.security.CustomUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 
@@ -46,5 +48,14 @@ public class PremiumService {
         return userRepository.findById(userId)
                 .map(User::isPremium)
                 .orElseThrow(() -> new RuntimeException("User not found."));
+    }
+
+    public boolean isPremiumUser() {
+        Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        if (principal instanceof CustomUserDetails) {
+            Long currentUserId = ((CustomUserDetails) principal).getId();
+            return userRepository.existsByIdAndIsPremiumTrue(currentUserId);
+        }
+        return false;
     }
 }
