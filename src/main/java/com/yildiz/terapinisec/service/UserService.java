@@ -7,7 +7,6 @@ import com.yildiz.terapinisec.repository.UserRepository;
 import com.yildiz.terapinisec.util.JwtUtil;
 import com.yildiz.terapinisec.util.Specialization;
 import com.yildiz.terapinisec.util.UserRole;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -17,23 +16,26 @@ import java.util.List;
 @Service
 public class UserService {
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
+    private final PhoneNumberValidationService phoneNumberValidationService;
+    private final PremiumService premiumService;
+    private final PasswordEncoder passwordEncoder;
+    private final UserMapper userMapper;
+    private final JwtUtil jwtUtil;
 
-    @Autowired
-    private PhoneNumberValidationService phoneNumberValidationService;
-
-    @Autowired
-    private PremiumService premiumService;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    @Autowired
-    private UserMapper userMapper;
-
-    @Autowired
-    private JwtUtil jwtUtil;
+    public UserService(UserRepository userRepository,
+                       PhoneNumberValidationService phoneNumberValidationService,
+                       PremiumService premiumService,
+                       PasswordEncoder passwordEncoder,
+                       UserMapper userMapper,
+                       JwtUtil jwtUtil) {
+        this.userRepository = userRepository;
+        this.phoneNumberValidationService = phoneNumberValidationService;
+        this.premiumService = premiumService;
+        this.passwordEncoder = passwordEncoder;
+        this.userMapper = userMapper;
+        this.jwtUtil = jwtUtil;
+    }
 
     public UserResponseDto updateUserPhoneNumber(Long userId, String phoneNumber) {
         User user = userRepository.findById(userId)
