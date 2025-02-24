@@ -8,7 +8,6 @@ import com.yildiz.terapinisec.model.LibraryDocument;
 import com.yildiz.terapinisec.model.User;
 import com.yildiz.terapinisec.repository.LibraryDocumentRepository;
 import com.yildiz.terapinisec.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -18,15 +17,17 @@ import java.util.stream.Collectors;
 
 @Service
 public class LibraryDocumentService {
+    private final LibraryDocumentRepository libraryDocumentRepository;
+    private final LibraryDocumentMapper libraryDocumentMapper;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private LibraryDocumentRepository libraryDocumentRepository;
-
-    @Autowired
-    private LibraryDocumentMapper libraryDocumentMapper;
-
-    @Autowired
-    private UserRepository userRepository;
+    public LibraryDocumentService(LibraryDocumentRepository libraryDocumentRepository,
+                                  LibraryDocumentMapper libraryDocumentMapper,
+                                  UserRepository userRepository) {
+        this.libraryDocumentRepository = libraryDocumentRepository;
+        this.libraryDocumentMapper = libraryDocumentMapper;
+        this.userRepository = userRepository;
+    }
 
     public Page<LibraryDocumentResponseDto> getAllLibraryDocuments(int page, int size) {
         Pageable pageable = PageRequest.of(page,size);

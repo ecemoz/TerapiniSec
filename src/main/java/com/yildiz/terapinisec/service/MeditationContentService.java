@@ -15,7 +15,6 @@ import java.util.stream.Collectors;
 
 @Service
 public class MeditationContentService {
-
     private final MeditationContentRepository meditationContentRepository;
     private final MeditationContentMapper meditationContentMapper;
     private final UserRepository userRepository;
