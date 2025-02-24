@@ -8,30 +8,32 @@ import com.yildiz.terapinisec.model.SurveyResponse;
 import com.yildiz.terapinisec.repository.SurveyResponseRepository;
 import com.yildiz.terapinisec.repository.SurveyRepository;
 import com.yildiz.terapinisec.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
 public class SurveyRelationshipService {
 
-    @Autowired
-    private SurveyService surveyService;
+    private final SurveyService surveyService;
+    private final SurveyResponseService surveyResponseService;
+    private final SurveyResponseMapper surveyResponseMapper;
+    private final SurveyResponseRepository surveyResponseRepository;
+    private final SurveyRepository surveyRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private SurveyResponseService surveyResponseService;
-
-    @Autowired
-    private SurveyResponseMapper surveyResponseMapper;
-
-    @Autowired
-    private SurveyResponseRepository surveyResponseRepository;
-
-    @Autowired
-    private SurveyRepository surveyRepository;
-
-    @Autowired
-    private UserRepository userRepository;
+    public SurveyRelationshipService(SurveyService surveyService,
+                                   SurveyResponseService surveyResponseService,
+                                   SurveyResponseMapper surveyResponseMapper,
+                                   SurveyResponseRepository surveyResponseRepository,
+                                   SurveyRepository surveyRepository,
+                                   UserRepository userRepository) {
+        this.surveyService = surveyService;
+        this.surveyResponseService = surveyResponseService;
+        this.surveyResponseMapper = surveyResponseMapper;
+        this.surveyResponseRepository = surveyResponseRepository;
+        this.surveyRepository = surveyRepository;
+        this.userRepository = userRepository;
+    }
 
 
     public List<SurveyResponsePostDto> getResponsesBySurvey(Long surveyId) {
