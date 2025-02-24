@@ -9,22 +9,23 @@ import com.yildiz.terapinisec.model.User;
 import com.yildiz.terapinisec.repository.GoalRepository;
 import com.yildiz.terapinisec.repository.UserRepository;
 import com.yildiz.terapinisec.util.GoalType;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class GoalService {
+    private final GoalRepository goalRepository;
+    private final GoalMapper goalMapper;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private GoalRepository goalRepository;
-
-    @Autowired
-    private GoalMapper goalMapper;
-
-    @Autowired
-    private UserRepository userRepository;
+    public GoalService(GoalRepository goalRepository,
+                       GoalMapper goalMapper,
+                       UserRepository userRepository) {
+        this.goalRepository = goalRepository;
+        this.goalMapper = goalMapper;
+        this.userRepository = userRepository;
+    }
 
     public List<GoalResponseDto> getAllGoals() {
         List<Goal> goals = goalRepository.findAll();
