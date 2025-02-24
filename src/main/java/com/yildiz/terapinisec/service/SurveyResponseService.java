@@ -93,6 +93,6 @@ public class SurveyResponseService {
     }
 
     public boolean hasUserRespondedToSurvey(Long surveyId, Long userId) {
-        return surveyResponseRepository.existsBySurveyIdAndUserId(surveyId, userId);
+        return surveyResponseRepository.existsBySurveyIdAndResponsedBy_Id(surveyId, userId);
     }
 }

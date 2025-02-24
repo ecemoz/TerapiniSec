@@ -12,5 +12,5 @@ public interface SurveyResponseRepository extends JpaRepository<SurveyResponse, 
     List<SurveyResponse>findBySurveyId(Long surveyId);
     List<SurveyResponse>findByResponsedByIdAndSurveyId(Long userId, Long surveyId);
     List<SurveyResponse> findBySurveyIdOrderBySubmittedDateDesc(Long surveyId);
-    boolean  existsBySurveyIdAndUserId(Long surveyId , Long userId);
+    boolean  existsBySurveyIdAndResponsedBy_Id(Long surveyId , Long userId);
 }
