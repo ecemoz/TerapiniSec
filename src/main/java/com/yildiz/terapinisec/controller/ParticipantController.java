@@ -32,6 +32,13 @@ public class ParticipantController {
         return ResponseEntity.ok(participantService.getParticipantById(id));
     }
 
+    @PostMapping
+    @PreAuthorize("hasRole('ADMIN') or hasRole('PSYCHOLOGIST')")
+    public ResponseEntity<ParticipantDto> createParticipant(@RequestBody ParticipantDto participantDto) {
+        ParticipantDto createdParticipant = participantService.createParticipant(participantDto);
+        return ResponseEntity.ok(createdParticipant);
+    }
+
     @GetMapping("/{sessionId}")
     @PreAuthorize("hasRole('ADMIN') or hasRole('PSYCHOLOGIST')or @securityService.isSessionParticipant(#sessionId)")
     public ResponseEntity<List<ParticipantDto>> getParticipantBySessionId(@PathVariable Long sessionId) {

@@ -5,14 +5,13 @@ import com.yildiz.terapinisec.model.Participant;
 import com.yildiz.terapinisec.model.Session;
 import com.yildiz.terapinisec.model.User;
 import org.springframework.stereotype.Component;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
 public class ParticipantMapper {
 
-    public static ParticipantDto toParticipantDto(Participant participant) {
+    public ParticipantDto toParticipantDto(Participant participant) {
         if (participant == null) {
             return null;
         }
@@ -26,7 +25,7 @@ public class ParticipantMapper {
                 .build();
     }
 
-    public static Participant toParticipant(ParticipantDto dto) {
+    public Participant toParticipant(ParticipantDto dto) {
         if (dto == null) {
             return null;
         }
@@ -37,7 +36,7 @@ public class ParticipantMapper {
                 .build();
     }
 
-    public static Participant toParticipant(ParticipantDto dto, User user, Session session) {
+    public Participant toParticipant(ParticipantDto dto, User user, Session session) {
         if (dto == null) {
             return null;
         }
@@ -50,17 +49,17 @@ public class ParticipantMapper {
                 .build();
     }
 
-    public static List<ParticipantDto> toParticipantDtoList(List<Participant> participants) {
+    public List<ParticipantDto> toParticipantDtoList(List<Participant> participants) {  // 🔥 static kaldırıldı
         if (participants == null || participants.isEmpty()) {
             return List.of();
         }
 
         return participants.stream()
-                .map(ParticipantMapper::toParticipantDto)
+                .map(this::toParticipantDto) // 🔥 Static olmadığı için doğrudan çağırabilirsin
                 .collect(Collectors.toList());
     }
 
-    public static List<Participant> toParticipantList(List<ParticipantDto> dtos, User user, Session session) {
+    public List<Participant> toParticipantList(List<ParticipantDto> dtos, User user, Session session) {
         if (dtos == null || dtos.isEmpty()) {
             return List.of();
         }

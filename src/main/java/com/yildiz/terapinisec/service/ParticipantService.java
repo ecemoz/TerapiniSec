@@ -5,18 +5,19 @@ import com.yildiz.terapinisec.mapper.ParticipantMapper;
 import com.yildiz.terapinisec.model.Participant;
 import com.yildiz.terapinisec.model.User;
 import com.yildiz.terapinisec.repository.ParticipantRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
 public class ParticipantService {
+    private final ParticipantRepository participantRepository;
+    private final ParticipantMapper participantMapper;
 
-    @Autowired
-    private ParticipantRepository participantRepository;
-
-    @Autowired
-    private ParticipantMapper participantMapper;
+    public ParticipantService(ParticipantRepository participantRepository,
+                              ParticipantMapper participantMapper) {
+        this.participantRepository = participantRepository;
+        this.participantMapper = participantMapper;
+    }
 
     public List<ParticipantDto> getAllParticipants() {
         List<Participant> participants = participantRepository.findAll();
