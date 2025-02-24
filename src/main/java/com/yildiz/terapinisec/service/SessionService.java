@@ -10,7 +10,6 @@ import com.yildiz.terapinisec.repository.SessionRepository;
 import com.yildiz.terapinisec.util.SessionStatus;
 import com.yildiz.terapinisec.util.SessionType;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -18,11 +17,14 @@ import java.util.List;
 @Service
 public class SessionService {
 
-    @Autowired
-    private SessionRepository sessionRepository;
+    private final SessionRepository sessionRepository;
+    private final SessionMapper sessionMapper;
 
-    @Autowired
-    private SessionMapper sessionMapper;
+    public SessionService(SessionRepository sessionRepository,
+                          SessionMapper sessionMapper) {
+        this.sessionRepository = sessionRepository;
+        this.sessionMapper = sessionMapper;
+    }
 
     public List<SessionResponseDto> getAllSessions() {
         List<Session> sessions = sessionRepository.findAll();
@@ -69,14 +71,14 @@ public class SessionService {
         Session session = sessionRepository.findById(sessionId)
                 .orElseThrow(() -> new RuntimeException("Session not found"));
 
-        validateStatusChange(session.getSessionStatus(), newStatus);
+        validateStatusChange(session.getSessionStatus());
         session.setSessionStatus(newStatus);
         Session updatedSession = sessionRepository.save(session);
 
         return sessionMapper.toSessionResponseDtoList(List.of(updatedSession)).get(0);
     }
 
-    private void validateStatusChange(SessionStatus currentStatus, SessionStatus newStatus) {
+    private void validateStatusChange(SessionStatus currentStatus) {
         if (currentStatus == SessionStatus.COMPLETED || currentStatus == SessionStatus.CANCELLED) {
             throw new IllegalArgumentException("SessionStatus cannot be changed");
         }
