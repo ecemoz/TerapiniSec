@@ -11,7 +11,6 @@ import com.yildiz.terapinisec.model.User;
 import com.yildiz.terapinisec.repository.AppointmentRepository;
 import com.yildiz.terapinisec.util.AppointmentStatus;
 import com.yildiz.terapinisec.util.UserRole;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,23 +18,25 @@ import java.util.stream.Collectors;
 
 @Service
 public class AppointmentService {
+    private final AppointmentRepository appointmentRepository;
+    private final AppointmentMapper appointmentMapper;
+    private final UserService userService;
+    private final UserMapper userMapper;
 
-    @Autowired
-    private AppointmentRepository appointmentRepository;
-
-    @Autowired
-    private AppointmentMapper appointmentMapper;
-
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private UserMapper userMapper;
+    public AppointmentService(AppointmentRepository appointmentRepository,
+                              AppointmentMapper appointmentMapper,
+                              UserService userService,
+                              UserMapper userMapper) {
+        this.appointmentRepository = appointmentRepository;
+        this.appointmentMapper = appointmentMapper;
+        this.userService = userService;
+        this.userMapper = userMapper;
+    }
 
     public List<AppointmentResponseDto> getAllAppointments() {
         List<Appointment> appointments = appointmentRepository.findAll();
         return appointments.stream()
-                .map(appointmentMapper::toAppointmentResponseDto) // Non-static metot çağrısı
+                .map(appointmentMapper::toAppointmentResponseDto)
                 .collect(Collectors.toList());
     }
 
