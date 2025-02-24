@@ -9,26 +9,27 @@ import com.yildiz.terapinisec.model.User;
 import com.yildiz.terapinisec.repository.SurveyRepository;
 import com.yildiz.terapinisec.repository.SurveyResponseRepository;
 import com.yildiz.terapinisec.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class SurveyResponseService {
 
-    @Autowired
-    private SurveyResponseRepository surveyResponseRepository;
+    private final SurveyResponseRepository surveyResponseRepository;
+    private final SurveyRepository surveyRepository;
+    private final UserRepository userRepository;
+    private final SurveyResponseMapper surveyResponseMapper;
 
-    @Autowired
-    private SurveyRepository surveyRepository;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private SurveyResponseMapper surveyResponseMapper;
+    public SurveyResponseService(SurveyResponseRepository surveyResponseRepository,
+                                 SurveyRepository surveyRepository,
+                                 UserRepository userRepository,
+                                 SurveyResponseMapper surveyResponseMapper) {
+        this.surveyResponseRepository = surveyResponseRepository;
+        this.surveyRepository = surveyRepository;
+        this.userRepository = userRepository;
+        this.surveyResponseMapper = surveyResponseMapper;
+    }
 
     public List<SurveyResponsePostDto> getAllSurveyResponses() {
         List<SurveyResponse> surveyResponses = surveyResponseRepository.findAll();
