@@ -8,7 +8,6 @@ import com.yildiz.terapinisec.mapper.StoryMapper;
 import com.yildiz.terapinisec.model.Story;
 import com.yildiz.terapinisec.repository.StoryRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -16,11 +15,13 @@ import java.util.List;
 @Service
 public class StoryService {
 
-    @Autowired
-    private StoryRepository storyRepository;
+    private final StoryRepository storyRepository;
+    private final StoryMapper storyMapper;
 
-    @Autowired
-    private StoryMapper storyMapper;
+    public StoryService(StoryRepository storyRepository, StoryMapper storyMapper) {
+        this.storyRepository = storyRepository;
+        this.storyMapper = storyMapper;
+    }
 
     public List<StoryResponseDto> getAllStories() {
         List<Story> stories = storyRepository.findAll();
