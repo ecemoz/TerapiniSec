@@ -11,7 +11,6 @@ import com.yildiz.terapinisec.repository.StoryRepository;
 import com.yildiz.terapinisec.repository.StoryViewRepository;
 import com.yildiz.terapinisec.repository.UserRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -20,17 +19,20 @@ import java.util.List;
 @Service
 public class StoryViewService {
 
-    @Autowired
-    private StoryViewRepository storyViewRepository;
+    private final StoryViewRepository storyViewRepository;
+    private final StoryRepository storyRepository;
+    private final UserRepository userRepository;
+    private final StoryViewMapper storyViewMapper;
 
-    @Autowired
-    private StoryRepository storyRepository;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private StoryViewMapper storyViewMapper;
+    public StoryViewService(StoryViewRepository storyViewRepository,
+                            StoryRepository storyRepository,
+                            UserRepository userRepository,
+                            StoryViewMapper storyViewMapper) {
+        this.storyViewRepository = storyViewRepository;
+        this.storyRepository = storyRepository;
+        this.userRepository = userRepository;
+        this.storyViewMapper = storyViewMapper;
+    }
 
     public StoryViewResponseDto createStoryView(StoryViewCreateDto storyViewCreateDto) {
 
