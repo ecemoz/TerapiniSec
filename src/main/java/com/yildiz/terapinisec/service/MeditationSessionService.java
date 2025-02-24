@@ -10,26 +10,26 @@ import com.yildiz.terapinisec.repository.MeditationContentRepository;
 import com.yildiz.terapinisec.repository.MeditationSessionRepository;
 import com.yildiz.terapinisec.repository.UserRepository;
 import com.yildiz.terapinisec.util.MeditationSessionType;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
 public class MeditationSessionService {
+    private final MeditationSessionRepository meditationSessionRepository;
+    private final MeditationSessionMapper meditationSessionMapper;
+    private final UserRepository userRepository;
+    private final MeditationContentRepository meditationContentRepository;
 
-    @Autowired
-    private MeditationSessionRepository meditationSessionRepository;
-
-    @Autowired
-    private MeditationSessionMapper meditationSessionMapper;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private MeditationContentRepository meditationContentRepository;
-
+    public MeditationSessionService(MeditationSessionRepository meditationSessionRepository,
+                                    MeditationSessionMapper meditationSessionMapper,
+                                    UserRepository userRepository,
+                                    MeditationContentRepository meditationContentRepository) {
+        this.meditationSessionRepository = meditationSessionRepository;
+        this.meditationSessionMapper = meditationSessionMapper;
+        this.userRepository = userRepository;
+        this.meditationContentRepository = meditationContentRepository;
+    }
 
     public List<MeditationSessionResponseDto> getAllMeditationSession() {
         List<MeditationSession> sessions = meditationSessionRepository.findAll();
