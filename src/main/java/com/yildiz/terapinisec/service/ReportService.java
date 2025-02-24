@@ -8,36 +8,37 @@ import com.yildiz.terapinisec.model.User;
 import com.yildiz.terapinisec.repository.*;
 import com.yildiz.terapinisec.util.ReportSituation;
 import com.yildiz.terapinisec.util.SleepQuality;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
+import com.yildiz.terapinisec.util.UserMoods;
 
 @Service
 public class ReportService {
+        private final ReportRepository reportRepository;
+        private final UserRepository userRepository;
+        private final MoodLogRepository moodLogRepository;
+        private final TaskRepository taskRepository;
+        private final GoalRepository goalRepository;
+        private final SleepLogRepository sleepLogRepository;
+        private final ReportMapper reportMapper;
 
-    @Autowired
-    private ReportRepository reportRepository;
-
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private MoodLogRepository moodLogRepository;
-
-    @Autowired
-    private TaskRepository taskRepository;
-
-    @Autowired
-    private GoalRepository goalRepository;
-
-    @Autowired
-    private SleepLogRepository sleepLogRepository;
-
-    @Autowired
-    private ReportMapper reportMapper;
+        public ReportService(ReportRepository reportRepository,
+                             UserRepository userRepository,
+                             MoodLogRepository moodLogRepository,
+                             TaskRepository taskRepository,
+                             GoalRepository goalRepository,
+                             SleepLogRepository sleepLogRepository,
+                             ReportMapper reportMapper) {
+            this.reportRepository = reportRepository;
+            this.userRepository = userRepository;
+            this.moodLogRepository = moodLogRepository;
+            this.taskRepository = taskRepository;
+            this.goalRepository = goalRepository;
+            this.sleepLogRepository = sleepLogRepository;
+            this.reportMapper = reportMapper;
+        }
 
     public ReportResponseDto generatePersonalizedWeeklyReport(Long userId) {
         User user = userRepository.findById(userId)
@@ -99,10 +100,11 @@ public class ReportService {
         List<MoodLog> moodLogs = moodLogRepository.findMoodSummaryByUserAndDateRange(user.getId(), startDate, endDate);
 
         long positiveCount = moodLogs.stream()
-                .filter(moodLog -> "Positive".equals(moodLog.getUserMoods()))
+                .filter(moodLog -> moodLog.getUserMoods().stream().anyMatch(UserMoods::isPositive))
                 .count();
+
         long negativeCount = moodLogs.stream()
-                .filter(moodLog -> "Negative".equals(moodLog.getUserMoods()))
+                .filter(moodLog -> moodLog.getUserMoods().stream().anyMatch(UserMoods::isNegative))
                 .count();
 
         if (positiveCount > negativeCount) {
@@ -113,6 +115,8 @@ public class ReportService {
             return "Mood: Stable.";
         }
     }
+
+
 
     private String analyzeTaskPerformance(User user, LocalDateTime startDate, LocalDateTime endDate) {
         long completedTasks = taskRepository.countCompletedTasksByUserAndDateRange(user.getId(), startDate, endDate);
@@ -144,21 +148,15 @@ public class ReportService {
 
         SleepQuality averageSleepQuality = SleepQuality.fromValue(averageSleepQualityValue.get().intValue());
 
-        switch (averageSleepQuality) {
-            case VERY_POOR:
-                return "Sleep Quality: Very Poor.";
-            case POOR:
-                return "Sleep Quality: Poor.";
-            case AVERAGE:
-                return "Sleep Quality: Average.";
-            case GOOD:
-                return "Sleep Quality: Good.";
-            case EXCELLENT:
-                return "Sleep Quality: Excellent.";
-            default:
-                return "Sleep Quality: Unknown.";
-        }
+        return switch (averageSleepQuality) {
+            case VERY_POOR -> "Sleep Quality: Very Poor.";
+            case POOR -> "Sleep Quality: Poor.";
+            case AVERAGE -> "Sleep Quality: Average.";
+            case GOOD -> "Sleep Quality: Good.";
+            case EXCELLENT -> "Sleep Quality: Excellent.";
+        };
     }
+
 
     private String generateSuggestions(User user, LocalDateTime startDate, LocalDateTime endDate) {
         StringBuilder suggestions = new StringBuilder("Suggestions:");
@@ -177,7 +175,7 @@ public class ReportService {
 
         List<MoodLog> moodLogs = moodLogRepository.findMoodSummaryByUserAndDateRange(user.getId(), startDate, endDate);
         long negativeCount = moodLogs.stream()
-                .filter(moodLog -> "Negative".equals(moodLog.getUserMoods()))
+                .filter(moodLog -> moodLog.getUserMoods().stream().anyMatch(UserMoods::isNegative))
                 .count();
 
         if (negativeCount > 3) {
@@ -186,6 +184,7 @@ public class ReportService {
 
         return suggestions.toString();
     }
+
 
     public ReportResponseDto findByReportType(ReportSituation reportSituation) {
         Report report = reportRepository.findByReportSituation(reportSituation)
