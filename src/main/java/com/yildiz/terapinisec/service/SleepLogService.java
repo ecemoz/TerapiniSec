@@ -8,28 +8,27 @@ import com.yildiz.terapinisec.model.SleepLog;
 import com.yildiz.terapinisec.model.User;
 import com.yildiz.terapinisec.repository.SleepLogRepository;
 import com.yildiz.terapinisec.repository.UserRepository;
-import com.yildiz.terapinisec.util.SleepQuality;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class SleepLogService {
 
-    @Autowired
-    private SleepLogRepository sleepLogRepository;
+    private final SleepLogRepository sleepLogRepository;
+    private final SleepLogMapper sleepLogMapper;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private SleepLogMapper sleepLogMapper;
-
-    @Autowired
-    private UserRepository userRepository;
-
+    public SleepLogService(SleepLogRepository sleepLogRepository,
+                           SleepLogMapper sleepLogMapper,
+                           UserRepository userRepository) {
+        this.sleepLogRepository = sleepLogRepository;
+        this.sleepLogMapper = sleepLogMapper;
+        this.userRepository = userRepository;
+    }
 
     public List<SleepLogResponseDto> getAllSleepLogs() {
         List<SleepLog> sleepLogs = sleepLogRepository.findAll();
