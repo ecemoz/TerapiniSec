@@ -8,7 +8,6 @@ import com.yildiz.terapinisec.model.Survey;
 import com.yildiz.terapinisec.model.User;
 import com.yildiz.terapinisec.repository.SurveyRepository;
 import com.yildiz.terapinisec.repository.UserRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.Optional;
@@ -17,14 +16,17 @@ import java.util.stream.Collectors;
 @Service
 public class SurveyService {
 
-    @Autowired
-    private SurveyRepository surveyRepository;
+    private final SurveyRepository surveyRepository;
+    private final SurveyMapper surveyMapper;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private SurveyMapper surveyMapper;
-
-    @Autowired
-    private UserRepository userRepository;
+    public SurveyService(SurveyRepository surveyRepository,
+                         SurveyMapper surveyMapper,
+                         UserRepository userRepository) {
+        this.surveyRepository = surveyRepository;
+        this.surveyMapper = surveyMapper;
+        this.userRepository = userRepository;
+    }
 
     public List<SurveyPostDto>getAllSurveys() {
         List<Survey> surveys = surveyRepository.findAll();
