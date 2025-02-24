@@ -9,7 +9,6 @@ import com.yildiz.terapinisec.model.User;
 import com.yildiz.terapinisec.repository.MoodLogRepository;
 import com.yildiz.terapinisec.repository.UserRepository;
 import com.yildiz.terapinisec.util.UserMoods;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -18,15 +17,17 @@ import java.util.stream.Collectors;
 
 @Service
 public class MoodLogService {
+    private final MoodLogRepository moodLogRepository;
+    private final MoodLogMapper moodLogMapper;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private MoodLogRepository moodLogRepository;
-
-    @Autowired
-    private MoodLogMapper moodLogMapper;
-
-    @Autowired
-    private UserRepository userRepository;
+    public MoodLogService(MoodLogRepository moodLogRepository,
+                          MoodLogMapper moodLogMapper,
+                          UserRepository userRepository) {
+        this.moodLogRepository = moodLogRepository;
+        this.moodLogMapper = moodLogMapper;
+        this.userRepository = userRepository;
+    }
 
     public List<MoodLogResponseDto> getAllMoodLog() {
         List<MoodLog> moodLogs = moodLogRepository.findAll();
@@ -42,7 +43,6 @@ public class MoodLogService {
     }
 
     public MoodLogResponseDto createMoodLog(MoodLogCreateDto moodLogCreateDto) {
-        // Mood owner (User) bulunuyor
         User moodOwner = userRepository.findById(moodLogCreateDto.getMoodOwnerId())
                 .orElseThrow(() -> new RuntimeException("User not found with ID: " + moodLogCreateDto.getMoodOwnerId()));
 
