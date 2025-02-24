@@ -9,7 +9,6 @@ import com.yildiz.terapinisec.model.User;
 import com.yildiz.terapinisec.repository.MeditationContentRepository;
 import com.yildiz.terapinisec.repository.UserRepository;
 import com.yildiz.terapinisec.util.MeditationSessionType;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -17,14 +16,17 @@ import java.util.stream.Collectors;
 @Service
 public class MeditationContentService {
 
-    @Autowired
-    private MeditationContentRepository meditationContentRepository;
+    private final MeditationContentRepository meditationContentRepository;
+    private final MeditationContentMapper meditationContentMapper;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private MeditationContentMapper meditationContentMapper;
-
-    @Autowired
-    private UserRepository userRepository;
+    public MeditationContentService(MeditationContentRepository meditationContentRepository,
+                                    MeditationContentMapper meditationContentMapper,
+                                    UserRepository userRepository) {
+        this.meditationContentRepository = meditationContentRepository;
+        this.meditationContentMapper = meditationContentMapper;
+        this.userRepository = userRepository;
+    }
 
     public List<MeditationContentResponseDto> getAllMeditationContent() {
        List<MeditationContent> contents = meditationContentRepository.findAll();
