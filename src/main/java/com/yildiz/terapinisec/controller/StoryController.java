@@ -4,9 +4,7 @@ import com.yildiz.terapinisec.dto.StoryCreateDto;
 import com.yildiz.terapinisec.dto.StoryDetailedResponseDto;
 import com.yildiz.terapinisec.dto.StoryResponseDto;
 import com.yildiz.terapinisec.dto.StoryUpdateDto;
-import com.yildiz.terapinisec.security.SecurityService;
 import com.yildiz.terapinisec.service.StoryService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,12 +15,11 @@ import java.util.List;
 @RequestMapping("/story")
 public class StoryController {
 
-    @Autowired
-    private StoryService storyService;
+    private final StoryService storyService;
 
-    @Autowired
-    private SecurityService securityService;
-
+    public StoryController(StoryService storyService) {
+        this.storyService = storyService;
+    }
 
     @GetMapping
     @PreAuthorize("isAuthenticated()")
