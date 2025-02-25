@@ -1,11 +1,12 @@
 package com.yildiz.terapinisec.controller;
 
 import com.yildiz.terapinisec.dto.*;
-import com.yildiz.terapinisec.security.SecurityService;
 import com.yildiz.terapinisec.service.UserService;
 import com.yildiz.terapinisec.util.Specialization;
 import com.yildiz.terapinisec.util.UserRole;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,48 +20,19 @@ import java.util.List;
 @RequestMapping("/users")
 public class UserController {
 
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
-    @Autowired
-    private SecurityService securityService;
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
 
+    @Data
+    @AllArgsConstructor
+    @NoArgsConstructor
     public static class ApiResponse<T> {
         private boolean success;
         private String message;
         private T data;
-
-        public ApiResponse() {}
-
-        public ApiResponse(boolean success, String message, T data) {
-            this.success = success;
-            this.message = message;
-            this.data = data;
-        }
-
-        public boolean isSuccess() {
-            return success;
-        }
-
-        public void setSuccess(boolean success) {
-            this.success = success;
-        }
-
-        public String getMessage() {
-            return message;
-        }
-
-        public void setMessage(String message) {
-            this.message = message;
-        }
-
-        public T getData() {
-            return data;
-        }
-
-        public void setData(T data) {
-            this.data = data;
-        }
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -97,9 +69,6 @@ public class UserController {
             ApiResponse<UserResponseDto> response = new ApiResponse<>(true, "User created successfully.", createdUser);
             return ResponseEntity.status(HttpStatus.CREATED).body(response);
         } catch (IllegalArgumentException ex) {
-            ApiResponse<UserResponseDto> response = new ApiResponse<>(false, "Failed to create user: " + ex.getMessage(), null);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
-        } catch (RuntimeException ex) {
             ApiResponse<UserResponseDto> response = new ApiResponse<>(false, "Failed to create user: " + ex.getMessage(), null);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
@@ -141,14 +110,11 @@ public class UserController {
             ApiResponse<UserResponseDto> response = new ApiResponse<>(true, "User updated successfully.", updatedUser);
             return ResponseEntity.ok(response);
         } catch (IllegalArgumentException ex) {
-            ApiResponse<UserResponseDto> response = new ApiResponse<>(false, "Update failed: " + ex.getMessage(), null);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                    .body(new ApiResponse<>(false, "Update failed: " + ex.getMessage(), null));
         } catch (UsernameNotFoundException ex) {
-            ApiResponse<UserResponseDto> response = new ApiResponse<>(false, "Update failed: " + ex.getMessage(), null);
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
-        } catch (RuntimeException ex) {
-            ApiResponse<UserResponseDto> response = new ApiResponse<>(false, "Update failed: " + ex.getMessage(), null);
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(response);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ApiResponse<>(false, "Update failed: " + ex.getMessage(), null));
         }
     }
 
@@ -402,7 +368,6 @@ public class UserController {
     @PostMapping("/register")
     public ResponseEntity<ApiResponse<UserResponseDto>> register(@RequestBody UserCreateDto userCreateDto) {
         try {
-            // userService.registerNewUser metodu, otomatik olarak USER rolü atanarak yeni kullanıcı oluşturur
             UserResponseDto createdUser = userService.registerNewUser(userCreateDto);
 
             ApiResponse<UserResponseDto> response = new ApiResponse<>(true, "User registered successfully.", createdUser);
