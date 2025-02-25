@@ -4,23 +4,47 @@ import com.yildiz.terapinisec.repository.AppointmentRepository;
 import com.yildiz.terapinisec.repository.FileStorageRepository;
 import com.yildiz.terapinisec.service.*;
 import com.yildiz.terapinisec.util.ReportSituation;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 @Service("securityService")
 public class SecurityService {
 
-    @Autowired private SurveyResponseService surveyResponseService;
-    @Autowired private StoryService storyService;
-    @Autowired private SleepLogService sleepLogService;
-    @Autowired private SessionService sessionService;
-    @Autowired private ReportService reportService;
-    @Autowired private MoodLogService moodLogService;
-    @Autowired private PremiumService premiumService;
-    @Autowired private GoalService goalService;
-    @Autowired private AppointmentRepository appointmentRepository;
-    @Autowired private FileStorageRepository fileStorageRepository;
+    private final SurveyResponseService surveyResponseService;
+    private final StoryService storyService;
+    private final SleepLogService sleepLogService;
+    private final SessionService sessionService;
+    private final ReportService reportService;
+    private final MoodLogService moodLogService;
+    private final PremiumService premiumService;
+    private final GoalService goalService;
+    private final AppointmentRepository appointmentRepository;
+    private final FileStorageRepository fileStorageRepository;
+
+    public SecurityService(
+            SurveyResponseService surveyResponseService,
+            StoryService storyService,
+            SleepLogService sleepLogService,
+            SessionService sessionService,
+            ReportService reportService,
+            MoodLogService moodLogService,
+            PremiumService premiumService,
+            GoalService goalService,
+            AppointmentRepository appointmentRepository,
+            FileStorageRepository fileStorageRepository
+    ) {
+        this.surveyResponseService = surveyResponseService;
+        this.storyService = storyService;
+        this.sleepLogService = sleepLogService;
+        this.sessionService = sessionService;
+        this.reportService = reportService;
+        this.moodLogService = moodLogService;
+        this.premiumService = premiumService;
+        this.goalService = goalService;
+        this.appointmentRepository = appointmentRepository;
+        this.fileStorageRepository = fileStorageRepository;
+    }
+
 
     public Long getCurrentUserId() {
         Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
