@@ -3,9 +3,7 @@ package com.yildiz.terapinisec.controller;
 import com.yildiz.terapinisec.dto.StoryViewCreateDto;
 import com.yildiz.terapinisec.dto.StoryViewDetailedDto;
 import com.yildiz.terapinisec.dto.StoryViewResponseDto;
-import com.yildiz.terapinisec.security.SecurityService;
 import com.yildiz.terapinisec.service.StoryViewService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
@@ -18,15 +16,15 @@ import java.util.List;
 @RequestMapping("/storyviews")
 public class StoryViewController {
 
-    @Autowired
-    private StoryViewService storyViewService;
+    private final StoryViewService storyViewService;
 
-    @Autowired
-    private SecurityService securityService;
+    public StoryViewController(StoryViewService storyViewService) {
+        this.storyViewService = storyViewService;
+    }
 
     @PostMapping
     @PreAuthorize("isAuthenticated()")
-    public ResponseEntity<StoryViewResponseDto> createStoryView (@PathVariable StoryViewCreateDto storyViewCreateDto) {
+    public ResponseEntity<StoryViewResponseDto> createStoryView (@RequestParam StoryViewCreateDto storyViewCreateDto) {
         return ResponseEntity.ok(storyViewService.createStoryView(storyViewCreateDto));
     }
 
