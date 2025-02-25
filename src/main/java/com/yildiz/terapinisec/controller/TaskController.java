@@ -3,9 +3,7 @@ package com.yildiz.terapinisec.controller;
 import com.yildiz.terapinisec.dto.TaskCreateDto;
 import com.yildiz.terapinisec.dto.TaskResponseDto;
 import com.yildiz.terapinisec.dto.TaskUpdateDto;
-import com.yildiz.terapinisec.security.SecurityService;
 import com.yildiz.terapinisec.service.TaskService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,11 +15,11 @@ import java.util.List;
 @RequestMapping("/tasks")
 public class TaskController {
 
-    @Autowired
-    private TaskService taskService;
+    private final TaskService taskService;
 
-    @Autowired
-    private SecurityService securityService;
+    public TaskController(TaskService taskService) {
+        this.taskService = taskService;
+    }
 
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
@@ -82,19 +80,19 @@ public class TaskController {
     }
 
     @GetMapping("/user/{userId}")
-    @PreAuthorize("hasAnyRole('ADMIN','PSYCHOLOGIST') or #userId == principal.id")
+    @PreAuthorize("hasAnyRole('ADMIN','PSYCHOLOGIST') or #userId == authentication.principal.getId()")
     public ResponseEntity<List<TaskResponseDto>> findByUserId(@PathVariable Long userId) {
         return ResponseEntity.ok(taskService.findByUserId(userId));
     }
 
     @GetMapping("/user/{userId}/incomplete")
-    @PreAuthorize("hasRole('ADMIN') or #userId == principal.id")
+    @PreAuthorize("hasRole('ADMIN') or #userId == authentication.principal.getId()")
     public ResponseEntity<List<TaskResponseDto>> findByUserIdAndIsCompletedFalse(@PathVariable Long userId) {
         return ResponseEntity.ok(taskService.findByUserIdAndIsCompletedFalse(userId));
     }
 
     @GetMapping("/user/{userId}/due-date/before")
-    @PreAuthorize("hasRole('ADMIN') or #userId == principal.id")
+    @PreAuthorize("hasRole('ADMIN') or #userId == authentication.principal.getId()")
     public ResponseEntity<List<TaskResponseDto>> findByUserIdDueDateBefore(
             @PathVariable Long userId,
             @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime dueDate) {
