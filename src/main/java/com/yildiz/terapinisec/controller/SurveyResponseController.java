@@ -2,9 +2,7 @@ package com.yildiz.terapinisec.controller;
 
 import com.yildiz.terapinisec.dto.SurveyResponseCreateDto;
 import com.yildiz.terapinisec.dto.SurveyResponsePostDto;
-import com.yildiz.terapinisec.security.SecurityService;
 import com.yildiz.terapinisec.service.SurveyResponseService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -14,14 +12,14 @@ import java.util.List;
 @RequestMapping("/surveyresponses")
 public class SurveyResponseController {
 
-    @Autowired
-    private SurveyResponseService surveyResponseService;
+    private final SurveyResponseService surveyResponseService;
 
-    @Autowired
-    private SecurityService securityService;
+    public SurveyResponseController(SurveyResponseService surveyResponseService) {
+        this.surveyResponseService = surveyResponseService;
+    }
 
     @GetMapping
-    @PreAuthorize("hasRole('ADMIN') or @securityService.isSelf(#id)")
+    @PreAuthorize("hasRole('ADMIN') or hasRole('PSYCHOLOGIST')")
     public ResponseEntity<List<SurveyResponsePostDto>> getAllSurveyResponses() {
         return ResponseEntity.ok(surveyResponseService.getAllSurveyResponses());
     }
@@ -39,7 +37,7 @@ public class SurveyResponseController {
     }
 
     @GetMapping("/{userId}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'PSYCHOLOGIST') or @securityService.isSelf(#id)")
+    @PreAuthorize("hasAnyRole('ADMIN', 'PSYCHOLOGIST') or @securityService.isSelf(#userId)")
     public ResponseEntity<List<SurveyResponsePostDto>> getResponsedById(@PathVariable Long userId) {
         return ResponseEntity.ok(surveyResponseService.findByResponsedById(userId));
     }
@@ -51,13 +49,13 @@ public class SurveyResponseController {
     }
 
     @GetMapping("/{userId}/{surveyId}")
-    @PreAuthorize("hasAnyRole('ADMIN', 'PSYCHOLOGIST') or @securityService.isSelf(#id)")
+    @PreAuthorize("hasAnyRole('ADMIN', 'PSYCHOLOGIST') or @securityService.isSelf(#userId)")
     public ResponseEntity<List<SurveyResponsePostDto>> findByResponsedByIdAndSurveyId(@PathVariable Long userId, @PathVariable Long surveyId) {
         return ResponseEntity.ok(surveyResponseService.findByResponsedByIdAndSurveyId(userId, surveyId));
     }
 
     @GetMapping("/{surveyId}/ord?submitteddate")
-    @PreAuthorize("hasAnyRole('ADMIN', 'PSYCHOLOGIST') or @securityService.isSelf(#id)")
+    @PreAuthorize("hasAnyRole('ADMIN', 'PSYCHOLOGIST') or @securityService.getCurrentUserId() == #surveyId")
     public ResponseEntity<List<SurveyResponsePostDto>> findBySurveyIdSubmittedDate(@PathVariable Long surveyId) {
         return ResponseEntity.ok(surveyResponseService.findBySurveyIdOrderBySubmittedDateDesc(surveyId));
     }
