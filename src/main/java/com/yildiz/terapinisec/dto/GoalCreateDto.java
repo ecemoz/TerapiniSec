@@ -4,7 +4,6 @@ import com.yildiz.terapinisec.util.GoalType;
 import lombok.Builder;
 import lombok.Data;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Data
 @Builder
