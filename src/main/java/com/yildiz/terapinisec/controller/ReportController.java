@@ -1,10 +1,8 @@
 package com.yildiz.terapinisec.controller;
 
 import com.yildiz.terapinisec.dto.ReportResponseDto;
-import com.yildiz.terapinisec.security.SecurityService;
 import com.yildiz.terapinisec.service.ReportService;
 import com.yildiz.terapinisec.util.ReportSituation;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -15,12 +13,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/reports")
 public class ReportController {
-
-    @Autowired
-    private ReportService reportService;
-
-    @Autowired
-    private SecurityService securityService;
+    private  final ReportService reportService;
+    public ReportController(ReportService reportService) {
+        this.reportService = reportService;
+    }
 
     @PostMapping("/weekly/{userId}")
     @PreAuthorize("hasRole('ADMIN')")
