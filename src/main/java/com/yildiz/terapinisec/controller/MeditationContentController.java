@@ -3,10 +3,8 @@ package com.yildiz.terapinisec.controller;
 import com.yildiz.terapinisec.dto.MeditationContentCreateDto;
 import com.yildiz.terapinisec.dto.MeditationContentResponseDto;
 import com.yildiz.terapinisec.dto.MeditationContentUpdateDto;
-import com.yildiz.terapinisec.security.SecurityService;
 import com.yildiz.terapinisec.service.MeditationContentService;
 import com.yildiz.terapinisec.util.MeditationSessionType;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -15,12 +13,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/meditationcontent")
 public class MeditationContentController {
-
-    @Autowired
-    private MeditationContentService meditationContentService;
-
-    @Autowired
-    private SecurityService securityService;
+    private final MeditationContentService meditationContentService;
+    public MeditationContentController(MeditationContentService meditationContentService) {
+        this.meditationContentService = meditationContentService;
+    }
 
     @GetMapping
     @PreAuthorize("isAuthenticated()")
