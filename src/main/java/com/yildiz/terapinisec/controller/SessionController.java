@@ -4,10 +4,8 @@ import com.yildiz.terapinisec.dto.SessionCreateDto;
 import com.yildiz.terapinisec.dto.SessionDetailedDto;
 import com.yildiz.terapinisec.dto.SessionResponseDto;
 import com.yildiz.terapinisec.model.Participant;
-import com.yildiz.terapinisec.security.SecurityService;
 import com.yildiz.terapinisec.service.SessionService;
 import com.yildiz.terapinisec.util.SessionType;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -18,12 +16,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/sessions")
 public class SessionController {
-
-    @Autowired
-    private SessionService sessionService;
-
-    @Autowired
-    private SecurityService securityService;
+    private final SessionService sessionService;
+    public SessionController(SessionService sessionService) {
+        this.sessionService = sessionService;
+    }
 
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
