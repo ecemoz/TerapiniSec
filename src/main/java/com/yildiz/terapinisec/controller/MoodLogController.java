@@ -3,10 +3,8 @@ package com.yildiz.terapinisec.controller;
 import com.yildiz.terapinisec.dto.MoodLogCreateDto;
 import com.yildiz.terapinisec.dto.MoodLogResponseDto;
 import com.yildiz.terapinisec.dto.MoodLogUpdateDto;
-import com.yildiz.terapinisec.security.SecurityService;
 import com.yildiz.terapinisec.service.MoodLogService;
 import com.yildiz.terapinisec.util.UserMoods;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -19,11 +17,10 @@ import java.util.List;
 @RequestMapping("/moodlogs")
 public class MoodLogController {
 
-    @Autowired
-    private MoodLogService moodLogService;
-
-    @Autowired
-    private SecurityService securityService;
+    private  final MoodLogService moodLogService;
+    public MoodLogController(MoodLogService moodLogService) {
+        this.moodLogService = moodLogService;
+    }
 
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
