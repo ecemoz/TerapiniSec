@@ -2,10 +2,8 @@ package com.yildiz.terapinisec.controller;
 
 import com.yildiz.terapinisec.dto.MeditationSessionCreateDto;
 import com.yildiz.terapinisec.dto.MeditationSessionResponseDto;
-import com.yildiz.terapinisec.security.SecurityService;
 import com.yildiz.terapinisec.service.MeditationSessionService;
 import com.yildiz.terapinisec.util.MeditationSessionType;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -14,12 +12,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/meditationsessions")
 public class MeditationSessionController {
-
-    @Autowired
-    private MeditationSessionService meditationSessionService;
-
-    @Autowired
-    private SecurityService securityService;
+    private final  MeditationSessionService meditationSessionService;
+    public MeditationSessionController(MeditationSessionService meditationSessionService) {
+        this.meditationSessionService = meditationSessionService;
+    }
 
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
