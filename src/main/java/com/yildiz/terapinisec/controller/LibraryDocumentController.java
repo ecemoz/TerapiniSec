@@ -3,9 +3,7 @@ package com.yildiz.terapinisec.controller;
 import com.yildiz.terapinisec.dto.LibraryDocumentCreateDto;
 import com.yildiz.terapinisec.dto.LibraryDocumentResponseDto;
 import com.yildiz.terapinisec.dto.LibraryDocumentUpdateDto;
-import com.yildiz.terapinisec.security.SecurityService;
 import com.yildiz.terapinisec.service.LibraryDocumentService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -16,12 +14,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/librarydocuments")
 public class LibraryDocumentController {
-
-    @Autowired
-    private LibraryDocumentService libraryDocumentService;
-
-    @Autowired
-    private SecurityService securityService;
+    private  final LibraryDocumentService libraryDocumentService;
+    public LibraryDocumentController(LibraryDocumentService libraryDocumentService) {
+        this.libraryDocumentService = libraryDocumentService;
+    }
 
     @GetMapping
     @PreAuthorize("isAuthenticated()")
