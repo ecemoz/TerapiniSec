@@ -2,10 +2,8 @@ package com.yildiz.terapinisec.controller;
 
 import com.yildiz.terapinisec.dto.FileStorageCreateDto;
 import com.yildiz.terapinisec.dto.FileStorageResponseDto;
-import com.yildiz.terapinisec.security.SecurityService;
 import com.yildiz.terapinisec.service.FileStorageService;
 import com.yildiz.terapinisec.util.FileType;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,12 +19,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/files")
 public class FileStorageController {
-
-    @Autowired
-    private FileStorageService fileStorageService;
-
-    @Autowired
-    private SecurityService securityService;
+    private  final FileStorageService fileStorageService;
+    public FileStorageController(FileStorageService fileStorageService) {
+        this.fileStorageService = fileStorageService;
+    }
 
     @PostMapping
     @PreAuthorize("hasRole('ADMIN') or hasRole('PSYCHOLOGIST')")
