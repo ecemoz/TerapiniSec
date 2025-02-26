@@ -6,11 +6,9 @@ import com.yildiz.terapinisec.dto.AppointmentUpdateDto;
 import com.yildiz.terapinisec.dto.UserResponseDto;
 import com.yildiz.terapinisec.mapper.UserMapper;
 import com.yildiz.terapinisec.model.User;
-import com.yildiz.terapinisec.security.SecurityService;
 import com.yildiz.terapinisec.service.AppointmentService;
 import com.yildiz.terapinisec.service.UserService;
 import com.yildiz.terapinisec.util.AppointmentStatus;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -20,18 +18,14 @@ import java.util.List;
 @RestController
 @RequestMapping("/appointments")
 public class AppointmentController {
-
-    @Autowired
-    private AppointmentService appointmentService;
-
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private UserMapper userMapper;
-
-    @Autowired
-    private SecurityService securityService;
+    private  final AppointmentService appointmentService;
+    private final UserService userService;
+    private final UserMapper userMapper;
+    public AppointmentController(AppointmentService appointmentService, UserService userService, UserMapper userMapper) {
+        this.appointmentService = appointmentService;
+        this.userService = userService;
+        this.userMapper = userMapper;
+    }
 
     @GetMapping
     @PreAuthorize("hasRole('ADMIN') or hasRole('PSYCHOLOGIST')")
