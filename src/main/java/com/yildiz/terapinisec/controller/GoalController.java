@@ -6,21 +6,21 @@ import com.yildiz.terapinisec.dto.GoalUpdateDto;
 import com.yildiz.terapinisec.security.SecurityService;
 import com.yildiz.terapinisec.service.GoalService;
 import com.yildiz.terapinisec.util.GoalType;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/goals")
 public class GoalController {
-
-    @Autowired
-    private GoalService goalService;
-
-    @Autowired
-    private SecurityService securityService;
+    private  final GoalService goalService;
+    private final SecurityService securityService;
+    public GoalController(GoalService goalService, SecurityService securityService) {
+        this.goalService = goalService;
+        this.securityService = securityService;
+    }
 
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
@@ -60,15 +60,35 @@ public class GoalController {
     }
 
     @GetMapping("/completed-true")
-    @PreAuthorize("hasRole('ADMIN') or @securityService.isGoalOwner(#id)")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<GoalResponseDto>> getGoalCompletedTrue() {
-        return ResponseEntity.ok(goalService.findByIsCompletedTrue());
+        List<GoalResponseDto> goals;
+        if (securityService.isAdmin()) {
+            goals = goalService.findByIsCompletedTrue();
+        } else {
+            goals = goalService.findByIsCompletedTrue()
+                    .stream()
+                    .filter(goal -> securityService.isGoalOwner(goal.getId()))
+                    .collect(Collectors.toList());
+        }
+
+        return ResponseEntity.ok(goals);
     }
 
     @GetMapping("/completed-false")
-    @PreAuthorize("hasRole('ADMIN') or @securityService.isGoalOwner(#id)")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<List<GoalResponseDto>> getGoalCompletedFalse() {
-        return ResponseEntity.ok(goalService.findByIsCompletedFalse());
+        List<GoalResponseDto> goals;
+        if (securityService.isAdmin()) {
+            goals = goalService.findByIsCompletedFalse();
+        } else {
+            goals = goalService.findByIsCompletedFalse()
+                    .stream()
+                    .filter(goal -> securityService.isGoalOwner(goal.getId()))
+                    .collect(Collectors.toList());
+        }
+
+        return ResponseEntity.ok(goals);
     }
 
     @GetMapping("/{userId}")

@@ -4,6 +4,8 @@ import com.yildiz.terapinisec.repository.AppointmentRepository;
 import com.yildiz.terapinisec.repository.FileStorageRepository;
 import com.yildiz.terapinisec.service.*;
 import com.yildiz.terapinisec.util.ReportSituation;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
@@ -108,5 +110,16 @@ public class SecurityService {
     public boolean isFileOwner(Long fileId) {
         Long currentUserId = getCurrentUserId();
         return currentUserId != null && fileStorageRepository.existsByIdAndDocumentUploaderId(fileId, currentUserId);
+    }
+
+    public boolean isAdmin() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication == null) {
+            return false;
+        }
+
+        return authentication.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .anyMatch(role -> role.equals("ROLE_ADMIN"));
     }
 }
