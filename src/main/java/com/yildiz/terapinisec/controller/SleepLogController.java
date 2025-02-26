@@ -3,9 +3,7 @@ package com.yildiz.terapinisec.controller;
 import com.yildiz.terapinisec.dto.SleepLogCreateDto;
 import com.yildiz.terapinisec.dto.SleepLogDetailedDto;
 import com.yildiz.terapinisec.dto.SleepLogResponseDto;
-import com.yildiz.terapinisec.security.SecurityService;
 import com.yildiz.terapinisec.service.SleepLogService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,11 +15,11 @@ import java.util.List;
 @RequestMapping("/sleeplogs")
 public class SleepLogController {
 
-    @Autowired
-    private SleepLogService sleepLogService;
+    private final SleepLogService sleepLogService;
 
-    @Autowired
-    private SecurityService securityService;
+    public SleepLogController (SleepLogService sleepLogService) {
+        this.sleepLogService = sleepLogService;
+    }
 
     @GetMapping
     @PreAuthorize("hasRole('ADMIN') or hasRole('USER')")
@@ -61,7 +59,7 @@ public class SleepLogController {
     }
 
     @GetMapping("/sleepdate")
-    @PreAuthorize("hasRole('ADMIN') or @securityService.isSelfUser()")
+    @PreAuthorize("hasRole('ADMIN') or @securityService.isSleepLogOwner(#sleepDate)")
     public ResponseEntity<List<SleepLogResponseDto>> getSleepLogBySleepDate(@RequestParam LocalDateTime sleepDate) {
         return ResponseEntity.ok(sleepLogService.findBySleepDate(sleepDate));
     }
