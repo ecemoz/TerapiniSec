@@ -3,9 +3,7 @@ package com.yildiz.terapinisec.controller;
 import com.yildiz.terapinisec.dto.SurveyCreateDto;
 import com.yildiz.terapinisec.dto.SurveyPostDto;
 import com.yildiz.terapinisec.dto.SurveyUpdateDto;
-import com.yildiz.terapinisec.security.SecurityService;
 import com.yildiz.terapinisec.service.SurveyService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -14,12 +12,10 @@ import java.util.List;
 @RestController
 @RequestMapping("/surveys")
 public class SurveyController {
-
-    @Autowired
-    SurveyService surveyService;
-
-    @Autowired
-    private SecurityService securityService;
+    private final SurveyService surveyService;
+    public SurveyController(SurveyService surveyService) {
+        this.surveyService = surveyService;
+    }
 
     @GetMapping
     @PreAuthorize("isAuthenticated()")
