@@ -18,7 +18,7 @@ public class JwtUtil {
 
     public String generateToken(UserResponseDto userResponseDto) {
         Map<String, Object> claims = new HashMap<>();
-        claims.put("role", userResponseDto.getUserRole().name());
+        claims.put("role", "ROLE_" + userResponseDto.getUserRole().name());
         claims.put("isPremium", userResponseDto.isPremium());
         claims.put("userName", userResponseDto.getUserName());
         claims.put("email", userResponseDto.getEmail());

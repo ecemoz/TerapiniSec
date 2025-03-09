@@ -78,10 +78,11 @@ public class User {
         this.lastLoginDateTime = this.registrationDateTime;
     }
 
-    @ElementCollection(targetClass = Specialization.class)
+    @ElementCollection(fetch = FetchType.EAGER, targetClass = Specialization.class)
     @CollectionTable(name = "user_specializations", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)
     private List<Specialization> specializations;
+
 
     @Column
     private Integer yearsOfExperience;
