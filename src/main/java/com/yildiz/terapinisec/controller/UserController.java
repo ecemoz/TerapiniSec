@@ -278,7 +278,6 @@ public class UserController {
     }
 
     @PostMapping("/authenticate")
-    @PreAuthorize("hasAnyRole('ADMIN','PSYCHOLOGIST','USER')")
     public ResponseEntity<ApiResponse<String>> authenticate(@RequestBody UserLoginDto userLoginDto) {
         try {
             String token = userService.authenticate(userLoginDto);

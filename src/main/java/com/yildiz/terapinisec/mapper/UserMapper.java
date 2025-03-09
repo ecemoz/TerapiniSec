@@ -96,6 +96,7 @@ public class UserMapper {
                         : null)
                 .yearsOfExperience(user.getYearsOfExperience())
                 .availableTimes(user.getAvailableTimes())
+                .userNameOrEmail(user.getUserName() != null ? user.getUserName() : user.getEmail())
                 .build();
     }
 
