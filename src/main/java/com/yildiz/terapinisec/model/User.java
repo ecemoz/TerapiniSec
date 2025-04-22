@@ -87,7 +87,7 @@ public class User {
     @Column
     private Integer yearsOfExperience;
 
-    @ElementCollection
+    @ElementCollection(fetch = FetchType.EAGER)
     @CollectionTable(name = "user_available_times", joinColumns = @JoinColumn(name = "user_id"))
     private List<LocalDateTime> availableTimes;
 
